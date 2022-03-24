@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 
 public class Gui extends Application {
 
+    //TODO
+    //Lav tekstfields og andet stuff her:
+
     @Override
     public void init() {
         Controller.initStorage();
