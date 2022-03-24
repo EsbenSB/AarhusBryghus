@@ -3,9 +3,9 @@ package aarhusBryghus.gui;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 
-public class SalgsstatestikPane extends GridPane {
+public class SalgsstatistikPane extends GridPane {
 
-    public SalgsstatestikPane() {
+    public SalgsstatistikPane() {
         this.setPadding(new Insets(20));
         this.setHgap(20);
         this.setVgap(10);

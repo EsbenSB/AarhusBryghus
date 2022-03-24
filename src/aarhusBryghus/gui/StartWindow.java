@@ -44,10 +44,11 @@ public class StartWindow extends Application {
         KasseapparatPane kasseapparatPane = new KasseapparatPane();
         tabKasseapparat.setContent(kasseapparatPane);
 
-        Tab tabSalgsstatestik = new Tab("Salgsstatistik");
-        tabPane.getTabs().add(tabSalgsstatestik);
+        // Laver tab til salgsstatistik
+        Tab tabSalgsstatistik = new Tab("Salgsstatistik");
+        tabPane.getTabs().add(tabSalgsstatistik);
 
-        SalgsstatestikPane salgsstatestikPane = new SalgsstatestikPane();
-        tabSalgsstatestik.setContent(salgsstatestikPane);
+        SalgsstatistikPane salgsstatestikPane = new SalgsstatistikPane();
+        tabSalgsstatistik.setContent(salgsstatestikPane);
     }
 }
