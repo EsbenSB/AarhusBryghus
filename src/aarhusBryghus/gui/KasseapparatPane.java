@@ -30,12 +30,14 @@ public class KasseapparatPane extends GridPane {
 
         Label lblTest = new Label("Test");
 
-        //TODO Gør så knap virker og set den det rigtige sted
+        //TODO Gør så knap virker og sat det rigtige sted
         //Knap til opret produkt
         Button btnOpretProdukt = new Button("Opret Produkt");
         this.add(btnOpretProdukt,0,0);
         GridPane.setHalignment(btnOpretProdukt, HPos.RIGHT);
         btnOpretProdukt.setOnAction(event -> this.opretProduktAction());
+
+
     }
 
     private void opretProduktAction() {
