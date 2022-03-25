@@ -13,12 +13,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.GridPane;
 
 import java.awt.*;
 
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
+    Label lblBetalingsmetoder;
 
     public KasseapparatPane() {
         this.setPadding(new Insets(20));
@@ -37,7 +39,20 @@ public class KasseapparatPane extends GridPane {
         GridPane.setHalignment(btnOpretProdukt, HPos.RIGHT);
         btnOpretProdukt.setOnAction(event -> this.opretProduktAction());
 
+        lblBetalingsmetoder = new Label("Betalingsmetoder:");
+        this.add(lblBetalingsmetoder,10,9);
 
+        RadioButton r1 = new RadioButton("Kontant");
+        this.add(r1,10,10);
+
+        RadioButton r2 = new RadioButton("Mobilepay");
+        this.add(r2,10,11);
+
+        RadioButton r3 = new RadioButton("Dankort");
+        this.add(r3,10,12);
+
+        RadioButton r4 = new RadioButton("Klippekort");
+        this.add(r4,10,13);
     }
 
     private void opretProduktAction() {
