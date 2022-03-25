@@ -41,7 +41,7 @@ public class KasseapparatPane extends GridPane {
 
         lblBetalingsmetoder = new Label("Betalingsmetoder:");
         this.add(lblBetalingsmetoder,10,9);
-
+        //TODO Går så man kun kan vælge en RadioButton af gangen
         RadioButton r1 = new RadioButton("Kontant");
         this.add(r1,10,10);
 
