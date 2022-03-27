@@ -15,7 +15,7 @@ public class Controller {
     }
 
     private Controller() {
-        storage = storage.getInstance();
+        storage = Storage.getInstance();
     }
 
     public static void initStorage() {
