@@ -6,24 +6,28 @@ public class Ordrelinje {
     private Ordre ordre;
     private int linjenummer;
     private int antal;
+    private double pris;
 
-    public Ordrelinje(int linjenummer, Produkt produkt, int antal, Ordre ordre) {
+    public Ordrelinje(int linjenummer, Produkt produkt, int antal, Ordre ordre, Prisliste prisliste) {
         this.linjenummer = linjenummer;
         this.produkt = produkt;
         this.ordre = ordre;
         this.antal = antal;
+        this.pris = produkt.enkeltPris(prisliste);
     }
 
     @Override
     public String toString() {
-        return produkt+" ";
+        return produkt.getNavn() +". Antal: " + antal + " stk pris: " + pris + " samlet pris: " + pris * antal;
     }
 
     public Produkt getProdukt(){
         return produkt;
     }
+
     public int getAntal(){
         return antal;
     }
+
 
 }

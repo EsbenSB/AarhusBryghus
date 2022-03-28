@@ -14,6 +14,7 @@ public class Ordre {
     private Prisliste prisliste;
     private int ordrelinjeNr = 0;
     private Betalingsform betalingsform;
+    private Kunde kunde;
 
     public Ordre(String type, boolean status, LocalDate oprettelsesDato, Prisliste prisliste) {
         ordreNummer++;
@@ -23,6 +24,10 @@ public class Ordre {
         this.ordrelinjeNr = 0;
         this.prisliste = prisliste;
         this.betalingsform = null;
+    }
+
+    public void setKunde(Kunde kunde){
+        this.kunde = kunde;
     }
 
     public void setBetalingsform(Betalingsform betalingsform){
@@ -35,9 +40,13 @@ public class Ordre {
 
     public Ordrelinje createOrdrelinje(int antal, Produkt produkt){
         ordrelinjeNr++;
-        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, antal, this);
+        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, antal, this, getPrisliste());
         ordrelinjer.add(ordrelinje);
         return ordrelinje;
+    }
+
+    public Betalingsform getBetalingsform() {
+        return betalingsform;
     }
 
     public String getType() {
@@ -60,10 +69,6 @@ public class Ordre {
         return oprettelsesDato;
     }
 
-    public void setOprettelsesDato(LocalDate oprettelsesDato) {
-        this.oprettelsesDato = oprettelsesDato;
-    }
-
     public LocalDate getAfslutningsDato() {
         return afslutningsDato;
     }
@@ -82,10 +87,6 @@ public class Ordre {
 
     public ArrayList<Ordrelinje> getOrdrelinjer() {
         return ordrelinjer;
-    }
-
-    public void setOrdrelinjer(ArrayList<Ordrelinje> ordrelinjer) {
-        this.ordrelinjer = ordrelinjer;
     }
 
     public int getOrdrelinjeNr() {
