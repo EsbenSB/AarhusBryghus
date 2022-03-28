@@ -78,7 +78,7 @@ public class Ordre {
     }
 
     public ArrayList<Ordrelinje> getOrdrelinjer() {
-        return ordrelinjer;
+        return new ArrayList<>(ordrelinjer);
     }
 
     public int getOrdrelinjeNr() {

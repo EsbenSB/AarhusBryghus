@@ -22,7 +22,7 @@ public class Prisliste {
     returnerer alle priser, som er forbundet med denne prisliste
      */
     public ArrayList<Pris> getPriser() {
-        return priser;
+        return new ArrayList<>(priser);
     }
 
     /*

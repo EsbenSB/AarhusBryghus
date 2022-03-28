@@ -7,14 +7,23 @@ public class Produkt {
     private String navn;
 
     // Associering: -> 0..* (Skal det være hashset? - hvorfor?)
-    private ProduktGruppe produktgruppe;
+    private ProduktGruppe produktgruppe; // todo: bør ikke være her pga. enkeltrettet
     private MaaleEnhed maaleEnhed;
     private HashSet<Pris> priser = new HashSet<Pris>();
+    private Pant pant;
 
     public Produkt(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed){
         this.navn = navn;
         this.produktgruppe = produktgruppe;
         this.maaleEnhed = maaleEnhed;
+    }
+
+    public Pant getPant() {
+        return pant;
+    }
+
+    public void setPant(Pant pant) {
+        this.pant = pant;
     }
 
     public void addPris(Pris pris){

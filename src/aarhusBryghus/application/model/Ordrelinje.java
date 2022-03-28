@@ -3,7 +3,7 @@ package aarhusBryghus.application.model;
 public class Ordrelinje {
 
     private Produkt produkt;
-    private Ordre ordre;
+    private Ordre ordre; // todo slettes, enkeltrettet
     private int linjenummer;
     private int antal;
     private double pris;

@@ -90,7 +90,7 @@ public class Controller {
         MaaleEnhed fyrreCl = Controller.createMaaleEnhed("cl", 40);
         MaaleEnhed fireCL = Controller.createMaaleEnhed("cl", 4);
 
-        // Flaske produkter
+        // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
         Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg",flaske,tresCl);
         Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown",flaske,tresCl);
         Produkt extraPilsnerFlaske = Controller.createProdukt("Extra Pilsner",flaske,tresCl);

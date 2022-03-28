@@ -6,7 +6,7 @@ public class MaaleEnhed {
     private String navn;
     private int tal;
 
-    private final HashSet<Produkt> produkter = new HashSet<>();
+    private final HashSet<Produkt> produkter = new HashSet<>(); // todo: tror ikke den her skal være her
 
     // opretter en måleenhed, som skal bruges til produkterne
     // produkterne har forskellige måleenheder
