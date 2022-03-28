@@ -25,8 +25,8 @@ public class App {
         Betalingsform mobilepay = new MobilePay();
         System.out.println(produkt1.getPriser());
         Ordre ordre1 = new Ordre("alm. salg",false, LocalDate.parse("2022-03-05"), pl1);
-        ordre1.createOrdrelinje(2, produkt1);
-        ordre1.createOrdrelinje(1, produkt2);
+        Ordrelinje ol1 = ordre1.createOrdrelinje(2, produkt1);
+        Ordrelinje ol2 = ordre1.createOrdrelinje(1, produkt2);
         for(Ordrelinje o: ordre1.getOrdrelinjer()){
             System.out.println( o.getProdukt().enkeltPris(ordre1.getPrisliste()));
         }
@@ -35,5 +35,10 @@ public class App {
 
         System.out.println();
         System.out.println(ordre1.getOrdrelinjer());
+        ol1.setPrisMedProcentRabat(10);
+        System.out.println(ordre1.getOrdrelinjer());
+        ol2.setAftaltPris(40);
+        System.out.println(ordre1.getOrdrelinjer());
+
     }
 }

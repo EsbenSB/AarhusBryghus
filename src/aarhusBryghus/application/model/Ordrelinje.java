@@ -29,5 +29,14 @@ public class Ordrelinje {
         return antal;
     }
 
+    public void setPrisMedProcentRabat(double procent){
+        pris = pris*((100.0-procent)/100.0);
+    }
+
+    public void setAftaltPris(double pris){
+        this.pris = pris;
+    }
+
+
 
 }
