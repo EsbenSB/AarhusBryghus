@@ -44,6 +44,13 @@ public class StartWindow extends Application {
         KasseapparatPane kasseapparatPane = new KasseapparatPane();
         tabKasseapparat.setContent(kasseapparatPane);
 
+        //Laver tab til produkt
+        Tab tabProdukt = new Tab("Produkt");
+        tabPane.getTabs().add(tabProdukt);
+
+        ProduktPane produktPane = new ProduktPane();
+        tabProdukt.setContent(produktPane);
+
         // Laver tab til salgsstatistik
         Tab tabSalgsstatistik = new Tab("Salgsstatistik");
         tabPane.getTabs().add(tabSalgsstatistik);
