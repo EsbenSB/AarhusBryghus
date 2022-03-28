@@ -22,6 +22,10 @@ public class Pris {
         return klippekort;
     }
 
+    public Produkt getProdukt() {
+        return produkt;
+    }
+
     public void setKlippekortPris(int klippekortPris){
         klippekort = klippekortPris;
     }
