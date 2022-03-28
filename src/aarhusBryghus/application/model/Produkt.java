@@ -49,6 +49,16 @@ public class Produkt {
         return priser;
     }
 
+    public double enkeltPris(Prisliste prisliste){
+        double pris = -1;
+        for(Pris p: this.getPriser()){
+            if(p.getPrisliste() == prisliste){
+                pris = p.getPris();
+            }
+        }
+        return pris;
+    }
+
     public void setPriser(HashSet<Pris> priser) {
         this.priser = priser;
     }

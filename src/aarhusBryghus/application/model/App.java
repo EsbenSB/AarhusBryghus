@@ -20,10 +20,14 @@ public class App {
         Pris pris2 = new Pris(38,produkt3,pl1);
         Pris pris3 = new Pris(70,produkt2,pl1);
         Pris pris4 = new Pris(36,produkt1,pl2);
-        System.out.println(produkt1.getPriser());
-        Ordre ordre1 = new Ordre("Fadølsanlæg",false, LocalDate.parse("2022-03-05"));
-        ordre1.createOrdrelinje(produkt1);
-        System.out.println(ordre1.getOrdrelinjer());
+        Pris pris5 = new Pris(36,produkt2,pl2);
 
+        System.out.println(produkt1.getPriser());
+        Ordre ordre1 = new Ordre("Fadølsanlæg",false, LocalDate.parse("2022-03-05"), pl1);
+        ordre1.createOrdrelinje(2, produkt1);
+        ordre1.createOrdrelinje(1, produkt2);
+        for(Ordrelinje o: ordre1.getOrdrelinjer()){
+            System.out.println( o.getProdukt().enkeltPris(ordre1.getPrisliste()));
+        }
     }
 }
