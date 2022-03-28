@@ -9,4 +9,17 @@ public class ProduktGruppe {
     public ProduktGruppe(String navn) {
         this.navn = navn;
     }
+
+    public Produkt createProdukt(String navn, MaaleEnhed maaleEnhed){
+        Produkt produkt = new Produkt(navn, this, maaleEnhed);
+        produkter.add(produkt);
+        return produkt;
+    }
+
+    @Override
+    public String toString() {
+        return "ProduktGruppe{" +
+                "navn='" + navn + '\'' +
+                '}';
+    }
 }

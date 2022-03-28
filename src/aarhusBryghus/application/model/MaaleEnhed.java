@@ -15,4 +15,9 @@ public class MaaleEnhed {
         this.navn = navn;
         this.tal = tal;
     }
+
+    @Override
+    public String toString() {
+        return tal + " " + navn;
+    }
 }

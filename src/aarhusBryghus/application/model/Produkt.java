@@ -7,16 +7,59 @@ public class Produkt {
     private String navn;
 
     // Associering: -> 0..* (Skal det være hashset? - hvorfor?)
-    private HashSet<ProduktGruppe> produktGrupper = new HashSet<>();
-    private HashSet<MaaleEnhed> maaleEnheder = new HashSet<>();
+    private ProduktGruppe produktgruppe;
+    private MaaleEnhed maaleEnhed;
     private HashSet<Pris> priser = new HashSet<Pris>();
 
-    //TODO Lav klasse (Hvis navnet skal ændres så husk refactor, ellers bliver gui fucked)
-    /*
-    kunne man lave constructoren, så man "automatisk" tilvælger måleenhed og produktgruppen, såfremt vi kender dem?
-
-     */
-    public Produkt(String navn){
+    public Produkt(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed){
         this.navn = navn;
+        this.produktgruppe = produktgruppe;
+        this.maaleEnhed = maaleEnhed;
+    }
+
+    public void addPris(Pris pris){
+        priser.add(pris);
+    }
+
+    public String getNavn() {
+        return navn;
+    }
+
+    public void setNavn(String navn) {
+        this.navn = navn;
+    }
+
+    public ProduktGruppe getProduktgruppe() {
+        return produktgruppe;
+    }
+
+    public void setProduktgruppe(ProduktGruppe produktgruppe) {
+        this.produktgruppe = produktgruppe;
+    }
+
+    public MaaleEnhed getMaaleEnhed() {
+        return maaleEnhed;
+    }
+
+    public void setMaaleEnhed(MaaleEnhed maaleEnhed) {
+        this.maaleEnhed = maaleEnhed;
+    }
+
+    public HashSet<Pris> getPriser() {
+        return priser;
+    }
+
+    public void setPriser(HashSet<Pris> priser) {
+        this.priser = priser;
+    }
+
+    @Override
+    public String toString() {
+        return "Produkt{" +
+                "navn='" + navn + '\'' +
+                ", produktGrupper=" + produktgruppe +
+                ", maaleEnhed=" + maaleEnhed +
+                ", priser=" + priser +
+                '}';
     }
 }

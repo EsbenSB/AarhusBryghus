@@ -9,4 +9,31 @@ public class Prisliste {
     public Prisliste(String navn) {
         this.navn = navn;
     }
+
+    public String getNavn() {
+        return navn;
+    }
+
+    public void setNavn(String navn) {
+        this.navn = navn;
+    }
+
+    public ArrayList<Pris> getPriser() {
+        return priser;
+    }
+
+    public void createPris(double varePris, Produkt produkt, int antalKlip){
+        Pris pris = new Pris(varePris,produkt, this);
+        if(antalKlip > 0){
+            pris.setKlippekortPris(antalKlip);
+        }
+        priser.add(pris);
+    }
+
+    @Override
+    public String toString() {
+        return "Prisliste{" +
+                "navn='" + navn + '\'' +
+                '}';
+    }
 }
