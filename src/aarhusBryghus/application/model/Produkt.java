@@ -49,6 +49,11 @@ public class Produkt {
         return priser;
     }
 
+    public double enkeltPris(Prisliste prisliste){
+       // todo
+        return 0;
+    }
+
     public void setPriser(HashSet<Pris> priser) {
         this.priser = priser;
     }

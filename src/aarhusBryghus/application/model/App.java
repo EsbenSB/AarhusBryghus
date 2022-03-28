@@ -21,7 +21,7 @@ public class App {
         Pris pris3 = new Pris(70,produkt2,pl1);
         Pris pris4 = new Pris(36,produkt1,pl2);
         System.out.println(produkt1.getPriser());
-        Ordre ordre1 = new Ordre("Fadølsanlæg",false, LocalDate.parse("2022-03-05"));
+        Ordre ordre1 = new Ordre("Fadølsanlæg",false, LocalDate.parse("2022-03-05"), pl1);
         ordre1.createOrdrelinje(produkt1);
         System.out.println(ordre1.getOrdrelinjer());
 

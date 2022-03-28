@@ -11,19 +11,21 @@ public class Ordre {
     private LocalDate afslutningsDato;
     private static int ordreNummer;
     private ArrayList<Ordrelinje> ordrelinjer = new ArrayList<>();
+    private Prisliste prisliste;
     private int ordrelinjeNr = 0;
 
-    public Ordre(String type, boolean status, LocalDate oprettelsesDato) {
+    public Ordre(String type, boolean status, LocalDate oprettelsesDato, Prisliste prisliste) {
         ordreNummer++;
         this.type = type;
         this.status = status;
         this.oprettelsesDato = oprettelsesDato;
         this.ordrelinjeNr = 0;
+        this.prisliste = prisliste;
     }
 
-    public Ordrelinje createOrdrelinje(Produkt produkt){
+    public Ordrelinje createOrdrelinje(int antal, Produkt produkt){
         ordrelinjeNr++;
-        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, this);
+        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, antal, this);
         ordrelinjer.add(ordrelinje);
         return ordrelinje;
     }
@@ -68,8 +70,16 @@ public class Ordre {
         Ordre.ordreNummer = ordreNummer;
     }
 
-    public ArrayList<Ordrelinje> getOrdrelinjer() {
-        return ordrelinjer;
+    public ArrayList<String> getOrdrelinjer() {
+        ArrayList<String> returliste = new ArrayList<>();
+        for(Ordrelinje o: ordrelinjer){
+            for(Pris p: o.getProdukt().getPriser()){
+                String pris = p.getPris()+"";
+                returliste.add(pris);
+            }
+        }
+
+        return returliste;
     }
 
     public void setOrdrelinjer(ArrayList<Ordrelinje> ordrelinjer) {
