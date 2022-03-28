@@ -32,9 +32,7 @@ public class Pris {
 
     @Override
     public String toString() {
-        return "Pris{" +
-                "pris=" + pris + prisliste +
-                '}';
+        return pris + "";
     }
 
     public Prisliste getPrisliste(){

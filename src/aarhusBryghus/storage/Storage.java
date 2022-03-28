@@ -1,9 +1,6 @@
 package aarhusBryghus.storage;
 
-import aarhusBryghus.application.model.MaaleEnhed;
-import aarhusBryghus.application.model.Prisliste;
-import aarhusBryghus.application.model.Produkt;
-import aarhusBryghus.application.model.ProduktGruppe;
+import aarhusBryghus.application.model.*;
 
 import java.util.ArrayList;
 
@@ -14,6 +11,7 @@ public class Storage {
     public static ArrayList<ProduktGruppe> produktGrupper = new ArrayList<>();
     public static ArrayList<MaaleEnhed> maaleEnheder = new ArrayList<>();
     public static ArrayList<Prisliste> prislister = new ArrayList<>();
+    public static ArrayList<Ordre> ordrer = new ArrayList<>();
 
     public static Storage getInstance() {
         if (uniqueInstance == null) {
@@ -78,5 +76,19 @@ public class Storage {
 
     public static void removePrisliste(Prisliste prisliste) {
         prislister.remove(prisliste);
+    }
+
+    // -------------------------------------------------------------------------
+
+    public static ArrayList<Ordre> getOrdrer() {
+        return new ArrayList<>(ordrer);
+    }
+
+    public static void addOrdre(Ordre ordre) {
+        ordrer.add(ordre);
+    }
+
+    public static void removeOrdre(Ordre ordre) {
+        ordrer.remove(ordre);
     }
 }

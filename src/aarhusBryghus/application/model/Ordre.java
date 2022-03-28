@@ -53,10 +53,6 @@ public class Ordre {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public boolean isStatus() {
         return status;
     }
@@ -81,20 +77,12 @@ public class Ordre {
         return ordreNummer;
     }
 
-    public static void setOrdreNummer(int ordreNummer) {
-        Ordre.ordreNummer = ordreNummer;
-    }
-
     public ArrayList<Ordrelinje> getOrdrelinjer() {
         return ordrelinjer;
     }
 
     public int getOrdrelinjeNr() {
         return ordrelinjeNr;
-    }
-
-    public void setOrdrelinjeNr(int ordrelinjeNr) {
-        this.ordrelinjeNr = ordrelinjeNr;
     }
 
     @Override

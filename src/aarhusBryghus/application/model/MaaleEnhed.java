@@ -8,7 +8,7 @@ public class MaaleEnhed {
 
     private final HashSet<Produkt> produkter = new HashSet<>();
 
-    // opretter en måleenhed, som skal bryges til produkterne
+    // opretter en måleenhed, som skal bruges til produkterne
     // produkterne har forskellige måleenheder
     // fx. centiliter, liter, eller kilo.
     public MaaleEnhed(String navn, int tal) {

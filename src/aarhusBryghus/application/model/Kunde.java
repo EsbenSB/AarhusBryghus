@@ -53,14 +53,6 @@ public class Kunde {
 
     @Override
     public String toString() {
-        return "Kunde{" +
-                "fornavn='" + fornavn + '\'' +
-                ", efternavn='" + efternavn + '\'' +
-                ", telefon=" + telefon +
-                ", adresse='" + adresse + '\'' +
-                ", vejnummer=" + vejnummer +
-                ", postnummer=" + postnummer +
-                ", by='" + by + '\'' +
-                '}';
+        return fornavn + " " + efternavn + " Tlf: " + telefon;
     }
 }

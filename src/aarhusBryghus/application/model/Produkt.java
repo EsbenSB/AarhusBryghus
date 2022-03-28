@@ -44,32 +44,31 @@ public class Produkt {
     public void setMaaleEnhed(MaaleEnhed maaleEnhed) {
         this.maaleEnhed = maaleEnhed;
     }
-
+    /*
+    Returnerer alle priser, som der er forbundet med produktet.
+     */
     public HashSet<Pris> getPriser() {
         return priser;
     }
-
+    /*
+    Returnerer den pris på produktet, som den har på prislisten, i parameteret
+    Returnerer -1 hvis prislisten er tom.
+     */
     public double enkeltPris(Prisliste prisliste){
         double pris = -1;
-        for(Pris p: this.getPriser()){
-            if(p.getPrisliste() == prisliste){
-                pris = p.getPris();
+        if(prisliste.getPriser() != null){
+            for(Pris p: this.getPriser()){
+                if(p.getPrisliste() == prisliste){
+                    pris = p.getPris();
+                    return pris;
+                }
             }
         }
         return pris;
     }
 
-    public void setPriser(HashSet<Pris> priser) {
-        this.priser = priser;
-    }
-
     @Override
     public String toString() {
-        return "Produkt{" +
-                "navn='" + navn + '\'' +
-                ", produktGrupper=" + produktgruppe +
-                ", maaleEnhed=" + maaleEnhed +
-                ", priser=" + priser +
-                '}';
+        return navn + "";
     }
 }

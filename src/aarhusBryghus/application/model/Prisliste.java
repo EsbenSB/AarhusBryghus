@@ -18,10 +18,17 @@ public class Prisliste {
         this.navn = navn;
     }
 
+    /*
+    returnerer alle priser, som er forbundet med denne prisliste
+     */
     public ArrayList<Pris> getPriser() {
         return priser;
     }
 
+    /*
+    Laver en pris på et produkt.
+    Parameter varePris er prisen i kroner. antalKlip er antallet af klip, som varen koster.
+     */
     public void createPris(Produkt produkt, double varePris, int antalKlip){
         Pris pris = new Pris(varePris,produkt, this);
         if(antalKlip > 0){
@@ -32,8 +39,6 @@ public class Prisliste {
 
     @Override
     public String toString() {
-        return "Prisliste{" +
-                "navn='" + navn + '\'' +
-                '}';
+        return navn;
     }
 }
