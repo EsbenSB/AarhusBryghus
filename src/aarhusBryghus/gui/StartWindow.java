@@ -12,7 +12,7 @@ public class StartWindow extends Application {
 
     @Override
     public void init() {
-        Controller.initStorage();
+        Controller.init();
     }
 
     @Override

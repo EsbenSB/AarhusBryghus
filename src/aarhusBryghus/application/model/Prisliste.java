@@ -22,7 +22,7 @@ public class Prisliste {
         return priser;
     }
 
-    public void createPris(double varePris, Produkt produkt, int antalKlip){
+    public void createPris(Produkt produkt, double varePris, int antalKlip){
         Pris pris = new Pris(varePris,produkt, this);
         if(antalKlip > 0){
             pris.setKlippekortPris(antalKlip);
