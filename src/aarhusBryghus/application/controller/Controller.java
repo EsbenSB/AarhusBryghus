@@ -37,7 +37,7 @@ public class Controller {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    //TODO Eventuelt tilføje så man kan updateProduktGruppe og deleteProduktGruppe
+    //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
     public static ProduktGruppe createProduktGruppe(String navn) {
         ProduktGruppe produktGruppe = new ProduktGruppe(navn);
         Storage.addProduktGruppe(produktGruppe);
@@ -49,6 +49,8 @@ public class Controller {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
+
     public static MaaleEnhed createMaaleEnhed(String navn, int tal) {
         MaaleEnhed maaleEnhed = new MaaleEnhed(navn,tal);
         Storage.addMaaleEnhed(maaleEnhed);
@@ -80,15 +82,16 @@ public class Controller {
 
         // Produktgrupper
         ProduktGruppe flaske = Controller.createProduktGruppe("Flaske");
-        ProduktGruppe fadoel = Controller.createProduktGruppe("Fadøl");
+        ProduktGruppe fadoel = Controller.createProduktGruppe("Fadøl 40 cl");
         ProduktGruppe madOgDrikke = Controller.createProduktGruppe("Mad og drikke");
         ProduktGruppe spiritus = Controller.createProduktGruppe("Spiritus");
+        ProduktGruppe fustage = Controller.createProduktGruppe("Fustage");
 
         // Måleenheder
-        MaaleEnhed tresCl = Controller.createMaaleEnhed("cl", 60);
-        MaaleEnhed halvtresCL = Controller.createMaaleEnhed("cl", 50);
+        MaaleEnhed fireCl = Controller.createMaaleEnhed("cl", 4);
         MaaleEnhed fyrreCl = Controller.createMaaleEnhed("cl", 40);
-        MaaleEnhed fireCL = Controller.createMaaleEnhed("cl", 4);
+        MaaleEnhed halvtredsCl = Controller.createMaaleEnhed("cl", 50);
+        MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
         // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
         Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg",flaske,tresCl);
