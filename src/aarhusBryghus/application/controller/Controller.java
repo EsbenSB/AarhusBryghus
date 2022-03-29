@@ -1,11 +1,9 @@
 package aarhusBryghus.application.controller;
 
-import aarhusBryghus.application.model.MaaleEnhed;
-import aarhusBryghus.application.model.Prisliste;
-import aarhusBryghus.application.model.Produkt;
-import aarhusBryghus.application.model.ProduktGruppe;
+import aarhusBryghus.application.model.*;
 import aarhusBryghus.storage.Storage;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Controller {
@@ -27,9 +25,18 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
     //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
     public static Produkt createProdukt(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed) {
-        Produkt produkt = new Produkt(navn,produktgruppe,maaleEnhed);
-        Storage.addProdukt(produkt);
+       Produkt produkt = produktgruppe.createProdukt(navn, maaleEnhed);
         return produkt;
+    }
+
+    public static Klippekort createKlippekort(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
+        Klippekort klippekort = produktgruppe.createKlippekort(navn, maaleEnhed, antalKlip);
+        return klippekort;
+    }
+
+    public static Rundvisning createRundvisning(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
+        Rundvisning rundvisning = produktgruppe.createRundvisning(navn, maaleEnhed, tidspunkt);
+        return rundvisning;
     }
 
     public static ArrayList<Produkt> getProdukt() {

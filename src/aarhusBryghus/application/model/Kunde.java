@@ -11,7 +11,6 @@ public class Kunde {
     private int vejnummer;
     private int postnummer;
     private String by;
-    private ArrayList<Ordre> ordrer = new ArrayList<>(); // todo: bør slettes pga. enkeltrettet
 
     public Kunde(String fornavn, String efternavn, int telefon) {
         this.fornavn = fornavn;
@@ -45,10 +44,6 @@ public class Kunde {
 
     public String getBy() {
         return by;
-    }
-
-    public ArrayList<Ordre> getOrdrer() {
-        return new ArrayList<>(ordrer);
     }
 
     @Override

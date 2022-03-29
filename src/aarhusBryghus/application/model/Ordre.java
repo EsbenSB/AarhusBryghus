@@ -40,7 +40,7 @@ public class Ordre {
 
     public Ordrelinje createOrdrelinje(int antal, Produkt produkt){
         ordrelinjeNr++;
-        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, antal, this, getPrisliste());
+        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, antal, getPrisliste());
         ordrelinjer.add(ordrelinje);
         return ordrelinje;
     }
