@@ -94,20 +94,20 @@ public class Controller {
         MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
         // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
-        Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg",flaske,tresCl);
-        Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown",flaske,tresCl);
-        Produkt extraPilsnerFlaske = Controller.createProdukt("Extra Pilsner",flaske,tresCl);
-        Produkt celebrationFlaske = Controller.createProdukt("Celebration",flaske,tresCl);
-        Produkt blondieFlaske = Controller.createProdukt("Blondie",flaske,tresCl);
-        Produkt foraarsbrygFlaske = Controller.createProdukt("Forårsbryg",flaske,tresCl);
-        Produkt indiaPaleAleFlaske = Controller.createProdukt("India Pale Ale",flaske ,tresCl);
-        Produkt julebrygFlaske = Controller.createProdukt("Julebryg",flaske,tresCl);
-        Produkt juletoenden = Controller.createProdukt("Juletønden", flaske, tresCl);
-        Produkt oldStrongAle = Controller.createProdukt("Old Strong Ale", flaske, tresCl);
-        Produkt fregattenJylland = Controller.createProdukt("Fregatten Jylland", flaske, tresCl);
-        Produkt imperialStoutFlaske = Controller.createProdukt("Imperial Stout", flaske, tresCl);
-        Produkt tribute = Controller.createProdukt("Tribute", flaske, tresCl);
-        Produkt blackMonster = Controller.createProdukt("Black Monster", flaske, tresCl);
+        Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg",flaske,null);
+        Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown",flaske,null);
+        Produkt extraPilsnerFlaske = Controller.createProdukt("Extra Pilsner",flaske,null);
+        Produkt celebrationFlaske = Controller.createProdukt("Celebration",flaske,null);
+        Produkt blondieFlaske = Controller.createProdukt("Blondie",flaske,null);
+        Produkt foraarsbrygFlaske = Controller.createProdukt("Forårsbryg",flaske,null);
+        Produkt indiaPaleAleFlaske = Controller.createProdukt("India Pale Ale",flaske ,null);
+        Produkt julebrygFlaske = Controller.createProdukt("Julebryg",flaske,null);
+        Produkt juletoenden = Controller.createProdukt("Juletønden", flaske, null);
+        Produkt oldStrongAle = Controller.createProdukt("Old Strong Ale", flaske, null);
+        Produkt fregattenJylland = Controller.createProdukt("Fregatten Jylland", flaske, null);
+        Produkt imperialStoutFlaske = Controller.createProdukt("Imperial Stout", flaske, null);
+        Produkt tribute = Controller.createProdukt("Tribute", flaske, null);
+        Produkt blackMonster = Controller.createProdukt("Black Monster", flaske, null);
 
         // Fadøl, 40 cl produkter
         Produkt klosterbrygFadoel = Controller.createProdukt("Klosterbryg", fadoel,fyrreCl);
@@ -132,8 +132,8 @@ public class Controller {
         Produkt oelpoelser = Controller.createProdukt("Ølpølser", madOgDrikke, null);
 
         // Spiritusprodukter
-        Produkt Whiskey45pct = Controller.createProdukt("Whiskey 45% Rør",spiritus,halvtresCL);
-        Produkt WhiskeyShot = Controller.createProdukt("Whiskey Shot",spiritus,fireCL);
+        Produkt Whiskey45pct = Controller.createProdukt("Whiskey 45% Rør",spiritus,halvtredsCl);
+        Produkt WhiskeyShot = Controller.createProdukt("Whiskey Shot",spiritus,fireCl);
 
         // Fredagsbar prisliste
         // flasker
