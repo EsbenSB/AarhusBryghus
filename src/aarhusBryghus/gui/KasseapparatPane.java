@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
+import java.util.ArrayList;
+
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
     private  ListView<Produkt> lvwProdukter;
@@ -32,18 +34,16 @@ public class KasseapparatPane extends GridPane {
         cbbPrislister = new ComboBox<>();
         this.add(cbbPrislister, 1, 0);
         cbbPrislister.getItems().addAll(Controller.getPrislister());
+        cbbPrislister.setOnAction(event -> this.opdaterSelectedPrisliste());
+        cbbPrislister.setOnAction(event -> this.opdaterProduktGruppeliste());
+
 
         Label lblProduktgruppe = new Label("Produktgrupper:");
         this.add(lblProduktgruppe,0,1);
 
         cbbProduktgrupper = new ComboBox<>();
         this.add(cbbProduktgrupper,1,1);
-        cbbProduktgrupper.getItems().addAll(Controller.getProduktGrupper());
-        cbbProduktgrupper.setOnAction(event -> {
-            if (cbbProduktgrupper.getSelectionModel().getSelectedItem() != null);
-            ProduktGruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
-            lvwProdukter.getItems().addAll(produktGruppe.getProdukter());
-        });
+        cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
 
 
         Label lblProdukter = new Label("Produkter:");
@@ -80,6 +80,28 @@ public class KasseapparatPane extends GridPane {
         this.add(rbKlippekort,10,13);
         rbKlippekort.setToggleGroup(group);
         // -------------------------------------------------------------------------------------------------------------
+    }
+
+    public void opdaterSelectedPrisliste() {
+
+        Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+
+        ProduktGruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
+        if (produktGruppe != null) {
+            lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
+        } else {
+            lvwProdukter.getItems().clear();
+        }
+
+    }
+
+    public void opdaterProduktGruppeliste() {
+        if(cbbPrislister.getSelectionModel().getSelectedItem() != null){
+            Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+            cbbProduktgrupper.getItems().setAll(Controller.listeProduktgrupperTilValgtePrisliste(prisliste));
+            lvwProdukter.getItems().clear();
+        }
+
     }
 
 }
