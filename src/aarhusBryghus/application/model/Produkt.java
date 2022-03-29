@@ -6,15 +6,12 @@ public class Produkt {
 
     private String navn;
 
-    // Associering: -> 0..* (Skal det være hashset? - hvorfor?)
-    private ProduktGruppe produktgruppe; // todo: bør ikke være her pga. enkeltrettet
     private MaaleEnhed maaleEnhed;
     private HashSet<Pris> priser = new HashSet<Pris>();
     private Pant pant;
 
-    public Produkt(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed){
+    public Produkt(String navn, MaaleEnhed maaleEnhed){
         this.navn = navn;
-        this.produktgruppe = produktgruppe;
         this.maaleEnhed = maaleEnhed;
     }
 
@@ -36,14 +33,6 @@ public class Produkt {
 
     public void setNavn(String navn) {
         this.navn = navn;
-    }
-
-    public ProduktGruppe getProduktgruppe() {
-        return produktgruppe;
-    }
-
-    public void setProduktgruppe(ProduktGruppe produktgruppe) {
-        this.produktgruppe = produktgruppe;
     }
 
     public MaaleEnhed getMaaleEnhed() {

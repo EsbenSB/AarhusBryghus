@@ -1,8 +1,12 @@
 package aarhusBryghus.application.model;
 
+import java.time.LocalDateTime;
+
 public class Rundvisning extends Produkt{
-    public Rundvisning(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed) {
-        super(navn, produktgruppe, maaleEnhed);
+    private LocalDateTime tidspunkt;
+    public Rundvisning(String navn, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
+        super(navn, maaleEnhed);
+        this.tidspunkt = tidspunkt;
     }
 
 
