@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 
 public class ProduktPane extends GridPane {
 
+
     private ListView<ProduktGruppe> lvwProduktgruppe = new ListView<>();
     private Button btnOpdaterProduktgruppe;
     private Button btnSletProduktgruppe;
