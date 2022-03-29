@@ -1,5 +1,6 @@
 package aarhusBryghus.gui;
 
+import aarhusBryghus.application.model.Prisliste;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
@@ -20,9 +21,9 @@ import java.awt.*;
 
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
-    Label lblBetalingsmetoder;
-    Button btnBetaling;
-    RadioButton r1, r2, r3, r4;
+//    private final ListView<Prisliste> lvwPrislister;
+    private final Button btnBetaling;
+    private final RadioButton r1, r2, r3, r4;
 
     public KasseapparatPane() {
         this.setPadding(new Insets(20));
@@ -30,18 +31,12 @@ public class KasseapparatPane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
-        //TODO Gør så knap virker og sat det rigtige sted
-        //Knap til opret produkt
-        Button btnOpretProdukt = new Button("Opret Produkt");
-        this.add(btnOpretProdukt,0,0);
-        GridPane.setHalignment(btnOpretProdukt, HPos.RIGHT);
-        btnOpretProdukt.setOnAction(event -> this.opretProduktAction());
         //TODO Lav knap færdig
         btnBetaling = new Button("Betal");
         this.add(btnBetaling,11,12);
         GridPane.setHalignment(btnBetaling, HPos.RIGHT);
 
-        lblBetalingsmetoder = new Label("Betalingsmetoder:");
+        Label lblBetalingsmetoder = new Label("Betalingsmetoder:");
         this.add(lblBetalingsmetoder,10,9);
         //TODO Går så man kun kan vælge en RadioButton af gangen
         r1 = new RadioButton("Kontant");
@@ -57,10 +52,4 @@ public class KasseapparatPane extends GridPane {
         this.add(r4,10,13);
     }
 
-    private void opretProduktAction() {
-        ProduktWindow dia= new ProduktWindow("Opret Produkt");
-        dia.showAndWait();
-
-        //TODO Lav resten af metoden færdig når knappen skal laves færdig
-    }
 }
