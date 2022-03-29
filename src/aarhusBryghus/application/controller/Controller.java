@@ -84,9 +84,14 @@ public class Controller {
         ProduktGruppe flaske = Controller.createProduktGruppe("Flaske");
         ProduktGruppe fadoel = Controller.createProduktGruppe("Fadøl 40 cl");
         ProduktGruppe madOgDrikke = Controller.createProduktGruppe("Mad og drikke");
+        ProduktGruppe spiritus = Controller.createProduktGruppe("Spiritus");
+        ProduktGruppe fustage = Controller.createProduktGruppe("Fustage");
 
         // Måleenheder
-        MaaleEnhed fyrreCl = Controller.createMaaleEnhed("40 cl", 40);
+        MaaleEnhed fireCl = Controller.createMaaleEnhed("cl", 4);
+        MaaleEnhed fyrreCl = Controller.createMaaleEnhed("cl", 40);
+        MaaleEnhed halvtredsCl = Controller.createMaaleEnhed("cl", 50);
+        MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
         // Flaske produkter
         Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg",flaske,null);
@@ -125,6 +130,20 @@ public class Controller {
         Produkt sevenUp = Controller.createProdukt("7-Up", madOgDrikke, null);
         Produkt vand = Controller.createProdukt("Vand", madOgDrikke, null);
         Produkt oelpoelser = Controller.createProdukt("Ølpølser", madOgDrikke, null);
+
+        // Spiritus produkter
+        Produkt whiskyFemogfyrreProcent = Controller.createProdukt("Whisky 45% 50 cl rør", spiritus, halvtredsCl);
+        Produkt whiskyFireClRoer = Controller.createProdukt("Whisky", spiritus,fireCl);
+        Produkt whiskyTreogfyrreProcentClRoer = Controller.createProdukt("Whisky 43% 50 cl rør", spiritus, halvtredsCl);
+        Produkt uEgesplint = Controller.createProdukt("u/ egesplint", spiritus, null);
+        Produkt mEgesplint = Controller.createProdukt("m/ egesplint", spiritus, null);
+        Produkt ToWhiskyglasMedbrikker = Controller.createProdukt("2*whisky glas + brikker", spiritus, null);
+        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus", spiritus, null);
+        Produkt lyngGinHalvtredsCl = Controller.createProdukt("Lyng gin 50 cl", spiritus, halvtredsCl);
+        Produkt lyngGinFireCl = Controller.createProdukt("Lyng gin 4 cl", spiritus, fireCl);
+
+        // Fustage produkter
+        Produkt klosterbrygTyveLiter = Controller.createProdukt("Klosterbryg, 20 liter", fustage,tyveLiter);
 
         // Fredagsbar prisliste
         fredagsbar.createPris(klosterbrygFlaske, 70,2);
