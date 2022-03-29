@@ -1,29 +1,26 @@
 package aarhusBryghus.gui;
 
+import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Prisliste;
+import aarhusBryghus.application.model.Produkt;
+import aarhusBryghus.application.model.ProduktGruppe;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.layout.GridPane;
-
-import javafx.beans.value.ChangeListener;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.VPos;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.layout.GridPane;
 
-import java.awt.*;
+import java.util.ArrayList;
 
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
-//    private final ListView<Prisliste> lvwPrislister;
+    private  ListView<Produkt> lvwProdukter;
+    private final ComboBox<Prisliste> cbbPrislister;
+    private final ComboBox<ProduktGruppe> cbbProduktgrupper;
     private final Button btnBetaling;
-    private final RadioButton r1, r2, r3, r4;
+    private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
+    private final ToggleGroup group = new ToggleGroup();
 
     public KasseapparatPane() {
         this.setPadding(new Insets(20));
@@ -31,25 +28,80 @@ public class KasseapparatPane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
-        //TODO Lav knap færdig
+        Label lblPrislister= new Label("Prislister:");
+        this.add(lblPrislister,0,0);
+
+        cbbPrislister = new ComboBox<>();
+        this.add(cbbPrislister, 1, 0);
+        cbbPrislister.getItems().addAll(Controller.getPrislister());
+        cbbPrislister.setOnAction(event -> this.opdaterSelectedPrisliste());
+        cbbPrislister.setOnAction(event -> this.opdaterProduktGruppeliste());
+
+
+        Label lblProduktgruppe = new Label("Produktgrupper:");
+        this.add(lblProduktgruppe,0,1);
+
+        cbbProduktgrupper = new ComboBox<>();
+        this.add(cbbProduktgrupper,1,1);
+        cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
+
+
+        Label lblProdukter = new Label("Produkter:");
+        this.add(lblProdukter, 0, 2);
+
+        lvwProdukter = new ListView<>();
+        this.add(lvwProdukter,1,2);
+        lvwProdukter.setPrefHeight(200);
+        lvwProdukter.setPrefWidth(200);
+
+
+        //TODO Lav knap færdig (Hvis det er nødvendigt?)
         btnBetaling = new Button("Betal");
         this.add(btnBetaling,11,12);
         GridPane.setHalignment(btnBetaling, HPos.RIGHT);
-
+        // -------------------------------------------------------------------------------------------------------------
+        // RadioButton laves her:
         Label lblBetalingsmetoder = new Label("Betalingsmetoder:");
         this.add(lblBetalingsmetoder,10,9);
-        //TODO Går så man kun kan vælge en RadioButton af gangen
-        r1 = new RadioButton("Kontant");
-        this.add(r1,10,10);
 
-        r2 = new RadioButton("Mobilepay");
-        this.add(r2,10,11);
+        rbKontant = new RadioButton("Kontant");
+        this.add(rbKontant,10,10);
+        rbKontant.setToggleGroup(group);
 
-        r3 = new RadioButton("Dankort");
-        this.add(r3,10,12);
+        rbMobilepay = new RadioButton("Mobilepay");
+        this.add(rbMobilepay,10,11);
+        rbMobilepay.setToggleGroup(group);
 
-        r4 = new RadioButton("Klippekort");
-        this.add(r4,10,13);
+        rbDankort = new RadioButton("Dankort");
+        this.add(rbDankort,10,12);
+        rbDankort.setToggleGroup(group);
+
+        rbKlippekort = new RadioButton("Klippekort");
+        this.add(rbKlippekort,10,13);
+        rbKlippekort.setToggleGroup(group);
+        // -------------------------------------------------------------------------------------------------------------
+    }
+
+    public void opdaterSelectedPrisliste() {
+
+        Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+
+        ProduktGruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
+        if (produktGruppe != null) {
+            lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
+        } else {
+            lvwProdukter.getItems().clear();
+        }
+
+    }
+
+    public void opdaterProduktGruppeliste() {
+        if(cbbPrislister.getSelectionModel().getSelectedItem() != null){
+            Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+            cbbProduktgrupper.getItems().setAll(Controller.listeProduktgrupperTilValgtePrisliste(prisliste));
+            lvwProdukter.getItems().clear();
+        }
+
     }
 
 }
