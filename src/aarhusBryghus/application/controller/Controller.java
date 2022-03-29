@@ -29,18 +29,22 @@ public class Controller {
         return produkt;
     }
 
+    public static ArrayList<Produkt> getProdukt() {
+        return Storage.getProdukter();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     public static Klippekort createKlippekort(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
         Klippekort klippekort = produktgruppe.createKlippekort(navn, maaleEnhed, antalKlip);
         return klippekort;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     public static Rundvisning createRundvisning(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
         Rundvisning rundvisning = produktgruppe.createRundvisning(navn, maaleEnhed, tidspunkt);
         return rundvisning;
-    }
-
-    public static ArrayList<Produkt> getProdukt() {
-        return Storage.getProdukter();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -76,7 +80,7 @@ public class Controller {
         return prisliste;
     }
 
-    public static ArrayList<Prisliste> getPrisliste() {
+    public static ArrayList<Prisliste> getPrislister() {
         return Storage.getPrislister();
     }
 
