@@ -29,23 +29,22 @@ public class Controller {
         return produkt;
     }
 
+    public static ArrayList<Produkt> getProdukt() {
+        return Storage.getProdukter();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     public static Klippekort createKlippekort(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
         Klippekort klippekort = produktgruppe.createKlippekort(navn, maaleEnhed, antalKlip);
         return klippekort;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     public static Rundvisning createRundvisning(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
         Rundvisning rundvisning = produktgruppe.createRundvisning(navn, maaleEnhed, tidspunkt);
         return rundvisning;
-    }
-
-    public static Pris createPris(Produkt produkt, double varePris, int antalKlip, Prisliste prisliste) {
-        Pris pris = prisliste.createPris(produkt, varePris, antalKlip);
-        return pris;
-    }
-
-    public static ArrayList<Produkt> getProdukt() {
-        return Storage.getProdukter();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -63,8 +62,8 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
     //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
 
-    public static MaaleEnhed createMaaleEnhed(String enhed, int tal) {
-        MaaleEnhed maaleEnhed = new MaaleEnhed(enhed,tal);
+    public static MaaleEnhed createMaaleEnhed(String navn, int tal) {
+        MaaleEnhed maaleEnhed = new MaaleEnhed(navn,tal);
         Storage.addMaaleEnhed(maaleEnhed);
         return maaleEnhed;
     }
@@ -81,7 +80,7 @@ public class Controller {
         return prisliste;
     }
 
-    public static ArrayList<Prisliste> getPrisliste() {
+    public static ArrayList<Prisliste> getPrislister() {
         return Storage.getPrislister();
     }
 
