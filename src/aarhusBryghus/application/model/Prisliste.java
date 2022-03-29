@@ -29,12 +29,13 @@ public class Prisliste {
     Laver en pris på et produkt.
     Parameter varePris er prisen i kroner. antalKlip er antallet af klip, som varen koster.
      */
-    public void createPris(Produkt produkt, double varePris, int antalKlip){
+    public Pris createPris(Produkt produkt, double varePris, int antalKlip){
         Pris pris = new Pris(varePris,produkt, this);
         if(antalKlip > 0){
             pris.setKlippekortPris(antalKlip);
         }
         priser.add(pris);
+        return pris;
     }
 
     @Override

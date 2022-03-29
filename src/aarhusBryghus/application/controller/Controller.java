@@ -39,6 +39,11 @@ public class Controller {
         return rundvisning;
     }
 
+    public static Pris createPris(Produkt produkt, double varePris, int antalKlip, Prisliste prisliste) {
+        Pris pris = prisliste.createPris(produkt, varePris, antalKlip);
+        return pris;
+    }
+
     public static ArrayList<Produkt> getProdukt() {
         return Storage.getProdukter();
     }
@@ -58,8 +63,8 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
     //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
 
-    public static MaaleEnhed createMaaleEnhed(String navn, int tal) {
-        MaaleEnhed maaleEnhed = new MaaleEnhed(navn,tal);
+    public static MaaleEnhed createMaaleEnhed(String enhed, int tal) {
+        MaaleEnhed maaleEnhed = new MaaleEnhed(enhed,tal);
         Storage.addMaaleEnhed(maaleEnhed);
         return maaleEnhed;
     }
