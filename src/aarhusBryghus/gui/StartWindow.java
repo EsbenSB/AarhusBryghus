@@ -52,10 +52,24 @@ public class StartWindow extends Application {
         tabProdukt.setContent(produktPane);
 
         // Laver tab til salgsstatistik
-        Tab tabSalgsstatistik = new Tab("Salgsstatistik");
+        Tab tabSalgsstatistik = new Tab("Statistik");
         tabPane.getTabs().add(tabSalgsstatistik);
 
         SalgsstatistikPane salgsstatestikPane = new SalgsstatistikPane();
         tabSalgsstatistik.setContent(salgsstatestikPane);
+
+        // Laver tab til Rundvisning
+        Tab tabRundvisning = new Tab("Rundvisning");
+        tabPane.getTabs().add(tabRundvisning);
+
+        RundvisningPane rundvisningPane= new RundvisningPane();
+        tabRundvisning.setContent(rundvisningPane);
+
+        // Laver tab til Udlejning
+        Tab tabUdlejning = new Tab("Udlejning");
+        tabPane.getTabs().add(tabUdlejning);
+
+        UdlejningPane udlejningPane = new UdlejningPane();
+        tabUdlejning.setContent(udlejningPane);
     }
 }
