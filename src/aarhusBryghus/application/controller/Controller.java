@@ -25,13 +25,13 @@ public class Controller {
 
     //------------------------------------------------------------------------------------------------------------------
     // Produkt. Create, get, delete, update.
-    public static Produkt createProdukt(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed) {
+    public static Produkt createProdukt(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed) {
         Produkt produkt = produktgruppe.createProdukt(navn, maaleEnhed);
         return produkt;
     }
 
-    public static ArrayList<Produkt> getAlleProdukter(ProduktGruppe produktgruppe) {
-        for (ProduktGruppe pg: Storage.getProduktGrupper()){
+    public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
+        for (Produktgruppe pg: Storage.getProduktGrupper()){
             if(pg == produktgruppe){
                 System.out.println("Produktgruppe: " + produktgruppe);
                 return pg.getProdukter();
@@ -41,7 +41,7 @@ public class Controller {
     }
 
     public static void deleteProdukt(Produkt produkt){
-        for(ProduktGruppe p: Storage.getProduktGrupper()){
+        for(Produktgruppe p: Storage.getProduktGrupper()){
             for(Produkt prod: p.getProdukter()){
                 if(prod == produkt){
                     p.removeProdukt(produkt);
@@ -51,8 +51,8 @@ public class Controller {
     }
 
     // henter produktets produktgruppe
-    public static ProduktGruppe getProduktGruppe(Produkt produkt){
-        for(ProduktGruppe pg: Storage.getProduktGrupper()){
+    public static Produktgruppe getProduktGruppe(Produkt produkt){
+        for(Produktgruppe pg: Storage.getProduktGrupper()){
             for(Produkt prod: pg.getProdukter()){
                 if(prod.equals(produkt)){
                     return pg;
@@ -77,7 +77,7 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
 
     // Klippekort. Create, get, delete, update.
-    public static Klippekort createKlippekort(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
+    public static Klippekort createKlippekort(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
         Klippekort klippekort = produktgruppe.createKlippekort(navn, maaleEnhed, antalKlip);
         return klippekort;
     }
@@ -85,7 +85,7 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
 
     // Rundvisning. Create, get, delete, update.
-    public static Rundvisning createRundvisning(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
+    public static Rundvisning createRundvisning(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
         Rundvisning rundvisning = produktgruppe.createRundvisning(navn, maaleEnhed, tidspunkt);
         return rundvisning;
     }
@@ -93,21 +93,21 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
 
     // Produktgruppe. create, get, delete, update
-    public static ProduktGruppe createProduktGruppe(String navn) {
-        ProduktGruppe produktGruppe = new ProduktGruppe(navn);
+    public static Produktgruppe createProduktGruppe(String navn) {
+        Produktgruppe produktGruppe = new Produktgruppe(navn);
         Storage.addProduktGruppe(produktGruppe);
         return produktGruppe;
     }
 
-    public static ArrayList<ProduktGruppe> getProduktGrupper() {
+    public static ArrayList<Produktgruppe> getProduktGrupper() {
         return Storage.getProduktGrupper();
     }
 
-    public static void deleteProduktgruppe(ProduktGruppe produktGruppe){
+    public static void deleteProduktgruppe(Produktgruppe produktGruppe){
         Storage.removeProduktGruppe(produktGruppe);
     }
 
-    public static void updateProduktgruppe(ProduktGruppe produktGruppe, String navn){
+    public static void updateProduktgruppe(Produktgruppe produktGruppe, String navn){
         produktGruppe.setNavn(navn);
     }
 
@@ -155,7 +155,7 @@ public class Controller {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public static HashSet<Produkt> listeOverProdukterProduktgruppePaaPrisliste(ProduktGruppe produktgruppe, Prisliste prisliste) {
+    public static HashSet<Produkt> listeOverProdukterProduktgruppePaaPrisliste(Produktgruppe produktgruppe, Prisliste prisliste) {
         HashSet<Produkt> produkter = new HashSet<>();
         for (Produkt p : produktgruppe.getProdukter()) {
             for (Pris pris : p.getPriser()) {
@@ -167,9 +167,9 @@ public class Controller {
         return produkter;
     }
 
-    public static HashSet<ProduktGruppe> listeProduktgrupperTilValgtePrisliste(Prisliste prisliste) {
-        HashSet<ProduktGruppe> produktGrupper = new HashSet<>();
-        for (ProduktGruppe g : Storage.getProduktGrupper()) {
+    public static HashSet<Produktgruppe> listeProduktgrupperTilValgtePrisliste(Prisliste prisliste) {
+        HashSet<Produktgruppe> produktGrupper = new HashSet<>();
+        for (Produktgruppe g : Storage.getProduktGrupper()) {
             for (Produkt p : g.getProdukter()) {
                 for (Pris pris : p.getPriser()) {
                     if (pris.getPrisliste() == prisliste) {
@@ -190,11 +190,13 @@ public class Controller {
         Prisliste butik = Controller.createPrisliste("Butik");
 
         // Produktgrupper
-        ProduktGruppe flaske = Controller.createProduktGruppe("Flaske");
-        ProduktGruppe fadoel = Controller.createProduktGruppe("Fadøl 40 cl");
-        ProduktGruppe madOgDrikke = Controller.createProduktGruppe("Mad og drikke");
-        ProduktGruppe spiritus = Controller.createProduktGruppe("Spiritus");
-        ProduktGruppe fustage = Controller.createProduktGruppe("Fustage");
+        Produktgruppe klippekort = Controller.createProduktGruppe("Klippekort");
+        Produktgruppe flaske = Controller.createProduktGruppe("Flaske");
+        Produktgruppe fadoel = Controller.createProduktGruppe("Fadøl 40 cl");
+        Produktgruppe madOgDrikke = Controller.createProduktGruppe("Mad og drikke");
+        Produktgruppe spiritus = Controller.createProduktGruppe("Spiritus");
+        Produktgruppe fustage = Controller.createProduktGruppe("Fustage");
+        Produktgruppe beklaedning = Controller.createProduktGruppe("Beklædning");
 
         // Måleenheder
         MaaleEnhed fireCl = Controller.createMaaleEnhed("cl", 4);
@@ -203,6 +205,8 @@ public class Controller {
         MaaleEnhed tresCl = Controller.createMaaleEnhed("cl", 60);
         MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
+        // Klippekort produkt
+        Produkt klippekortProdukt = Controller.createProdukt("Klippekort, 4 klip", klippekort, null);
         // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
         Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg", flaske, tresCl);
         Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown", flaske, tresCl);
@@ -242,10 +246,24 @@ public class Controller {
         Produkt oelpoelser = Controller.createProdukt("Ølpølser", madOgDrikke, null);
 
         // Spiritusprodukter
-        Produkt Whiskey45pct = Controller.createProdukt("Whiskey 45% Rør", spiritus, halvtredsCl);
-        Produkt WhiskeyShot = Controller.createProdukt("Whiskey Shot", spiritus, fireCl);
+        Produkt whiskey45pct = Controller.createProdukt("Whiskey 45% 50 cl rør", spiritus, halvtredsCl);
+        Produkt whiskey4Cl = Controller.createProdukt("Whiskey 4 cl", spiritus, fireCl);
+        Produkt whiskey43Pct = Controller.createProdukt("Whisky 43% 50 cl rør", spiritus, halvtredsCl);
+        Produkt uEgesplint = Controller.createProdukt("u/ egesplint", spiritus, null);
+        Produkt mEgesplint = Controller.createProdukt("m/ egesplint", spiritus, null);
+        Produkt toWhiskyGlasMedBrikker = Controller.createProdukt("2*whisky glas + brikker", spiritus, null);
+        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus",spiritus,null);
+        Produkt lyngGin50Cl = Controller.createProdukt("Lyng gin 50 cl", spiritus, null);
+        Produkt lyngGin4Cl = Controller.createProdukt("Lyng gin 4 cl", spiritus, fireCl);
+
+        // beklædning
+        Produkt tShirt = Controller.createProdukt("t-shirt", beklaedning, null);
+        Produkt polo = Controller.createProdukt("polo", beklaedning, null);
+        Produkt cap = Controller.createProdukt("cap", beklaedning, null);
 
         // Fredagsbar prisliste
+        // klippekort
+        fredagsbar.createPris(klippekortProdukt, 130, 0);
         // flasker
         fredagsbar.createPris(klosterbrygFlaske, 70, 2);
         fredagsbar.createPris(sweetGeorgiaBrown, 70, 2);
@@ -281,9 +299,23 @@ public class Controller {
         fredagsbar.createPris(sevenUp, 15, 0);
         fredagsbar.createPris(vand, 10, 0);
         fredagsbar.createPris(oelpoelser, 30, 1);
-        fredagsbar.createPris(Whiskey45pct, 599, 0);
-        fredagsbar.createPris(WhiskeyShot, 50, 0);
+        // spiritus
+        fredagsbar.createPris(whiskey45pct, 599, 0);
+        fredagsbar.createPris(whiskey4Cl, 50, 0);
+        fredagsbar.createPris(whiskey43Pct, 599, 0);
+        fredagsbar.createPris(uEgesplint, 300, 0);
+        fredagsbar.createPris(mEgesplint, 350, 0);
+        fredagsbar.createPris(toWhiskyGlasMedBrikker, 80, 0);
+        fredagsbar.createPris(liquorOfAarhus, 175, 0);
+        fredagsbar.createPris(lyngGin50Cl, 350, 0);
+        fredagsbar.createPris(lyngGin4Cl, 40, 0);
+        // beklædning
+        fredagsbar.createPris(tShirt, 70, 0);
+        fredagsbar.createPris(polo, 100, 0);
+        fredagsbar.createPris(cap, 30, 0);
         // Butiksprisliste:
+        // klippekort
+        butik.createPris(klippekortProdukt, 130, 0);
         // flasker
         butik.createPris(klosterbrygFlaske, 36, 0);
         butik.createPris(sweetGeorgiaBrown, 36, 0);
@@ -300,8 +332,17 @@ public class Controller {
         butik.createPris(tribute, 36, 0);
         butik.createPris(blackMonster, 60, 0);
         // spiritus
-        butik.createPris(Whiskey45pct, 599, 0);
-
+        butik.createPris(whiskey45pct, 599, 0);
+        butik.createPris(whiskey43Pct, 499, 0);
+        butik.createPris(uEgesplint, 300, 0);
+        butik.createPris(mEgesplint, 350, 0);
+        butik.createPris(toWhiskyGlasMedBrikker, 80, 0);
+        butik.createPris(liquorOfAarhus, 175, 0);
+        butik.createPris(lyngGin50Cl, 350, 0);
+        // beklædning
+        butik.createPris(tShirt, 70, 0);
+        butik.createPris(polo, 100, 0);
+        butik.createPris(cap, 30, 0);
     }
 
     public static void init() {

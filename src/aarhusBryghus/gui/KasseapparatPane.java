@@ -3,16 +3,13 @@ package aarhusBryghus.gui;
 import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Prisliste;
 import aarhusBryghus.application.model.Produkt;
-import aarhusBryghus.application.model.ProduktGruppe;
-import javafx.geometry.HPos;
+import aarhusBryghus.application.model.Produktgruppe;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-
-import java.util.ArrayList;
 
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
@@ -21,7 +18,7 @@ public class KasseapparatPane extends GridPane {
     private final TextArea txaKurv;
     private  ListView<Produkt> lvwProdukter;
     private final ComboBox<Prisliste> cbbPrislister;
-    private final ComboBox<ProduktGruppe> cbbProduktgrupper;
+    private final ComboBox<Produktgruppe> cbbProduktgrupper;
     private final Button btnBetaling, btnTilKurv;
     private final RadioButton rbStandardPris, rbCustomPris, rbRabat, rbKlippeKortPris;
     private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
@@ -173,7 +170,7 @@ public class KasseapparatPane extends GridPane {
 
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
 
-        ProduktGruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
+        Produktgruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
         if (produktGruppe != null) {
             lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
         } else {
