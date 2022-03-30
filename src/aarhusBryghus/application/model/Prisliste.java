@@ -18,6 +18,18 @@ public class Prisliste {
         this.navn = navn;
     }
 
+    public int getAntalKlip(Produkt produkt){
+        int antalKlip = 0;
+        for(Pris pris: priser){
+            for(Pris p: produkt.getPriser()){
+                if(p == pris){
+                    antalKlip = pris.getKlippekort();
+                }
+            }
+        }
+        return antalKlip;
+    }
+
     /*
     returnerer alle priser, som er forbundet med denne prisliste
      */

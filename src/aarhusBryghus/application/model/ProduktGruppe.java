@@ -2,13 +2,18 @@ package aarhusBryghus.application.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ProduktGruppe {
-    private final HashSet<Produkt> produkter = new HashSet<>();
+    private final ArrayList<Produkt> produkter = new ArrayList<>();
     private String navn;
 
     public ProduktGruppe(String navn) {
+        this.navn = navn;
+    }
+
+    public void setNavn(String navn) {
         this.navn = navn;
     }
 
@@ -30,8 +35,15 @@ public class ProduktGruppe {
         return rundvisning;
     }
 
-    public HashSet<Produkt> getProdukter() {
-        return new HashSet<>(produkter);
+    public ArrayList<Produkt> getProdukter() {
+        return new ArrayList<>(produkter);
+    }
+
+    // fjerner et enkelt produkt fra dets produktgruppe.
+    public void removeProdukt(Produkt produkt){
+        if(produkter.contains(produkt)){
+            produkter.remove(produkt);
+        }
     }
 
     @Override

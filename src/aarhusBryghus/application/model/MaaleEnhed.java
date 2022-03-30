@@ -12,6 +12,14 @@ public class MaaleEnhed {
         this.tal = tal;
     }
 
+    public void setEnhed(String enhed) {
+        this.enhed = enhed;
+    }
+
+    public void setTal(int tal) {
+        this.tal = tal;
+    }
+
     @Override
     public String toString() {
         return tal + " " + enhed;
