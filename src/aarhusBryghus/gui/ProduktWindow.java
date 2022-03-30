@@ -108,6 +108,7 @@ public class ProduktWindow extends Stage {
         pane.add(lvwAndrePrislister,1,5,1,2);
         lvwAndrePrislister.setPrefWidth(200);
         lvwAndrePrislister.setPrefHeight(150);
+        lvwAndrePrislister.getItems().setAll(Controller.getAndrePrislister(produkt)); // :)
 
         nyPris = new TextField();
         pane.add(nyPris,2,5);
