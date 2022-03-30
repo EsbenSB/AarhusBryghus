@@ -4,6 +4,7 @@ import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Prisliste;
 import aarhusBryghus.application.model.Produkt;
 import aarhusBryghus.application.model.Produktgruppe;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
@@ -58,6 +59,9 @@ public class KasseapparatPane extends GridPane {
         lvwProdukter.setPrefHeight(200);
         lvwProdukter.setPrefWidth(200);
 
+        ChangeListener<Produkt> produktChangeListener = (ov, gammelProdukt, nyProdukt) -> this.selectedProduktChanged();
+        lvwProdukter.getSelectionModel().selectedItemProperty().addListener(produktChangeListener);
+
         Label lblValgteProdukt = new Label("Valgte produkt:");
         this.add(lblValgteProdukt,0,3);
 
@@ -76,11 +80,12 @@ public class KasseapparatPane extends GridPane {
         this.add(rbStandardPris, 0,5);
         rbStandardPris.setToggleGroup(groupAnvendtPris);
         rbStandardPris.setOnAction(event -> setStandardPris());
+        rbStandardPris.fire();
 
         txfStandardPris = new TextField();
         this.add(txfStandardPris, 1, 5);
         txfStandardPris.setEditable(false);
-        txfStandardPris.setDisable(true);
+        txfStandardPris.setDisable(false);
 
         rbKlippeKortPris = new RadioButton("Anvend klippekort pris");
         this.add(rbKlippeKortPris, 0, 6);
@@ -188,9 +193,29 @@ public class KasseapparatPane extends GridPane {
 
     }
 
+    public void selectedProduktChanged() {
+        this.updateControls();
+    }
+
+    //TODO Der skal laves en getKlippekortPris for at lave denne metode færdig
+    public void updateControls() {
+        Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
+        Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+        if (produkt != null) {
+            txfValgteProdukt.setText(produkt.getNavn());
+            txfValgteProdukt.setDisable(false);
+            txfStandardPris.setText(produkt.enkeltPris(prisliste) + " Kr.");
+        } else {
+            txfValgteProdukt.clear();
+            txfValgteProdukt.setDisable(true);
+            txfStandardPris.clear();
+        }
+    }
+
     public void setStandardPris() {
         if (rbStandardPris.isArmed()) {
             txfStandardPris.setDisable(false);
+            txfKlippekortPris.setDisable(true);
             txfCustomPris.clear();
             txfCustomPris.setEditable(false);
             txfCustomPris.setDisable(true);
