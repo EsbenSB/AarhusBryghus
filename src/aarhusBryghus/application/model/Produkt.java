@@ -65,6 +65,23 @@ public class Produkt {
         return pris;
     }
 
+    /*
+    Returnerer den pris på produktet, som den har på prislisten, i parameteret
+    Returnerer -1 hvis prislisten er tom.
+    */
+    public int getklippekortPris(Prisliste prisliste){
+        int klip = -1;
+        if(prisliste.getPriser() != null){
+            for(Pris p: this.getPriser()){
+                if(p.getPrisliste() == prisliste){
+                    klip = p.getKlippekort();
+                    return klip;
+                }
+            }
+        }
+        return klip;
+    }
+
     @Override
     public String toString() {
         return navn + "";

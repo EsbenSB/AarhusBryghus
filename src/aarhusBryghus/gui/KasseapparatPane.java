@@ -4,6 +4,8 @@ import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Prisliste;
 import aarhusBryghus.application.model.Produkt;
 import aarhusBryghus.application.model.Produktgruppe;
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
@@ -19,7 +21,7 @@ public class KasseapparatPane extends GridPane {
     private  ListView<Produkt> lvwProdukter;
     private final ComboBox<Prisliste> cbbPrislister;
     private final ComboBox<Produktgruppe> cbbProduktgrupper;
-    private final Button btnBetaling, btnTilKurv;
+    private final Button btnBetaling, btnTilKurv, btnBeregnPris;
     private final RadioButton rbStandardPris, rbCustomPris, rbRabat, rbKlippeKortPris;
     private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
@@ -48,6 +50,7 @@ public class KasseapparatPane extends GridPane {
         this.add(cbbProduktgrupper,1,1);
         cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbProduktgrupper.setPrefWidth(200);
+        cbbProduktgrupper.setDisable(true);
 
         Label lblProdukter = new Label("Produkter:");
         this.add(lblProdukter, 0, 2);
@@ -57,6 +60,9 @@ public class KasseapparatPane extends GridPane {
         this.add(lvwProdukter,1,2);
         lvwProdukter.setPrefHeight(200);
         lvwProdukter.setPrefWidth(200);
+
+        ChangeListener<Produkt> produktChangeListener = (ov, gammelProdukt, nyProdukt) -> this.selectedProduktChanged();
+        lvwProdukter.getSelectionModel().selectedItemProperty().addListener(produktChangeListener);
 
         Label lblValgteProdukt = new Label("Valgte produkt:");
         this.add(lblValgteProdukt,0,3);
@@ -76,11 +82,12 @@ public class KasseapparatPane extends GridPane {
         this.add(rbStandardPris, 0,5);
         rbStandardPris.setToggleGroup(groupAnvendtPris);
         rbStandardPris.setOnAction(event -> setStandardPris());
+        rbStandardPris.fire();
 
         txfStandardPris = new TextField();
         this.add(txfStandardPris, 1, 5);
         txfStandardPris.setEditable(false);
-        txfStandardPris.setDisable(true);
+        txfStandardPris.setDisable(false);
 
         rbKlippeKortPris = new RadioButton("Anvend klippekort pris");
         this.add(rbKlippeKortPris, 0, 6);
@@ -121,8 +128,14 @@ public class KasseapparatPane extends GridPane {
         txfSamletPrisProdukt.setDisable(true);
 
         //TODO Lav knap færdig
+        btnBeregnPris = new Button("Beregn pris");
+        this.add(btnBeregnPris, 1, 10);
+        GridPane.setHalignment(btnBeregnPris, HPos.LEFT);
+
+        //TODO Lav knap færdig
         btnTilKurv = new Button("Tilføj til kurv");
         this.add(btnTilKurv,1,10);
+        GridPane.setHalignment(btnTilKurv, HPos.RIGHT);
 
         Label lblKurv = new Label("Kurv:");
         this.add(lblKurv, 3, 2);
@@ -184,13 +197,45 @@ public class KasseapparatPane extends GridPane {
             Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
             cbbProduktgrupper.getItems().setAll(Controller.listeProduktgrupperTilValgtePrisliste(prisliste));
             lvwProdukter.getItems().clear();
+            cbbProduktgrupper.setDisable(false);
         }
 
+    }
+
+    public void selectedProduktChanged() {
+        this.updateControls();
+    }
+
+    //TODO Der skal måske tilføjes mere
+    public void updateControls() {
+        Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
+        Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+        if (produkt != null) {
+            txfValgteProdukt.setText(produkt.getNavn());
+            txfValgteProdukt.setDisable(false);
+            txfStandardPris.setText(produkt.enkeltPris(prisliste) + " Kr.");
+            if (produkt.getklippekortPris(prisliste) == 0) {
+                txfKlippekortPris.setText("Klippekort kan ikke anvendes");
+                txfKlippekortPris.setDisable(true);
+                rbKlippeKortPris.setDisable(true);
+                rbStandardPris.fire();
+                txfStandardPris.setDisable(false);
+            } else {
+                txfKlippekortPris.setText(produkt.getklippekortPris(prisliste) + " Klip");
+            }
+        } else {
+            txfValgteProdukt.clear();
+            txfValgteProdukt.setDisable(true);
+            txfStandardPris.clear();
+            txfKlippekortPris.clear();
+            rbKlippeKortPris.setDisable(false);
+        }
     }
 
     public void setStandardPris() {
         if (rbStandardPris.isArmed()) {
             txfStandardPris.setDisable(false);
+            txfKlippekortPris.setDisable(true);
             txfCustomPris.clear();
             txfCustomPris.setEditable(false);
             txfCustomPris.setDisable(true);
@@ -217,7 +262,6 @@ public class KasseapparatPane extends GridPane {
         if (rbCustomPris.isArmed()) {
             txfCustomPris.setEditable(true);
             txfCustomPris.setDisable(false);
-//            txfStandardPris.setEditable(false);
             txfStandardPris.setDisable(true);
             txfKlippekortPris.setDisable(true);
             txfRabatPris.clear();
@@ -230,7 +274,6 @@ public class KasseapparatPane extends GridPane {
         if (rbRabat.isArmed()) {
             txfRabatPris.setEditable(true);
             txfRabatPris.setDisable(false);
-//            txfStandardPris.setEditable(false);
             txfStandardPris.setDisable(true);
             txfKlippekortPris.setDisable(true);
             txfCustomPris.clear();
