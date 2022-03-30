@@ -79,20 +79,18 @@ public class KasseapparatPane extends GridPane {
         rbKlippekort = new RadioButton("Klippekort");
         this.add(rbKlippekort,10,13);
         rbKlippekort.setToggleGroup(group);
+
         // -------------------------------------------------------------------------------------------------------------
     }
 
     public void opdaterSelectedPrisliste() {
-
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
-
         ProduktGruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
         if (produktGruppe != null) {
             lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
         } else {
             lvwProdukter.getItems().clear();
         }
-
     }
 
     public void opdaterProduktGruppeliste() {

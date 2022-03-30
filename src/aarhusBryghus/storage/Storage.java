@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public class Storage {
 
     private static Storage uniqueInstance;
-    public static ArrayList<Produkt> produkter = new ArrayList<>();
     public static ArrayList<ProduktGruppe> produktGrupper = new ArrayList<>();
     public static ArrayList<MaaleEnhed> maaleEnheder = new ArrayList<>();
     public static ArrayList<Prisliste> prislister = new ArrayList<>();
@@ -18,22 +17,6 @@ public class Storage {
             uniqueInstance = new Storage();
         }
         return uniqueInstance;
-    }
-
-
-
-    // -------------------------------------------------------------------------
-
-    public static ArrayList<Produkt> getProdukter() {
-        return new ArrayList<>(produkter);
-    }
-
-    public static void addProdukt(Produkt produkt) {
-        produkter.add(produkt);
-    }
-
-    public static void removeProdukt(Produkt produkt) {
-        produkter.remove(produkt);
     }
 
     // -------------------------------------------------------------------------

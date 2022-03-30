@@ -24,18 +24,59 @@ public class Controller {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
+    // Produkt. Create, get, delete, update.
     public static Produkt createProdukt(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed) {
         Produkt produkt = produktgruppe.createProdukt(navn, maaleEnhed);
         return produkt;
     }
 
-    public static ArrayList<Produkt> getProdukt() {
-        return Storage.getProdukter();
+    public static ArrayList<Produkt> getAlleProdukter(ProduktGruppe produktgruppe) {
+        for (ProduktGruppe pg: Storage.getProduktGrupper()){
+            if(pg == produktgruppe){
+                System.out.println("Produktgruppe: " + produktgruppe);
+                return pg.getProdukter();
+            }
+        }
+        return null;
     }
+
+    public static void deleteProdukt(Produkt produkt){
+        for(ProduktGruppe p: Storage.getProduktGrupper()){
+            for(Produkt prod: p.getProdukter()){
+                if(prod == produkt){
+                    p.removeProdukt(produkt);
+                }
+            }
+        }
+    }
+
+    // henter produktets produktgruppe
+    public static ProduktGruppe getProduktGruppe(Produkt produkt){
+        for(ProduktGruppe pg: Storage.getProduktGrupper()){
+            for(Produkt prod: pg.getProdukter()){
+                if(prod.equals(produkt)){
+                    return pg;
+                }
+            }
+        }
+        return null;
+    }
+    // returnerer den første prisliste, som findes på et produkt
+    public static Prisliste getProduktPrisliste(Produkt produkt){
+        for(Prisliste pl: Storage.getPrislister()){
+            for(Pris pris: produkt.getPriser()){
+                if(pris.getPrisliste() == pl){
+                    return pl;
+                }
+            }
+        }
+        return null;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
 
+    // Klippekort. Create, get, delete, update.
     public static Klippekort createKlippekort(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
         Klippekort klippekort = produktgruppe.createKlippekort(navn, maaleEnhed, antalKlip);
         return klippekort;
@@ -43,13 +84,15 @@ public class Controller {
 
     //------------------------------------------------------------------------------------------------------------------
 
+    // Rundvisning. Create, get, delete, update.
     public static Rundvisning createRundvisning(String navn, ProduktGruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
         Rundvisning rundvisning = produktgruppe.createRundvisning(navn, maaleEnhed, tidspunkt);
         return rundvisning;
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
+
+    // Produktgruppe. create, get, delete, update
     public static ProduktGruppe createProduktGruppe(String navn) {
         ProduktGruppe produktGruppe = new ProduktGruppe(navn);
         Storage.addProduktGruppe(produktGruppe);
@@ -60,9 +103,17 @@ public class Controller {
         return Storage.getProduktGrupper();
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
+    public static void deleteProduktgruppe(ProduktGruppe produktGruppe){
+        Storage.removeProduktGruppe(produktGruppe);
+    }
 
+    public static void updateProduktgruppe(ProduktGruppe produktGruppe, String navn){
+        produktGruppe.setNavn(navn);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    // Måleenhed. Create, get, delete, update.
     public static MaaleEnhed createMaaleEnhed(String navn, int tal) {
         MaaleEnhed maaleEnhed = new MaaleEnhed(navn, tal);
         Storage.addMaaleEnhed(maaleEnhed);
@@ -73,8 +124,17 @@ public class Controller {
         return Storage.getMaaleEnheder();
     }
 
+    public static void deleteMaaleenhed(MaaleEnhed maaleEnhed){
+        Storage.removeMaaleEnhed(maaleEnhed);
+    }
+
+    public static void updateMaaleenhed(MaaleEnhed maaleEnhed, String enhed, int tal){
+        maaleEnhed.setEnhed(enhed);
+        maaleEnhed.setTal(tal);
+    }
+
     //------------------------------------------------------------------------------------------------------------------
-    //TODO Eventuelt tilføje så man kan updateProdukt og deleteProdukt
+    // Prisliste. Create, get, delete, update.
     public static Prisliste createPrisliste(String navn) {
         Prisliste prisliste = new Prisliste(navn);
         Storage.addPrisliste(prisliste);
@@ -83,6 +143,14 @@ public class Controller {
 
     public static ArrayList<Prisliste> getPrislister() {
         return Storage.getPrislister();
+    }
+
+    public static void deletePrisliste(Prisliste prisliste){
+        Storage.removePrisliste(prisliste);
+    }
+
+    public static void updatePrisliste(Prisliste prisliste, String navn){
+        prisliste.setNavn(navn);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -132,23 +200,24 @@ public class Controller {
         MaaleEnhed fireCl = Controller.createMaaleEnhed("cl", 4);
         MaaleEnhed fyrreCl = Controller.createMaaleEnhed("cl", 40);
         MaaleEnhed halvtredsCl = Controller.createMaaleEnhed("cl", 50);
+        MaaleEnhed tresCl = Controller.createMaaleEnhed("cl", 60);
         MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
         // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
-        Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg", flaske, null);
-        Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown", flaske, null);
-        Produkt extraPilsnerFlaske = Controller.createProdukt("Extra Pilsner", flaske, null);
-        Produkt celebrationFlaske = Controller.createProdukt("Celebration", flaske, null);
-        Produkt blondieFlaske = Controller.createProdukt("Blondie", flaske, null);
-        Produkt foraarsbrygFlaske = Controller.createProdukt("Forårsbryg", flaske, null);
-        Produkt indiaPaleAleFlaske = Controller.createProdukt("India Pale Ale", flaske, null);
-        Produkt julebrygFlaske = Controller.createProdukt("Julebryg", flaske, null);
-        Produkt juletoenden = Controller.createProdukt("Juletønden", flaske, null);
-        Produkt oldStrongAle = Controller.createProdukt("Old Strong Ale", flaske, null);
-        Produkt fregattenJylland = Controller.createProdukt("Fregatten Jylland", flaske, null);
-        Produkt imperialStoutFlaske = Controller.createProdukt("Imperial Stout", flaske, null);
-        Produkt tribute = Controller.createProdukt("Tribute", flaske, null);
-        Produkt blackMonster = Controller.createProdukt("Black Monster", flaske, null);
+        Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg", flaske, tresCl);
+        Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown", flaske, tresCl);
+        Produkt extraPilsnerFlaske = Controller.createProdukt("Extra Pilsner", flaske, tresCl);
+        Produkt celebrationFlaske = Controller.createProdukt("Celebration", flaske, tresCl);
+        Produkt blondieFlaske = Controller.createProdukt("Blondie", flaske, tresCl);
+        Produkt foraarsbrygFlaske = Controller.createProdukt("Forårsbryg", flaske, tresCl);
+        Produkt indiaPaleAleFlaske = Controller.createProdukt("India Pale Ale", flaske, tresCl);
+        Produkt julebrygFlaske = Controller.createProdukt("Julebryg", flaske, tresCl);
+        Produkt juletoenden = Controller.createProdukt("Juletønden", flaske, tresCl);
+        Produkt oldStrongAle = Controller.createProdukt("Old Strong Ale", flaske, tresCl);
+        Produkt fregattenJylland = Controller.createProdukt("Fregatten Jylland", flaske, tresCl);
+        Produkt imperialStoutFlaske = Controller.createProdukt("Imperial Stout", flaske, tresCl);
+        Produkt tribute = Controller.createProdukt("Tribute", flaske, tresCl);
+        Produkt blackMonster = Controller.createProdukt("Black Monster", flaske, tresCl);
 
         // Fadøl, 40 cl produkter
         Produkt klosterbrygFadoel = Controller.createProdukt("Klosterbryg", fadoel, fyrreCl);
