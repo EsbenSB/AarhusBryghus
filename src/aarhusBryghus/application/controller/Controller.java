@@ -31,8 +31,8 @@ public class Controller {
     }
 
     public static ArrayList<Produkt> getAlleProdukter(ProduktGruppe produktgruppe) {
-        for (ProduktGruppe pg: Storage.getProduktGrupper()){
-            if(pg == produktgruppe){
+        for (ProduktGruppe pg : Storage.getProduktGrupper()) {
+            if (pg == produktgruppe) {
                 System.out.println("Produktgruppe: " + produktgruppe);
                 return pg.getProdukter();
             }
@@ -40,10 +40,10 @@ public class Controller {
         return null;
     }
 
-    public static void deleteProdukt(Produkt produkt){
-        for(ProduktGruppe p: Storage.getProduktGrupper()){
-            for(Produkt prod: p.getProdukter()){
-                if(prod == produkt){
+    public static void deleteProdukt(Produkt produkt) {
+        for (ProduktGruppe p : Storage.getProduktGrupper()) {
+            for (Produkt prod : p.getProdukter()) {
+                if (prod == produkt) {
                     p.removeProdukt(produkt);
                 }
             }
@@ -51,21 +51,39 @@ public class Controller {
     }
 
     // henter produktets produktgruppe
-    public static ProduktGruppe getProduktGruppe(Produkt produkt){
-        for(ProduktGruppe pg: Storage.getProduktGrupper()){
-            for(Produkt prod: pg.getProdukter()){
-                if(prod.equals(produkt)){
+    public static ProduktGruppe getProduktGruppe(Produkt produkt) {
+        for (ProduktGruppe pg : Storage.getProduktGrupper()) {
+            for (Produkt prod : pg.getProdukter()) {
+                if (prod.equals(produkt)) {
                     return pg;
                 }
             }
         }
         return null;
     }
+
+    //Henter de prislister, som produktet i parameteren IKKE har
+    public static ArrayList<Prisliste> getAndrePrislister(Produkt produkt) {
+        ArrayList<Prisliste> liste = new ArrayList<>();
+        ArrayList<Prisliste> listeNy = Storage.getPrislister();
+        for (Pris pris : produkt.getPriser()) {
+            liste.add(pris.getPrisliste());
+        }
+        for (int i = 0; i < Storage.getPrislister().size(); i++) {
+            for (int j = 0; j < liste.size(); j++) {
+                if (Storage.getPrislister().get(i) == liste.get(j)) {
+                    listeNy.remove(liste.get(j));
+                    j = liste.size();
+                }
+            }
+        }
+        return listeNy;
+    }
     // returnerer den første prisliste, som findes på et produkt
-    public static Prisliste getProduktPrisliste(Produkt produkt){
-        for(Prisliste pl: Storage.getPrislister()){
-            for(Pris pris: produkt.getPriser()){
-                if(pris.getPrisliste() == pl){
+    public static Prisliste getProduktPrisliste(Produkt produkt) {
+        for (Prisliste pl : Storage.getPrislister()) {
+            for (Pris pris : produkt.getPriser()) {
+                if (pris.getPrisliste() == pl) {
                     return pl;
                 }
             }
@@ -103,11 +121,11 @@ public class Controller {
         return Storage.getProduktGrupper();
     }
 
-    public static void deleteProduktgruppe(ProduktGruppe produktGruppe){
+    public static void deleteProduktgruppe(ProduktGruppe produktGruppe) {
         Storage.removeProduktGruppe(produktGruppe);
     }
 
-    public static void updateProduktgruppe(ProduktGruppe produktGruppe, String navn){
+    public static void updateProduktgruppe(ProduktGruppe produktGruppe, String navn) {
         produktGruppe.setNavn(navn);
     }
 
@@ -124,11 +142,11 @@ public class Controller {
         return Storage.getMaaleEnheder();
     }
 
-    public static void deleteMaaleenhed(MaaleEnhed maaleEnhed){
+    public static void deleteMaaleenhed(MaaleEnhed maaleEnhed) {
         Storage.removeMaaleEnhed(maaleEnhed);
     }
 
-    public static void updateMaaleenhed(MaaleEnhed maaleEnhed, String enhed, int tal){
+    public static void updateMaaleenhed(MaaleEnhed maaleEnhed, String enhed, int tal) {
         maaleEnhed.setEnhed(enhed);
         maaleEnhed.setTal(tal);
     }
@@ -145,11 +163,11 @@ public class Controller {
         return Storage.getPrislister();
     }
 
-    public static void deletePrisliste(Prisliste prisliste){
+    public static void deletePrisliste(Prisliste prisliste) {
         Storage.removePrisliste(prisliste);
     }
 
-    public static void updatePrisliste(Prisliste prisliste, String navn){
+    public static void updatePrisliste(Prisliste prisliste, String navn) {
         prisliste.setNavn(navn);
     }
 
@@ -173,9 +191,9 @@ public class Controller {
             for (Produkt p : g.getProdukter()) {
                 for (Pris pris : p.getPriser()) {
                     if (pris.getPrisliste() == prisliste) {
-                       if (!produktGrupper.contains(g)) {
-                           produktGrupper.add(g);
-                       }
+                        if (!produktGrupper.contains(g)) {
+                            produktGrupper.add(g);
+                        }
                     }
                 }
             }
