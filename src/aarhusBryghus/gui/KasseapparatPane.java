@@ -5,6 +5,7 @@ import aarhusBryghus.application.model.Prisliste;
 import aarhusBryghus.application.model.Produkt;
 import aarhusBryghus.application.model.Produktgruppe;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
@@ -20,7 +21,7 @@ public class KasseapparatPane extends GridPane {
     private  ListView<Produkt> lvwProdukter;
     private final ComboBox<Prisliste> cbbPrislister;
     private final ComboBox<Produktgruppe> cbbProduktgrupper;
-    private final Button btnBetaling, btnTilKurv;
+    private final Button btnBetaling, btnTilKurv, btnBeregnPris;
     private final RadioButton rbStandardPris, rbCustomPris, rbRabat, rbKlippeKortPris;
     private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
@@ -126,8 +127,14 @@ public class KasseapparatPane extends GridPane {
         txfSamletPrisProdukt.setDisable(true);
 
         //TODO Lav knap færdig
+        btnBeregnPris = new Button("Beregn pris");
+        this.add(btnBeregnPris, 1, 10);
+        GridPane.setHalignment(btnBeregnPris, HPos.LEFT);
+
+        //TODO Lav knap færdig
         btnTilKurv = new Button("Tilføj til kurv");
         this.add(btnTilKurv,1,10);
+        GridPane.setHalignment(btnTilKurv, HPos.RIGHT);
 
         Label lblKurv = new Label("Kurv:");
         this.add(lblKurv, 3, 2);
@@ -242,7 +249,6 @@ public class KasseapparatPane extends GridPane {
         if (rbCustomPris.isArmed()) {
             txfCustomPris.setEditable(true);
             txfCustomPris.setDisable(false);
-//            txfStandardPris.setEditable(false);
             txfStandardPris.setDisable(true);
             txfKlippekortPris.setDisable(true);
             txfRabatPris.clear();
@@ -255,7 +261,6 @@ public class KasseapparatPane extends GridPane {
         if (rbRabat.isArmed()) {
             txfRabatPris.setEditable(true);
             txfRabatPris.setDisable(false);
-//            txfStandardPris.setEditable(false);
             txfStandardPris.setDisable(true);
             txfKlippekortPris.setDisable(true);
             txfCustomPris.clear();
