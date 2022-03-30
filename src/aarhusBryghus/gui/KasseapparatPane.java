@@ -50,6 +50,7 @@ public class KasseapparatPane extends GridPane {
         this.add(cbbProduktgrupper,1,1);
         cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbProduktgrupper.setPrefWidth(200);
+        cbbProduktgrupper.setDisable(true);
 
         Label lblProdukter = new Label("Produkter:");
         this.add(lblProdukter, 0, 2);
@@ -196,6 +197,7 @@ public class KasseapparatPane extends GridPane {
             Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
             cbbProduktgrupper.getItems().setAll(Controller.listeProduktgrupperTilValgtePrisliste(prisliste));
             lvwProdukter.getItems().clear();
+            cbbProduktgrupper.setDisable(false);
         }
 
     }
@@ -204,7 +206,7 @@ public class KasseapparatPane extends GridPane {
         this.updateControls();
     }
 
-    //TODO Der skal laves en getKlippekortPris for at lave denne metode færdig
+    //TODO Der skal måske tilføjes mere
     public void updateControls() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
@@ -212,10 +214,21 @@ public class KasseapparatPane extends GridPane {
             txfValgteProdukt.setText(produkt.getNavn());
             txfValgteProdukt.setDisable(false);
             txfStandardPris.setText(produkt.enkeltPris(prisliste) + " Kr.");
+            if (produkt.getklippekortPris(prisliste) == 0) {
+                txfKlippekortPris.setText("Klippekort kan ikke anvendes");
+                txfKlippekortPris.setDisable(true);
+                rbKlippeKortPris.setDisable(true);
+                rbStandardPris.fire();
+                txfStandardPris.setDisable(false);
+            } else {
+                txfKlippekortPris.setText(produkt.getklippekortPris(prisliste) + " Klip");
+            }
         } else {
             txfValgteProdukt.clear();
             txfValgteProdukt.setDisable(true);
             txfStandardPris.clear();
+            txfKlippekortPris.clear();
+            rbKlippeKortPris.setDisable(false);
         }
     }
 
