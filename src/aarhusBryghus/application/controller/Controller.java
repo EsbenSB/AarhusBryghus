@@ -73,6 +73,24 @@ public class Controller {
         return null;
     }
 
+    //Henter de prislister, som produktet i parameteren IKKE har.
+    public static ArrayList<Prisliste> getAndrePrislister(Produkt produkt) {
+        ArrayList<Prisliste> liste = new ArrayList<>();
+        ArrayList<Prisliste> listeNy = Storage.getPrislister();
+        for (Pris pris : produkt.getPriser()) {
+            liste.add(pris.getPrisliste());
+        }
+        for (int i = 0; i < Storage.getPrislister().size(); i++) {
+            for (int j = 0; j < liste.size(); j++) {
+                if (Storage.getPrislister().get(i) == liste.get(j)) {
+                    listeNy.remove(liste.get(j));
+                    j = liste.size();
+                }
+            }
+        }
+        return listeNy;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
 
