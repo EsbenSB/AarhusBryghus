@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Storage {
 
     private static Storage uniqueInstance;
-    public static ArrayList<ProduktGruppe> produktGrupper = new ArrayList<>();
+    public static ArrayList<Produktgruppe> produktGrupper = new ArrayList<>();
     public static ArrayList<MaaleEnhed> maaleEnheder = new ArrayList<>();
     public static ArrayList<Prisliste> prislister = new ArrayList<>();
     public static ArrayList<Ordre> ordrer = new ArrayList<>();
@@ -21,15 +21,15 @@ public class Storage {
 
     // -------------------------------------------------------------------------
 
-    public static ArrayList<ProduktGruppe> getProduktGrupper() {
+    public static ArrayList<Produktgruppe> getProduktGrupper() {
         return new ArrayList<>(produktGrupper);
     }
 
-    public static void addProduktGruppe(ProduktGruppe produktGruppe) {
+    public static void addProduktGruppe(Produktgruppe produktGruppe) {
         produktGrupper.add(produktGruppe);
     }
 
-    public static void removeProduktGruppe(ProduktGruppe produktGruppe) {
+    public static void removeProduktGruppe(Produktgruppe produktGruppe) {
         produktGrupper.remove(produktGruppe);
     }
 

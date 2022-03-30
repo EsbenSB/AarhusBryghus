@@ -3,7 +3,6 @@ package aarhusBryghus.gui;
 import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.*;
 import aarhusBryghus.storage.Storage;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -13,7 +12,7 @@ import java.util.Optional;
 public class ProduktPane extends GridPane {
 
 
-    private ListView<ProduktGruppe> lvwProduktgruppe = new ListView<>();
+    private ListView<Produktgruppe> lvwProduktgruppe = new ListView<>();
     private Button btnOpdaterProduktgruppe;
     private Button btnSletProduktgruppe;
     private Button btnOpretProduktgruppe;
@@ -181,7 +180,7 @@ public class ProduktPane extends GridPane {
     }
 
     private void updateProduktliste() {
-        ProduktGruppe produktGruppe = (ProduktGruppe) cbProduktGrp.getSelectionModel().getSelectedItem();
+        Produktgruppe produktGruppe = (Produktgruppe) cbProduktGrp.getSelectionModel().getSelectedItem();
         if (produktGruppe != null) {
             lvwProdukt.getItems().setAll(Controller.getAlleProdukter(produktGruppe));
         } else {
@@ -231,7 +230,7 @@ public class ProduktPane extends GridPane {
     }
 
     private void opdaterProduktAction() {
-        ProduktGruppe produktGruppe = (ProduktGruppe) cbProduktGrp.getSelectionModel().getSelectedItem();
+        Produktgruppe produktGruppe = (Produktgruppe) cbProduktGrp.getSelectionModel().getSelectedItem();
         Produkt produkt = lvwProdukt.getSelectionModel().getSelectedItem();
         if(produkt != null){
             ProduktWindow dia = new ProduktWindow("Opdatér Produkt: " + produkt.getNavn(),produkt);
@@ -244,7 +243,7 @@ public class ProduktPane extends GridPane {
     }
 
     private void sletProduktAction() {
-        ProduktGruppe produktGruppe = (ProduktGruppe) cbProduktGrp.getSelectionModel().getSelectedItem();
+        Produktgruppe produktGruppe = (Produktgruppe) cbProduktGrp.getSelectionModel().getSelectedItem();
         Produkt produkt = lvwProdukt.getSelectionModel().getSelectedItem();
         if (produkt != null) {
             Alert SletProduktAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -274,7 +273,7 @@ public class ProduktPane extends GridPane {
     Giver dog ingen fejl i gui, når mna trykker slet, på en produktgruppe, som ikke er tom.
      */
     private void sletProduktgruppeAction() {
-        ProduktGruppe produktGruppe = lvwProduktgruppe.getSelectionModel().getSelectedItem();
+        Produktgruppe produktGruppe = lvwProduktgruppe.getSelectionModel().getSelectedItem();
         if (produktGruppe != null && produktGruppe.getProdukter().isEmpty()) {
             Alert sletProduktGruppeAlert = new Alert(Alert.AlertType.CONFIRMATION);
             sletProduktGruppeAlert.setTitle("Slet Produktgruppe");

@@ -3,8 +3,7 @@ package aarhusBryghus.gui;
 import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Prisliste;
 import aarhusBryghus.application.model.Produkt;
-import aarhusBryghus.application.model.ProduktGruppe;
-import javafx.geometry.HPos;
+import aarhusBryghus.application.model.Produktgruppe;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
@@ -12,18 +11,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
     private final TextField txfValgteProdukt, txfAntalValgte, txfSamletPrisProdukt, txfStandardPris;
-    private final TextField txfCustomPris, txfRabatPris, txfTotalPris;
+    private final TextField txfKlippekortPris, txfCustomPris, txfRabatPris, txfTotalPris;
     private final TextArea txaKurv;
     private  ListView<Produkt> lvwProdukter;
     private final ComboBox<Prisliste> cbbPrislister;
-    private final ComboBox<ProduktGruppe> cbbProduktgrupper;
+    private final ComboBox<Produktgruppe> cbbProduktgrupper;
     private final Button btnBetaling, btnTilKurv;
-    private final RadioButton rbStandardPris, rbCustomPris, rbRabat, rbKontant, rbMobilepay, rbDankort, rbKlippekort;
+    private final RadioButton rbStandardPris, rbCustomPris, rbRabat, rbKlippeKortPris;
+    private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
     private final ToggleGroup groupAnvendtPris = new ToggleGroup();
 
@@ -41,7 +39,7 @@ public class KasseapparatPane extends GridPane {
         cbbPrislister.getItems().addAll(Controller.getPrislister());
         cbbPrislister.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbPrislister.setOnAction(event -> this.opdaterProduktGruppeliste());
-
+        cbbPrislister.setPrefWidth(200);
 
         Label lblProduktgruppe = new Label("Produktgrupper:");
         this.add(lblProduktgruppe,0,1);
@@ -49,7 +47,7 @@ public class KasseapparatPane extends GridPane {
         cbbProduktgrupper = new ComboBox<>();
         this.add(cbbProduktgrupper,1,1);
         cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
-
+        cbbProduktgrupper.setPrefWidth(200);
 
         Label lblProdukter = new Label("Produkter:");
         this.add(lblProdukter, 0, 2);
@@ -84,37 +82,47 @@ public class KasseapparatPane extends GridPane {
         txfStandardPris.setEditable(false);
         txfStandardPris.setDisable(true);
 
+        rbKlippeKortPris = new RadioButton("Anvend klippekort pris");
+        this.add(rbKlippeKortPris, 0, 6);
+        rbKlippeKortPris.setToggleGroup(groupAnvendtPris);
+        rbKlippeKortPris.setOnAction(event -> setKlippekortPris());
+
+        txfKlippekortPris = new TextField();
+        this.add(txfKlippekortPris, 1, 6);
+        txfKlippekortPris.setEditable(false);
+        txfKlippekortPris.setDisable(true);
+
         rbCustomPris = new RadioButton("Anvend custom pris");
-        this.add(rbCustomPris,0,6);
+        this.add(rbCustomPris,0,7);
         rbCustomPris.setToggleGroup(groupAnvendtPris);
         rbCustomPris.setOnAction(event -> setCustomPris());
 
         txfCustomPris = new TextField();
-        this.add(txfCustomPris, 1, 6);
+        this.add(txfCustomPris, 1, 7);
         txfCustomPris.setEditable(false);
         txfCustomPris.setDisable(true);
 
         rbRabat = new RadioButton("Anvend rabat");
-        this.add(rbRabat, 0, 7);
+        this.add(rbRabat, 0, 8);
         rbRabat.setToggleGroup(groupAnvendtPris);
         rbRabat.setOnAction(event -> setRabatPris());
 
         txfRabatPris = new TextField();
-        this.add(txfRabatPris, 1, 7);
+        this.add(txfRabatPris, 1, 8);
         txfRabatPris.setEditable(false);
         txfRabatPris.setDisable(true);
 
         Label lblSamletPrisProdukt = new Label("Samlet pris for valgte produkt:");
-        this.add(lblSamletPrisProdukt,0,8);
+        this.add(lblSamletPrisProdukt,0,9);
 
         txfSamletPrisProdukt = new TextField();
-        this.add(txfSamletPrisProdukt,1,8);
+        this.add(txfSamletPrisProdukt,1,9);
         txfSamletPrisProdukt.setEditable(false);
         txfSamletPrisProdukt.setDisable(true);
 
         //TODO Lav knap færdig
         btnTilKurv = new Button("Tilføj til kurv");
-        this.add(btnTilKurv,1,9);
+        this.add(btnTilKurv,1,10);
 
         Label lblKurv = new Label("Kurv:");
         this.add(lblKurv, 3, 2);
@@ -162,7 +170,7 @@ public class KasseapparatPane extends GridPane {
 
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
 
-        ProduktGruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
+        Produktgruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
         if (produktGruppe != null) {
             lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
         } else {
@@ -192,13 +200,26 @@ public class KasseapparatPane extends GridPane {
         }
     }
 
+    public void setKlippekortPris() {
+        if (rbKlippeKortPris.isArmed()) {
+            txfKlippekortPris.setDisable(false);
+            txfStandardPris.setDisable(true);
+            txfCustomPris.clear();
+            txfCustomPris.setEditable(false);
+            txfCustomPris.setDisable(true);
+            txfRabatPris.clear();
+            txfRabatPris.setEditable(false);
+            txfRabatPris.setDisable(true);
+        }
+    }
+
     public void setCustomPris() {
         if (rbCustomPris.isArmed()) {
             txfCustomPris.setEditable(true);
             txfCustomPris.setDisable(false);
-            txfStandardPris.clear();
-            txfStandardPris.setEditable(false);
+//            txfStandardPris.setEditable(false);
             txfStandardPris.setDisable(true);
+            txfKlippekortPris.setDisable(true);
             txfRabatPris.clear();
             txfRabatPris.setEditable(false);
             txfRabatPris.setDisable(true);
@@ -209,9 +230,9 @@ public class KasseapparatPane extends GridPane {
         if (rbRabat.isArmed()) {
             txfRabatPris.setEditable(true);
             txfRabatPris.setDisable(false);
-            txfStandardPris.clear();
-            txfStandardPris.setEditable(false);
+//            txfStandardPris.setEditable(false);
             txfStandardPris.setDisable(true);
+            txfKlippekortPris.setDisable(true);
             txfCustomPris.clear();
             txfCustomPris.setEditable(false);
             txfCustomPris.setDisable(true);

@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class App {
     public static void main(String[] args) {
-        ProduktGruppe pg = new ProduktGruppe("Flaskeøl");
-        ProduktGruppe pg2 = new ProduktGruppe("Fadøl");
+        Produktgruppe pg = new Produktgruppe("Flaskeøl");
+        Produktgruppe pg2 = new Produktgruppe("Fadøl");
         MaaleEnhed me1 = new MaaleEnhed("Cl", 60);
         MaaleEnhed me2 = new MaaleEnhed("Cl",40);
         Produkt produkt1 =  pg.createProdukt("Klosterbryg", me1);

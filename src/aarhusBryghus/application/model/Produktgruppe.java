@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ProduktGruppe {
+public class Produktgruppe {
     private final ArrayList<Produkt> produkter = new ArrayList<>();
     private String navn;
 
-    public ProduktGruppe(String navn) {
+    public Produktgruppe(String navn) {
         this.navn = navn;
     }
 
