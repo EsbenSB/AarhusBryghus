@@ -134,27 +134,6 @@ public class ProduktPane extends GridPane {
         this.add(btnOpretMaaleenhed, 2, 7);
         btnOpretMaaleenhed.setOnAction(event -> this.opretMaaleenhedAction());
 
-        // Klippekort
-        Label lblKlippekort = new Label("Klippekort:");
-        this.add(lblKlippekort, 3, 5, 3, 1);
-
-        this.add(lvwKlippekort, 3, 6, 3, 1);
-
-        lvwKlippekort.getItems().setAll(Storage.getProduktGrupper().get(4).getProdukter());
-        lvwKlippekort.setPrefWidth(200);
-        lvwKlippekort.setPrefHeight(200);
-
-        btnOpretKlippekort = new Button("Slet");
-        this.add(btnOpretKlippekort, 3, 7);
-        btnOpretKlippekort.setOnAction(event -> this.sletKlippekortAction());
-
-        btnOpretKlippekort = new Button("Opdatér");
-        this.add(btnOpretKlippekort, 4, 7);
-        btnOpretKlippekort.setOnAction(event -> this.opdaterKlippekortAction());
-
-        btnOpretKlippekort = new Button("Opret");
-        this.add(btnOpretKlippekort, 5, 7);
-        btnOpretKlippekort.setOnAction(event -> this.opretKlippekortAction());
 
         // Pant
         Label lblPant = new Label("Pant:");
