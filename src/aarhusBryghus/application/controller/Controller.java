@@ -25,16 +25,16 @@ public class Controller {
     }
 
     // createSalg er metoden som bruges, til af kasseapperatet. de oprettes altid med fast dato, og som lukkede.
-    public static Ordre createSalg(Prisliste prisliste){
-        Ordre ordre = new Ordre("Salg", true,LocalDate.now(),prisliste);
+    public static Ordre createSalg(Prisliste prisliste) {
+        Ordre ordre = new Ordre("Salg", true, LocalDate.now(), prisliste);
         Storage.addOrdre(ordre);
         return ordre;
     }
 
     // createOrdrelinjeSalg opretter enkelte salgslinjer, til en ordre, men KUN i "Kasseapparat" tabben!
-    public static Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
+    public static Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste) {
         Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
-        if(prisliste.getAntalKlip(produkt) > 0){
+        if (prisliste.getAntalKlip(produkt) > 0) {
             ordrelinje.setKlip(prisliste.getAntalKlip(produkt));
         }
         return ordrelinje;
@@ -48,8 +48,8 @@ public class Controller {
     }
 
     public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
-        for (Produktgruppe pg: Storage.getProduktGrupper()){
-            if(pg == produktgruppe){
+        for (Produktgruppe pg : Storage.getProduktGrupper()) {
+            if (pg == produktgruppe) {
                 System.out.println("Produktgruppe: " + produktgruppe);
                 return pg.getProdukter();
             }
@@ -57,10 +57,10 @@ public class Controller {
         return null;
     }
 
-    public static void deleteProdukt(Produkt produkt){
-        for(Produktgruppe p: Storage.getProduktGrupper()){
-            for(Produkt prod: p.getProdukter()){
-                if(prod == produkt){
+    public static void deleteProdukt(Produkt produkt) {
+        for (Produktgruppe p : Storage.getProduktGrupper()) {
+            for (Produkt prod : p.getProdukter()) {
+                if (prod == produkt) {
                     p.removeProdukt(produkt);
                 }
             }
@@ -68,27 +68,26 @@ public class Controller {
     }
 
     // henter produktets produktgruppe
-    public static Produktgruppe getProduktGruppe(Produkt produkt){
-        for(Produktgruppe pg: Storage.getProduktGrupper()){
-            for(Produkt prod: pg.getProdukter()){
-                if(prod.equals(produkt)){
+    public static Produktgruppe getProduktGruppe(Produkt produkt) {
+        for (Produktgruppe pg : Storage.getProduktGrupper()) {
+            for (Produkt prod : pg.getProdukter()) {
+                if (prod.equals(produkt)) {
                     return pg;
                 }
             }
         }
         return null;
     }
+
     // returnerer den første prisliste, som findes på et produkt
-    public static Prisliste getProduktPrisliste(Produkt produkt){
-            for(Prisliste pl: Storage.getPrislister()){
-                for(Pris pris: produkt.getPriser()){
-                    if(pris.getPrisliste() == pl){
-                        return pl;
-                    }
+    public static Prisliste getProduktPrisliste(Produkt produkt) {
+        for (Prisliste pl : Storage.getPrislister()) {
+            for (Pris pris : produkt.getPriser()) {
+                if (pris.getPrisliste() == pl) {
+                    return pl;
                 }
             }
-
-
+        }
         return null;
     }
 
@@ -140,11 +139,11 @@ public class Controller {
         return Storage.getProduktGrupper();
     }
 
-    public static void deleteProduktgruppe(Produktgruppe produktGruppe){
+    public static void deleteProduktgruppe(Produktgruppe produktGruppe) {
         Storage.removeProduktGruppe(produktGruppe);
     }
 
-    public static void updateProduktgruppe(Produktgruppe produktGruppe, String navn){
+    public static void updateProduktgruppe(Produktgruppe produktGruppe, String navn) {
         produktGruppe.setNavn(navn);
     }
 
@@ -161,11 +160,11 @@ public class Controller {
         return Storage.getMaaleEnheder();
     }
 
-    public static void deleteMaaleenhed(MaaleEnhed maaleEnhed){
+    public static void deleteMaaleenhed(MaaleEnhed maaleEnhed) {
         Storage.removeMaaleEnhed(maaleEnhed);
     }
 
-    public static void updateMaaleenhed(MaaleEnhed maaleEnhed, String enhed, int tal){
+    public static void updateMaaleenhed(MaaleEnhed maaleEnhed, String enhed, int tal) {
         maaleEnhed.setEnhed(enhed);
         maaleEnhed.setTal(tal);
     }
@@ -182,11 +181,11 @@ public class Controller {
         return Storage.getPrislister();
     }
 
-    public static void deletePrisliste(Prisliste prisliste){
+    public static void deletePrisliste(Prisliste prisliste) {
         Storage.removePrisliste(prisliste);
     }
 
-    public static void updatePrisliste(Prisliste prisliste, String navn){
+    public static void updatePrisliste(Prisliste prisliste, String navn) {
         prisliste.setNavn(navn);
     }
 
@@ -210,15 +209,37 @@ public class Controller {
             for (Produkt p : g.getProdukter()) {
                 for (Pris pris : p.getPriser()) {
                     if (pris.getPrisliste() == prisliste) {
-                       if (!produktGrupper.contains(g)) {
-                           produktGrupper.add(g);
-                       }
+                        if (!produktGrupper.contains(g)) {
+                            produktGrupper.add(g);
+                        }
                     }
                 }
             }
         }
         return produktGrupper;
     }
+
+    public static ArrayList<Ordre> getDagensSalg() {
+        ArrayList<Ordre> alleSalg = new ArrayList<>();
+        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
+            if (Storage.getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
+                alleSalg.add(Storage.getOrdrer().get(i));
+            }
+        }
+        return alleSalg;
+    }
+
+    public static ArrayList<String> udprintOrdre(Ordre ordre) {
+        ArrayList<String> alleSalg = new ArrayList<>();
+        for (int j = 0; j < ordre.getOrdrelinjer().size(); j++) {
+            Ordrelinje ol = ordre.getOrdrelinjer().get(j);
+            alleSalg.add("Navn: " + ol.getProdukt() + ", antal: " + ol.getAntal() + ", pris pr. styk: " + ol.getPris() + ", samlet pris:"
+                    + ol.getSamletPris() + ", betalingsform: " + ordre.getBetalingsform());
+        }
+        return alleSalg;
+    }
+
+
 
 
     private static void initStorage() {
@@ -244,9 +265,9 @@ public class Controller {
         MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
         // Klippekort produkt
-        Produkt klippekortProdukt4 = Controller.createKlippekort("Klippekort, 4 klip",klippekort,ingen,4);
-        Produkt klippekortProdukt10 = Controller.createKlippekort("Klippekort, 10 klip",klippekort,ingen,10);
-        Produkt klippekortProdukt20 = Controller.createKlippekort("Klippekort, 20 klip",klippekort,ingen,20);
+        Produkt klippekortProdukt4 = Controller.createKlippekort("Klippekort, 4 klip", klippekort, ingen, 4);
+        Produkt klippekortProdukt10 = Controller.createKlippekort("Klippekort, 10 klip", klippekort, ingen, 10);
+        Produkt klippekortProdukt20 = Controller.createKlippekort("Klippekort, 20 klip", klippekort, ingen, 20);
 
         // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
         Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg", flaske, tresCl);
@@ -293,7 +314,7 @@ public class Controller {
         Produkt uEgesplint = Controller.createProdukt("u/ egesplint", spiritus, ingen);
         Produkt mEgesplint = Controller.createProdukt("m/ egesplint", spiritus, ingen);
         Produkt toWhiskyGlasMedBrikker = Controller.createProdukt("2*whisky glas + brikker", spiritus, ingen);
-        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus",spiritus,ingen);
+        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus", spiritus, ingen);
         Produkt lyngGin50Cl = Controller.createProdukt("Lyng gin 50 cl", spiritus, ingen);
         Produkt lyngGin4Cl = Controller.createProdukt("Lyng gin 4 cl", spiritus, fireCl);
 
@@ -397,8 +418,8 @@ public class Controller {
     }
 
     public static void removePrislisteOgProduktFraPris(Prisliste prisliste, Produkt produkt) {
-        for(Pris p: prisliste.getPriser()){
-            if(p.getProdukt() == produkt){
+        for (Pris p : prisliste.getPriser()) {
+            if (p.getProdukt() == produkt) {
                 p.setPrisliste(null);
                 p.setProdukt(null);
             }
