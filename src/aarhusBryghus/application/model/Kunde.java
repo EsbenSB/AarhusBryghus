@@ -12,6 +12,8 @@ public class Kunde {
     private int postnummer;
     private String by;
 
+    // TODO Overvej: sletning af adresse, vejnummer, postnummer og by?
+
     public Kunde(String fornavn, String efternavn, int telefon) {
         this.fornavn = fornavn;
         this.efternavn = efternavn;
