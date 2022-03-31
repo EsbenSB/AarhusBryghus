@@ -40,7 +40,7 @@ public class Ordre {
 
     public Ordrelinje createOrdrelinje(int antal, Produkt produkt){
         ordrelinjeNr++;
-        Ordrelinje ordrelinje = new Ordrelinje(ordrelinjeNr, produkt, antal, getPrisliste());
+        Ordrelinje ordrelinje = new Ordrelinje(produkt, antal, getPrisliste());
         ordrelinjer.add(ordrelinje);
         return ordrelinje;
     }
@@ -79,6 +79,28 @@ public class Ordre {
 
     public ArrayList<Ordrelinje> getOrdrelinjer() {
         return new ArrayList<>(ordrelinjer);
+    }
+
+    public int getSamletPrisKlip() {
+        int klip = 0;
+        for (Ordrelinje ol : ordrelinjer) {
+            if (ol.getKlip() > 0) {
+                klip += ol.getKlip();
+            }
+        }
+        return klip;
+    }
+
+    public double getSamletPris(){
+        int klip = 0;
+        double samletPris = 0;
+        for(Ordrelinje ol: ordrelinjer){
+            if(ol.getKlip() > 0){
+                klip += ol.getKlip();
+            }
+            samletPris += ol.getPris();
+        }
+        return samletPris;
     }
 
     public int getOrdrelinjeNr() {

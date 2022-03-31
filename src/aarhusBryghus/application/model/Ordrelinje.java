@@ -3,12 +3,13 @@ package aarhusBryghus.application.model;
 public class Ordrelinje {
 
     private Produkt produkt;
-    private int linjenummer;
+    private int linjenummer = 1;
     private int antal;
     private double pris;
+    private int Klip; // prisen på klippekort??
 
-    public Ordrelinje(int linjenummer, Produkt produkt, int antal, Prisliste prisliste) {
-        this.linjenummer = linjenummer;
+    public Ordrelinje(Produkt produkt, int antal, Prisliste prisliste) {
+        linjenummer++;
         this.produkt = produkt;
         this.antal = antal;
         this.pris = produkt.enkeltPris(prisliste);
@@ -43,6 +44,14 @@ public class Ordrelinje {
         if(pris > 0){
             this.pris = pris;
         }
+    }
+
+    public void setKlip(int klip) {
+        Klip = klip;
+    }
+
+    public int getKlip() {
+        return Klip;
     }
 
     @Override

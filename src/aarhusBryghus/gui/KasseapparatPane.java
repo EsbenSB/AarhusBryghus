@@ -1,9 +1,7 @@
 package aarhusBryghus.gui;
 
 import aarhusBryghus.application.controller.Controller;
-import aarhusBryghus.application.model.Prisliste;
-import aarhusBryghus.application.model.Produkt;
-import aarhusBryghus.application.model.Produktgruppe;
+import aarhusBryghus.application.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -12,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+
+import java.time.LocalDate;
 
 public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
@@ -130,6 +130,7 @@ public class KasseapparatPane extends GridPane {
         //TODO Lav knap færdig
         btnBeregnPris = new Button("Beregn pris");
         this.add(btnBeregnPris, 1, 10);
+        btnBeregnPris.setOnAction(event -> beregnProduktPris());
         GridPane.setHalignment(btnBeregnPris, HPos.LEFT);
 
         //TODO Lav knap færdig
@@ -279,6 +280,19 @@ public class KasseapparatPane extends GridPane {
             txfCustomPris.clear();
             txfCustomPris.setEditable(false);
             txfCustomPris.setDisable(true);
+        }
+    }
+
+    //TODO har ikke rigtigt forstået hvordan det virker med ordre og ordrelinjer
+    public void beregnProduktPris() {
+        if (rbStandardPris.isSelected()) {
+            txfSamletPrisProdukt.setText("test");
+        } else if (rbKlippeKortPris.isSelected()) {
+            txfSamletPrisProdukt.setText("test2");
+        } else if (rbCustomPris.isSelected()) {
+            txfSamletPrisProdukt.setText("test3");
+        } else {
+            txfSamletPrisProdukt.setText("test4");
         }
     }
 

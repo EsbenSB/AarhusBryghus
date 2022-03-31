@@ -1,5 +1,7 @@
 package aarhusBryghus.application.model;
 
+import aarhusBryghus.storage.Storage;
+
 import java.util.ArrayList;
 
 public class Prisliste {
@@ -20,8 +22,8 @@ public class Prisliste {
 
     public int getAntalKlip(Produkt produkt){
         int antalKlip = 0;
-        for(Pris pris: priser){
-            for(Pris p: produkt.getPriser()){
+        for(Pris p: produkt.getPriser()){
+            for(Pris pris: this.getPriser()){
                 if(p == pris){
                     antalKlip = pris.getKlippekort();
                 }

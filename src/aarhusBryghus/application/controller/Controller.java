@@ -3,6 +3,7 @@ package aarhusBryghus.application.controller;
 import aarhusBryghus.application.model.*;
 import aarhusBryghus.storage.Storage;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +22,22 @@ public class Controller {
 
     private Controller() {
         storage = Storage.getInstance();
+    }
+
+    // createSalg er metoden som bruges, til af kasseapperatet. de oprettes altid med fast dato, og som lukkede.
+    public static Ordre createSalg(Prisliste prisliste){
+        Ordre ordre = new Ordre("Salg", true,LocalDate.now(),prisliste);
+        Storage.addOrdre(ordre);
+        return ordre;
+    }
+
+    // createOrdrelinjeSalg opretter enkelte salgslinjer, til en ordre, men KUN i "Kasseapparat" tabben!
+    public static Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
+        Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
+        if(prisliste.getAntalKlip(produkt) > 0){
+            ordrelinje.setKlip(prisliste.getAntalKlip(produkt));
+        }
+        return ordrelinje;
     }
 
     //------------------------------------------------------------------------------------------------------------------
