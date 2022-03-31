@@ -265,7 +265,7 @@ public class Controller {
     public static ArrayList<Ordre> getDagensSalg() {
         ArrayList<Ordre> alleSalg = new ArrayList<>();
         for (int i = 0; i < Storage.getOrdrer().size(); i++) {
-            if (Storage.getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
+            if (Storage.getOrdrer().get(i).getAfslutningsDato() != null && Storage.getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
                 alleSalg.add(Storage.getOrdrer().get(i));
             }
         }
