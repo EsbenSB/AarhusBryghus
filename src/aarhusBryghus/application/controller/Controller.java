@@ -90,7 +90,7 @@ public class Controller {
         return null;
     }
 
-    //Henter de prislister, som produktet i parameteren IKKE har.
+    //Henter de prislister, som produktet i parameteren IKKE har. // todo brug sortering/compareTo i stedet for
     public static ArrayList<Prisliste> getAndrePrislister(Produkt produkt) {
         ArrayList<Prisliste> liste = new ArrayList<>();
         ArrayList<Prisliste> listeNy = Storage.getPrislister();
