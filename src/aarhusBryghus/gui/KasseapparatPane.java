@@ -17,11 +17,11 @@ public class KasseapparatPane extends GridPane {
     //TODO Lav tekstfields og andet stuff her:
     private final TextField txfValgteProdukt, txfAntalValgte, txfSamletPrisProdukt, txfStandardPris;
     private final TextField txfKlippekortPris, txfCustomPris, txfRabatPris, txfTotalPris;
-    private final TextArea txaKurv;
-    private  ListView<Produkt> lvwProdukter;
+//    private final TextArea txaKurv;
+    private  ListView<Produkt> lvwProdukter, lvwKurv;
     private final ComboBox<Prisliste> cbbPrislister;
     private final ComboBox<Produktgruppe> cbbProduktgrupper;
-    private final Button btnBetaling, btnTilKurv, btnBeregnPris;
+    private final Button btnBetaling, btnTilKurv, btnBeregnPris, btnToemKurv, btnFjernProdukt;
     private final RadioButton rbStandardPris, rbCustomPris, rbRabat, rbKlippeKortPris;
     private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
@@ -58,7 +58,7 @@ public class KasseapparatPane extends GridPane {
 
         lvwProdukter = new ListView<>();
         this.add(lvwProdukter,1,2);
-        lvwProdukter.setPrefHeight(200);
+        lvwProdukter.setPrefHeight(150);
         lvwProdukter.setPrefWidth(200);
 
         ChangeListener<Produkt> produktChangeListener = (ov, gammelProdukt, nyProdukt) -> this.selectedProduktChanged();
@@ -136,15 +136,17 @@ public class KasseapparatPane extends GridPane {
         //TODO Lav knap færdig
         btnTilKurv = new Button("Tilføj til kurv");
         this.add(btnTilKurv,1,10);
+        btnTilKurv.setOnAction(event -> addProduktKurv());
         GridPane.setHalignment(btnTilKurv, HPos.RIGHT);
 
         Label lblKurv = new Label("Kurv:");
         this.add(lblKurv, 3, 2);
         GridPane.setValignment(lblKurv, VPos.TOP);
 
-        txaKurv = new TextArea();
-        this.add(txaKurv, 4, 2);
-        txaKurv.setEditable(false);
+        lvwKurv = new ListView<>();
+        this.add(lvwKurv, 4, 2);
+        lvwKurv.setEditable(false);
+        lvwKurv.setPrefHeight(150);
 
         Label lblTotalPris = new Label("Total pris:");
         this.add(lblTotalPris, 3, 3);
@@ -154,9 +156,21 @@ public class KasseapparatPane extends GridPane {
         txfTotalPris.setEditable(false);
         txfTotalPris.setDisable(true);
 
-        //TODO Lav knap færdig (Hvis det er nødvendigt?)
+        //TODO Lav knap færdig
         btnBetaling = new Button("Betal");
         this.add(btnBetaling,4,8);
+        GridPane.setHalignment(btnBetaling, HPos.RIGHT);
+
+        //TODO Lav knap færdig
+        btnToemKurv = new Button("Tøm kurv");
+        this.add(btnToemKurv, 4, 8);
+        btnToemKurv.setOnAction(event -> toemKurv());
+        GridPane.setHalignment(btnToemKurv, HPos.CENTER);
+
+        btnFjernProdukt = new Button("Fjern produkt");
+        this.add(btnFjernProdukt, 4, 8);
+        btnFjernProdukt.setOnAction(event -> fjernProduktKurv());
+        GridPane.setHalignment(btnFjernProdukt, HPos.LEFT);
         // -------------------------------------------------------------------------------------------------------------
         // RadioButton laves her:
         Label lblBetalingsmetoder = new Label("Betalingsmetoder:");
@@ -283,7 +297,7 @@ public class KasseapparatPane extends GridPane {
         }
     }
 
-    //TODO har ikke rigtigt forstået hvordan det virker med ordre og ordrelinjer
+    //TODO Lav færdig
     public void beregnProduktPris() {
         if (rbStandardPris.isSelected()) {
             txfSamletPrisProdukt.setText("test");
@@ -296,4 +310,24 @@ public class KasseapparatPane extends GridPane {
         }
     }
 
+    //TODO Lav færdig
+    public void addProduktKurv() {
+        Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
+        if (produkt != null) {
+            lvwKurv.getItems().add(produkt);
+        }
+    }
+
+    //TODO Lav knap færdig
+    public void fjernProduktKurv() {
+        Produkt produkt = lvwKurv.getSelectionModel().getSelectedItem();
+        if (produkt != null) {
+            lvwKurv.getItems().remove(produkt);
+        }
+    }
+
+    public void toemKurv() {
+        lvwKurv.getItems().clear();
+        txfTotalPris.clear();
+    }
 }
