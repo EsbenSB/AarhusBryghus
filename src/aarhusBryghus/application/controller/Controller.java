@@ -266,8 +266,10 @@ public class Controller {
             Ordre o = Storage.getOrdrer().get(i);
             if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                     o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
-                for (int j = 0; j < o.getOrdrelinjer().size(); j++) {
-                    forbrugteKlip += o.getOrdrelinjer().get(j).getSamletPrisKlip();
+                if (o.getBetalingsform().getType().equals("Klip")) {
+                    for (int j = 0; j < o.getOrdrelinjer().size(); j++) {
+                        forbrugteKlip += o.getOrdrelinjer().get(j).getSamletPrisKlip();
+                    }
                 }
             }
         }
@@ -278,13 +280,12 @@ public class Controller {
         ordre.setAfslutningsDato(afslutDato);
         ordre.setOrdreStatus(status);
         ordre.setBetalingsform(betalingsform);
-        if(betalingsform.getType().equals("Klip")){
-            for(Ordrelinje ol: ordre.getOrdrelinjer()){
+        if (betalingsform.getType().equals("Klip")) {
+            for (Ordrelinje ol : ordre.getOrdrelinjer()) {
                 ol.setKlip(ol.getProdukt().getklippekortPris(prisliste));
             }
         }
     }
-
 
 
     private static void initStorage() {
@@ -465,17 +466,17 @@ public class Controller {
 
 
         Ordre ordre1 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre1,oldStrongAle,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,blackMonster,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,blondieFlaske,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,oelpoelser,1,ordre1.getPrisliste());
-        lukSalg(ordre1,fredagsbar, LocalDate.now(), true, klip1);
+        Controller.createOrdrelinjeSalg(ordre1, oldStrongAle, 1, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1, blackMonster, 2, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1, blondieFlaske, 2, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1, oelpoelser, 2, ordre1.getPrisliste());
+        lukSalg(ordre1, fredagsbar, LocalDate.now(), true, klip1);
 
         Ordre ordre2 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,2,ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,blackMonster,3,ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,mEgesplint,5,ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,lyngGin4Cl,9,ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, whiskey4Cl, 2, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, blackMonster, 3, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, mEgesplint, 5, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, lyngGin4Cl, 9, ordre1.getPrisliste());
         lukSalg(ordre2, fredagsbar, LocalDate.now(), true, dankort);
 
 
