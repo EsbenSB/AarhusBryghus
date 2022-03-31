@@ -45,40 +45,43 @@ public class SalgsstatistikPane extends GridPane {
         btnSolgteKlip = new Button("Solgte Klip");
         this.add(btnSolgteKlip,0,2);
 
+        txfSolgteKlip = new TextField();
+        this.add(txfSolgteKlip,0,3);
+
+        txfBrugteKlip = new TextField();
+        this.add(txfBrugteKlip,1,3);
+
         btnBrugteKlip = new Button("Brugte Klip");
         this.add(btnBrugteKlip,1,2);
 
         Label lblOrdrer = new Label("Ordre: ");
-        this.add(lblOrdrer,1,3);
+        this.add(lblOrdrer,1,4);
 
-        Label lblOrdre = new Label("Ordre: ");
-        this.add(lblOrdre,0,3);
+        Label lblOrdrelinjer = new Label("Ordrelinjer: ");
+        this.add(lblOrdrelinjer,0,4);
 
         lvwOrdrer = new ListView<>();
-        this.add(lvwOrdrer,0,4,1,5);
+        this.add(lvwOrdrer,0,5,1,5);
         ChangeListener<Ordre> ordreListener = (ov, gammelOrdre, nyOrdre) -> this.selectedOrdreChanged();
         lvwOrdrer.getSelectionModel().selectedItemProperty().addListener(ordreListener);
 
-        Label lblOrdreliste = new Label("Ordrelinjer: ");
-        this.add(lblOrdreliste,1,3);
-
         lvwOrdrelinjer = new ListView<>();
-        this.add(lvwOrdrelinjer,1,4,3,5);
+        this.add(lvwOrdrelinjer,1,5,3,5);
         lvwOrdrelinjer.setPrefWidth(400);
         ChangeListener<String> ordrelinjeListener = (ov, gammelLinje, nyLinje) -> this.selectedOrdreLinjeChanged();
         lvwOrdrelinjer.getSelectionModel().selectedItemProperty().addListener(ordrelinjeListener);
 
         Label lblBetalingsform = new Label("Betalingsform: ");
-        this.add(lblBetalingsform,4,3);
+        this.add(lblBetalingsform,4,4);
 
         txfBetalingsform = new TextField("Betalingsform");
-        this.add(txfBetalingsform,4,4);
+        this.add(txfBetalingsform,4,5);
 
         Label lblSamletPris = new Label("Samlet Pris: ");
-        this.add(lblSamletPris,4,5);
+        this.add(lblSamletPris,4,6);
 
         txfSamletPris = new TextField("Samlet pris");
-        this.add(txfSamletPris,4,6);
+        this.add(txfSamletPris,4,7);
     }
 
     private void selectedOrdreLinjeChanged() {
