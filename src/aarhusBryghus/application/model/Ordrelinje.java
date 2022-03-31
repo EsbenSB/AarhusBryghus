@@ -13,6 +13,7 @@ public class Ordrelinje {
         this.produkt = produkt;
         this.antal = antal;
         this.pris = produkt.enkeltPris(prisliste);
+        this.klip = produkt.getklippekortPris(prisliste);
     }
 
     public Produkt getProdukt(){
