@@ -2,7 +2,7 @@ package aarhusBryghus.application.model;
 
 public class MobilePay implements Betalingsform{
 
-    public String betal() {
+    public String getType() {
         return "MobilePay";
 
     }
