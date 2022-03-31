@@ -2,8 +2,6 @@ package aarhusBryghus.gui;
 
 import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Ordre;
-import aarhusBryghus.application.model.Ordrelinje;
-import aarhusBryghus.application.model.Produkt;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -16,7 +14,7 @@ public class SalgsstatistikPane extends GridPane {
 
     private final DatePicker dpStartDato = new DatePicker(LocalDate.parse("2022-01-01"));
     private final DatePicker dpSlutDato = new DatePicker(LocalDate.now());
-    private final TextField txfBetalingsform, txfSamletPris;
+    private final TextField txfSolgteKlip, txfBrugteKlip, txfBetalingsform, txfSamletPris;
     private final Button btnSolgteKlip, btnBrugteKlip, dagensSalg, udlejedeProdukter;
     private final ListView<Ordre> lvwOrdrer;
     private final ListView<String> lvwOrdrelinjer;
@@ -57,7 +55,7 @@ public class SalgsstatistikPane extends GridPane {
         this.add(lblOrdre,0,3);
 
         lvwOrdrer = new ListView<>();
-        this.add(lvwOrdrer,0,4);
+        this.add(lvwOrdrer,0,4,1,5);
         ChangeListener<Ordre> ordreListener = (ov, gammelOrdre, nyOrdre) -> this.selectedOrdreChanged();
         lvwOrdrer.getSelectionModel().selectedItemProperty().addListener(ordreListener);
 
@@ -65,24 +63,35 @@ public class SalgsstatistikPane extends GridPane {
         this.add(lblOrdreliste,1,3);
 
         lvwOrdrelinjer = new ListView<>();
-        this.add(lvwOrdrelinjer,1,4);
+        this.add(lvwOrdrelinjer,1,4,3,5);
+        lvwOrdrelinjer.setPrefWidth(400);
+        ChangeListener<String> ordrelinjeListener = (ov, gammelLinje, nyLinje) -> this.selectedOrdreLinjeChanged();
+        lvwOrdrelinjer.getSelectionModel().selectedItemProperty().addListener(ordrelinjeListener);
 
         Label lblBetalingsform = new Label("Betalingsform: ");
-        this.add(lblBetalingsform,3,3);
+        this.add(lblBetalingsform,4,3);
 
-        txfBetalingsform = new TextField("test");
-        this.add(txfBetalingsform,3,4);
+        txfBetalingsform = new TextField("Betalingsform");
+        this.add(txfBetalingsform,4,4);
 
         Label lblSamletPris = new Label("Samlet Pris: ");
-        this.add(lblSamletPris,3,5);
+        this.add(lblSamletPris,4,5);
 
         txfSamletPris = new TextField("Samlet pris");
-        this.add(txfSamletPris,3,6);
+        this.add(txfSamletPris,4,6);
+    }
+
+    private void selectedOrdreLinjeChanged() {
+        Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
+        txfBetalingsform.setText(ordre.getBetalingsform()+"");
+        txfSamletPris.setText(ordre.getSamletPris()+"");
     }
 
     private void selectedOrdreChanged() {
         Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
         lvwOrdrelinjer.getItems().setAll(Controller.udprintOrdre(ordre));
+        txfBetalingsform.setText(ordre.getBetalingsform()+"");
+        txfSamletPris.setText(ordre.getSamletPris()+"");
     }
 
     private void hentDagensSalg() {

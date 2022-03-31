@@ -9,7 +9,7 @@ public class Ordre {
     private boolean erOrdrenLukket;
     private LocalDate oprettelsesDato;
     private LocalDate afslutningsDato;
-    private static int ordreNummer;
+    private static int ordrenummer;
     private ArrayList<Ordrelinje> ordrelinjer = new ArrayList<>();
     private Prisliste prisliste;
     private int ordrelinjeNr = 0;
@@ -17,7 +17,7 @@ public class Ordre {
     private Kunde kunde;
 
     public Ordre(String type, boolean status, LocalDate oprettelsesDato, Prisliste prisliste) {
-        ordreNummer++;
+        ordrenummer++;
         this.type = type;
         this.erOrdrenLukket = status;
         this.oprettelsesDato = oprettelsesDato;
@@ -73,8 +73,8 @@ public class Ordre {
         this.afslutningsDato = afslutningsDato;
     }
 
-    public static int getOrdreNummer() {
-        return ordreNummer;
+    public static int getOrdrenummer() {
+        return ordrenummer;
     }
 
     public ArrayList<Ordrelinje> getOrdrelinjer() {
@@ -95,10 +95,7 @@ public class Ordre {
         int klip = 0;
         double samletPris = 0;
         for(Ordrelinje ol: ordrelinjer){
-            if(ol.getKlip() > 0){
-                klip += ol.getKlip();
-            }
-            samletPris += ol.getPris();
+            samletPris += ol.getPris()*ol.getAntal();
         }
         return samletPris;
     }
@@ -109,13 +106,13 @@ public class Ordre {
 
     @Override
     public String toString() {
-        return "Ordre{" +
-                "type='" + type + '\'' +
-                ", status=" + erOrdrenLukket +
-                ", oprettelsesDato=" + oprettelsesDato +
-                ", afslutningsDato=" + afslutningsDato +
-                ", ordrelinjer=" + ordrelinjer +
-                ", ordrelinjeNr=" + ordrelinjeNr +
-                '}';
+        if(kunde == null){
+            return "Ordrenr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Samlet salg: " + this.getSamletPris();
+
+        }
+        else{
+            return "OrdreNr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Kunde navn: " + kunde.getFornavn() + " " + kunde.getEfternavn() + "Kunde Mobil: " + kunde.getTelefon();
+
+        }
     }
 }
