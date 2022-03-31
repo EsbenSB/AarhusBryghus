@@ -314,7 +314,19 @@ public class KasseapparatPane extends GridPane {
     public void addProduktKurv() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
         if (produkt != null) {
+            Ordrelinje ordrelinje = new Ordrelinje(produkt, Integer.parseInt(txfValgteProdukt.getText()), cbbPrislister.getSelectionModel().getSelectedItem());
+            if (rbStandardPris.isSelected()) {
+                txfSamletPrisProdukt.setText("test");
+            } else if (rbKlippeKortPris.isSelected()) {
+                txfSamletPrisProdukt.setText("test2");
+            } else if (rbCustomPris.isSelected()) {
+                txfSamletPrisProdukt.setText("test3");
+            } else {
+                txfSamletPrisProdukt.setText("test4");
+            }
             lvwKurv.getItems().add(produkt);
+            cbbPrislister.setDisable(true);
+            txfTotalPris.setDisable(false);
         }
     }
 
@@ -323,11 +335,18 @@ public class KasseapparatPane extends GridPane {
         Produkt produkt = lvwKurv.getSelectionModel().getSelectedItem();
         if (produkt != null) {
             lvwKurv.getItems().remove(produkt);
+
+            if (lvwKurv.getSelectionModel().isEmpty()) {
+                cbbPrislister.setDisable(false);
+                txfTotalPris.setDisable(true);
+            }
         }
     }
 
     public void toemKurv() {
         lvwKurv.getItems().clear();
         txfTotalPris.clear();
+        cbbPrislister.setDisable(false);
+        txfTotalPris.setDisable(true);
     }
 }

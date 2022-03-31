@@ -20,7 +20,7 @@ public class ProduktPane extends GridPane {
     private Button btnOpdaterMaaleenhed;
     private Button btnSletMaaleenhed;
     private Button btnOpretMaaleenhed;
-    private ListView<Pant> lvwPant = new ListView<>();
+    private ListView<PantProdukt> lvwPant = new ListView<>();
     private Button btnOpdaterPant;
     private Button btnSletPant;
     private Button btnOpretPant;
