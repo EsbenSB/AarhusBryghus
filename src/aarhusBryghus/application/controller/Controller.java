@@ -466,16 +466,16 @@ public class Controller {
 
         Ordre ordre1 = Controller.createSalg(fredagsbar);
         Controller.createOrdrelinjeSalg(ordre1,oldStrongAle,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,blackMonster,2,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,blondieFlaske,2,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,oelpoelser,2,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,blackMonster,1,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,blondieFlaske,1,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,oelpoelser,1,ordre1.getPrisliste());
         lukSalg(ordre1,fredagsbar, LocalDate.now(), true, klip1);
 
         Ordre ordre2 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,2,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,blackMonster,3,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,mEgesplint,5,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,lyngGin4Cl,9,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,2,ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,blackMonster,3,ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,mEgesplint,5,ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,lyngGin4Cl,9,ordre2.getPrisliste());
         lukSalg(ordre2, fredagsbar, LocalDate.now(), true, dankort);
 
 
