@@ -32,6 +32,7 @@ public class StartWindow extends Application {
         TabPane tabPane = new TabPane();
         this.initTapPane(tabPane);
         pane.setCenter(tabPane);
+
     }
 
     private void initTapPane(TabPane tabPane) {
@@ -71,5 +72,13 @@ public class StartWindow extends Application {
 
         UdlejningPane udlejningPane = new UdlejningPane();
         tabUdlejning.setContent(udlejningPane);
-    }
+
+        // Laver tab til Kunder
+        Tab tabKunder = new Tab("Kunder");
+        tabPane.getTabs().add(tabKunder);
+
+        KundePane kundePane = new KundePane();
+        tabKunder.setContent(kundePane);
+        }
+
 }

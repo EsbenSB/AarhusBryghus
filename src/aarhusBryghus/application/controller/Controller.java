@@ -24,6 +24,25 @@ public class Controller {
         storage = Storage.getInstance();
     }
 
+    // METODER TIL UDLEJNING
+    public static Kunde findKunde(int mobilnummer){
+        // TODO FIND KUNDE
+
+        return null;
+    }
+
+    public static ArrayList<Ordre> getKundeOrdre(Kunde kunde){
+        // TODO Find alle ordre, som har kunden registret på sig.
+        // if ordre.getKunde == kunde -> add til arrayliste
+        return null;
+    }
+    public static ArrayList<Ordre> getNuværendeUdlejninger(){
+        // TODO Listen som indlæses fra start, i udlejning. Man kan søge, og erstatte listen, hvis der er for mange
+        return null;
+    }
+
+
+
     // createSalg er metoden som bruges, til af kasseapperatet. de oprettes altid med fast dato, og som lukkede.
     public static Ordre createSalg(Prisliste prisliste) {
         Ordre ordre = new Ordre("Salg", true, LocalDate.now(), prisliste);
@@ -234,11 +253,11 @@ public class Controller {
         for (int j = 0; j < ordre.getOrdrelinjer().size(); j++) {
             Ordrelinje ol = ordre.getOrdrelinjer().get(j);
             if (ordre.getBetalingsform().getType().equals("Klip")) {
-                alleSalg.add("Navn: " + ol.getProdukt() + ", antal: " + ol.getAntal() + ", klip pr. styk: " + ol.getKlip() + ", samlet klippepris: "
-                        + ol.getSamletPrisKlip() + ", betalingsform: " + ordre.getBetalingsform());
+                alleSalg.add(ol.getAntal() + " x " + ol.getProdukt() + ", Klip pr. styk: " + ol.getKlip() + ", samlet Klip: "
+                        + ol.getSamletPrisKlip());
             } else {
-                alleSalg.add("Navn: " + ol.getProdukt() + ", antal: " + ol.getAntal() + ", pris pr. styk: " + ol.getPris() + ", samlet pris: "
-                        + ol.getSamletPris() + ", betalingsform: " + ordre.getBetalingsform());
+                alleSalg.add(ol.getAntal() + " x " + ol.getProdukt() + ", pris pr. styk: " + ol.getPris() + ", samlet pris: "
+                        + ol.getSamletPris());
             }
 
         }
@@ -266,14 +285,15 @@ public class Controller {
             Ordre o = Storage.getOrdrer().get(i);
             if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                     o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
-                for (int j = 0; j < o.getOrdrelinjer().size(); j++) {
-                    forbrugteKlip += o.getOrdrelinjer().get(j).getSamletPrisKlip();
+                if (o.getBetalingsform().getType().equals("Klip")) {
+                    for (int j = 0; j < o.getOrdrelinjer().size(); j++) {
+                        forbrugteKlip += o.getOrdrelinjer().get(j).getSamletPrisKlip();
+                    }
                 }
             }
         }
         return forbrugteKlip;
     }
-
     public static void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
         ordre.setAfslutningsDato(afslutDato);
         ordre.setOrdreStatus(status);
@@ -472,6 +492,7 @@ public class Controller {
         lukSalg(ordre1,fredagsbar, LocalDate.now(), true, klip1);
 
         Ordre ordre2 = Controller.createSalg(fredagsbar);
+        Controller.createOrdrelinjeSalg(ordre2,klippekortProdukt10,1,fredagsbar);
         Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,2,ordre2.getPrisliste());
         Controller.createOrdrelinjeSalg(ordre2,blackMonster,3,ordre2.getPrisliste());
         Controller.createOrdrelinjeSalg(ordre2,mEgesplint,5,ordre2.getPrisliste());
