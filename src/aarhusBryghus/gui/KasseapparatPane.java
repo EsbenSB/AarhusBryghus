@@ -26,6 +26,7 @@ public class KasseapparatPane extends GridPane {
     private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
     private final ToggleGroup groupAnvendtPris = new ToggleGroup();
+    private Label lblError;
 
     public KasseapparatPane() {
         this.setPadding(new Insets(20));
@@ -191,6 +192,10 @@ public class KasseapparatPane extends GridPane {
         rbKlippekort = new RadioButton("Klippekort");
         this.add(rbKlippekort,4,7);
         rbKlippekort.setToggleGroup(groupBetalingsmetode);
+
+        lblError = new Label();
+        this.add(lblError, 4, 0);
+        lblError.setStyle("-fx-text-fill: red");
         // -------------------------------------------------------------------------------------------------------------
     }
 
@@ -299,14 +304,67 @@ public class KasseapparatPane extends GridPane {
 
     //TODO Lav færdig
     public void beregnProduktPris() {
-        if (rbStandardPris.isSelected()) {
-            txfSamletPrisProdukt.setText("test");
-        } else if (rbKlippeKortPris.isSelected()) {
-            txfSamletPrisProdukt.setText("test2");
-        } else if (rbCustomPris.isSelected()) {
-            txfSamletPrisProdukt.setText("test3");
+        Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
+        Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+
+        String valgteProdukt = txfValgteProdukt.getText().trim();
+        if (valgteProdukt.length() == 0) {
+            lblError.setText("Vælg et produkt");
         } else {
-            txfSamletPrisProdukt.setText("test4");
+            int antalValgte = -1;
+            try {
+                antalValgte = Integer.parseInt(txfAntalValgte.getText().trim());
+            } catch (NumberFormatException ex) {
+                // Do nothing
+            }
+            if (antalValgte < 1) {
+                lblError.setText("Vælg et antal");
+            } else {
+                if (rbStandardPris.isSelected()) {
+                    Ordrelinje ordrelinje = new Ordrelinje(produkt, antalValgte, prisliste);
+                    txfSamletPrisProdukt.setText(ordrelinje.getSamletPris()+" Kr.");
+                    lblError.setText("");
+                } else {
+                    if (rbKlippeKortPris.isSelected()) {
+                        Ordrelinje ordrelinje2 = new Ordrelinje(produkt, antalValgte, prisliste);
+                        txfSamletPrisProdukt.setText(ordrelinje2.getSamletPrisKlip()+" Klip");
+                        lblError.setText("");
+                    } else {
+                        if (rbCustomPris.isSelected()) {
+                            int customPris = -1;
+                            try {
+                                customPris = Integer.parseInt(txfCustomPris.getText().trim());
+                                Ordrelinje ordrelinje3 = new Ordrelinje(produkt, antalValgte, prisliste);
+                                ordrelinje3.setAftaltPris(customPris);
+                                txfSamletPrisProdukt.setText(ordrelinje3.getSamletPris()+" Kr.");
+                                lblError.setText("");
+                            } catch (NumberFormatException ex) {
+                                // Do nothing
+                            }
+                            if (customPris <1) {
+                                lblError.setText("CustomPris er tom");
+                            }
+                        } else {
+                            double rabatPris = -1;
+                            try {
+                                rabatPris = Integer.parseInt(txfRabatPris.getText().trim());
+                                Ordrelinje ordrelinje4 = new Ordrelinje(produkt, antalValgte, prisliste);
+                                ordrelinje4.setPrisMedProcentRabat(rabatPris);
+                                txfSamletPrisProdukt.setText(ordrelinje4.getSamletPris()+" Kr.");
+                                lblError.setText("");
+                            } catch (NumberFormatException ex) {
+                                // Do nothing
+                            }
+                            if (rabatPris < 0) {
+                                lblError.setText("Ugyldig rabat");
+                            } else if (rabatPris > 100) {
+                                lblError.setText("For høj rabat");
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
