@@ -44,6 +44,7 @@ public class SalgsstatistikPane extends GridPane {
 
         btnSolgteKlip = new Button("Solgte Klip");
         this.add(btnSolgteKlip,0,2);
+        btnSolgteKlip.setOnAction(event -> getAntalSolgteKlip());
 
         txfSolgteKlip = new TextField();
         this.add(txfSolgteKlip,0,3);
@@ -53,6 +54,7 @@ public class SalgsstatistikPane extends GridPane {
 
         btnBrugteKlip = new Button("Brugte Klip");
         this.add(btnBrugteKlip,1,2);
+        btnBrugteKlip.setOnAction(event -> getAntalBrugteKlip());
 
         Label lblOrdrer = new Label("Ordre: ");
         this.add(lblOrdrer,1,4);
@@ -108,5 +110,16 @@ public class SalgsstatistikPane extends GridPane {
 
     private void hentDagensSalg() {
         lvwOrdrer.getItems().setAll(Controller.getDagensSalg());
+    }
+
+    private void getAntalSolgteKlip(){
+        LocalDate startDato = dpStartDato.getValue();
+        LocalDate slutDato = dpSlutDato.getValue();
+        txfSolgteKlip.setText(""+Controller.getAntalSolgteKlip(startDato,slutDato));
+    }
+    private void getAntalBrugteKlip(){
+        LocalDate startDato = dpStartDato.getValue();
+        LocalDate slutDato = dpSlutDato.getValue();
+        txfBrugteKlip.setText(""+Controller.getAntalForbrugteKlip(startDato,slutDato));
     }
 }
