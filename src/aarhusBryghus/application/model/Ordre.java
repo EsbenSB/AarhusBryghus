@@ -9,7 +9,8 @@ public class Ordre {
     private boolean erOrdrenLukket;
     private LocalDate oprettelsesDato;
     private LocalDate afslutningsDato;
-    private static int ordrenummer;
+    private static int ordrenummerCounter = 0;
+    private int ordrenummer;
     private ArrayList<Ordrelinje> ordrelinjer = new ArrayList<>();
     private Prisliste prisliste;
     private int ordrelinjeNr = 0;
@@ -17,7 +18,8 @@ public class Ordre {
     private Kunde kunde;
 
     public Ordre(String type, boolean status, LocalDate oprettelsesDato, Prisliste prisliste) {
-        ordrenummer++;
+        ordrenummerCounter++;
+        this.ordrenummer = ordrenummerCounter;
         this.type = type;
         this.erOrdrenLukket = status;
         this.oprettelsesDato = oprettelsesDato;
@@ -73,7 +75,7 @@ public class Ordre {
         this.afslutningsDato = afslutningsDato;
     }
 
-    public static int getOrdrenummer() {
+    public int getOrdrenummer() {
         return ordrenummer;
     }
 
@@ -85,7 +87,7 @@ public class Ordre {
         int klip = 0;
         for (Ordrelinje ol : ordrelinjer) {
             if (ol.getKlip() > 0) {
-                klip += ol.getKlip();
+                klip += ol.getSamletPrisKlip();
             }
         }
         return klip;

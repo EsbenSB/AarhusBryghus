@@ -274,10 +274,15 @@ public class Controller {
         return forbrugteKlip;
     }
 
-    public static void lukSalg(Ordre ordre, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
+    public static void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
         ordre.setAfslutningsDato(afslutDato);
         ordre.setOrdreStatus(status);
         ordre.setBetalingsform(betalingsform);
+        if(betalingsform.getType().equals("Klip")){
+            for(Ordrelinje ol: ordre.getOrdrelinjer()){
+                ol.setKlip(ol.getProdukt().getklippekortPris(prisliste));
+            }
+        }
     }
 
 
@@ -459,19 +464,19 @@ public class Controller {
         Betalingsform regning = new Regning();
 
 
-        Ordre ordre1 = Controller.createSalg(butik);
-        Controller.createOrdrelinjeSalg(ordre1,tShirt,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,polo,3,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,klosterbrygFadoel,5,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,cap,10,ordre1.getPrisliste());
-        lukSalg(ordre1, LocalDate.now(), true, klip1);
+        Ordre ordre1 = Controller.createSalg(fredagsbar);
+        Controller.createOrdrelinjeSalg(ordre1,oldStrongAle,1,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,blackMonster,2,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,blondieFlaske,2,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,oelpoelser,2,ordre1.getPrisliste());
+        lukSalg(ordre1,fredagsbar, LocalDate.now(), true, klip1);
 
-        Ordre ordre2 = Controller.createSalg(butik);
+        Ordre ordre2 = Controller.createSalg(fredagsbar);
         Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,2,ordre1.getPrisliste());
         Controller.createOrdrelinjeSalg(ordre2,blackMonster,3,ordre1.getPrisliste());
         Controller.createOrdrelinjeSalg(ordre2,mEgesplint,5,ordre1.getPrisliste());
         Controller.createOrdrelinjeSalg(ordre2,lyngGin4Cl,9,ordre1.getPrisliste());
-        lukSalg(ordre2, LocalDate.now(), true, dankort);
+        lukSalg(ordre2, fredagsbar, LocalDate.now(), true, dankort);
 
 
     }

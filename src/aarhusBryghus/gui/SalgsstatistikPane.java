@@ -87,14 +87,23 @@ public class SalgsstatistikPane extends GridPane {
     private void selectedOrdreLinjeChanged() {
         Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
         txfBetalingsform.setText(ordre.getBetalingsform()+"");
-        txfSamletPris.setText(ordre.getSamletPris()+"");
+        if(ordre.getBetalingsform().getType().equals("Klip")){
+            txfSamletPris.setText(ordre.getSamletPrisKlip()+"");
+        } else{
+            txfSamletPris.setText(ordre.getSamletPris()+"");
+        }
+
     }
 
     private void selectedOrdreChanged() {
         Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
         lvwOrdrelinjer.getItems().setAll(Controller.udprintOrdre(ordre));
         txfBetalingsform.setText(ordre.getBetalingsform()+"");
-        txfSamletPris.setText(ordre.getSamletPris()+"");
+        if(ordre.getBetalingsform().getType().equals("Klip")){
+            txfSamletPris.setText(ordre.getSamletPrisKlip()+"");
+        } else{
+            txfSamletPris.setText(ordre.getSamletPris()+"");
+        }
     }
 
     private void hentDagensSalg() {
