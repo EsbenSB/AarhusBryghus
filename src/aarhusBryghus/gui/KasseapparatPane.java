@@ -136,6 +136,7 @@ public class KasseapparatPane extends GridPane {
         //TODO Lav knap færdig
         btnTilKurv = new Button("Tilføj til kurv");
         this.add(btnTilKurv,1,10);
+        btnTilKurv.setOnAction(event -> addProduktKurv());
         GridPane.setHalignment(btnTilKurv, HPos.RIGHT);
 
         Label lblKurv = new Label("Kurv:");
@@ -283,7 +284,7 @@ public class KasseapparatPane extends GridPane {
         }
     }
 
-    //TODO har ikke rigtigt forstået hvordan det virker med ordre og ordrelinjer
+    //TODO Lav færdig
     public void beregnProduktPris() {
         if (rbStandardPris.isSelected()) {
             txfSamletPrisProdukt.setText("test");
@@ -296,4 +297,8 @@ public class KasseapparatPane extends GridPane {
         }
     }
 
+    //TODO Lav færdig
+    public void addProduktKurv() {
+
+    }
 }
