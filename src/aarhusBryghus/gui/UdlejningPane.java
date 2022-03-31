@@ -1,17 +1,24 @@
 package aarhusBryghus.gui;
 
+import aarhusBryghus.application.controller.Controller;
+import aarhusBryghus.application.model.Kunde;
+import aarhusBryghus.storage.Storage;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 public class UdlejningPane extends GridPane {
-    //TODO Lav tekstfields og andet stuff her:
-    Label lblBetalingsmetoder;
-    Button btnBetaling;
-    RadioButton r1, r2, r3, r4;
+
+    private Label lblUdlejninger, lblOrdrelinjer, lblSamletPant, lblSoegEfterKunde, lblSamletPris, lblRetOrdreLinje, lblBetalingsmetoder;
+    private Button btnBetaling, btnBeregnSamletPris, btnSoegEfterKunde, btnRetOrdre;
+    private RadioButton rbKontant, rbRegning, rbMobilepay, rbDankort;
+    private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
+    private ListView lvwUdlejninger = new ListView();
+    private ListView lvwOrdrelinjer = new ListView();
+    private TextField txfSamletPant, txfSoegKunde, txfSamletPris, txfRetAntal;
+
+
 
     public UdlejningPane() {
         this.setPadding(new Insets(20));
@@ -19,38 +26,96 @@ public class UdlejningPane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
-        //TODO Gør så knap virker og sat det rigtige sted
-        //Knap til opret produkt
-        Button btnOpretProdukt = new Button("Opret Produkt");
-        this.add(btnOpretProdukt,0,0);
-        GridPane.setHalignment(btnOpretProdukt, HPos.RIGHT);
-        btnOpretProdukt.setOnAction(event -> this.opretProduktAction());
-        //TODO Lav knap færdig
+        txfRetAntal = new TextField();
+        this.add(txfRetAntal,1,10);
+
+        txfSamletPris = new TextField();
+        this.add(txfSamletPris,3,5);
+
+        txfSamletPant = new TextField();
+        this.add(txfSamletPant,2,1);
+
+        txfSoegKunde = new TextField("Indtast Mobilnummer");
+        this.add(txfSoegKunde,3,1);
+        txfSoegKunde.setOnMouseClicked(event -> soegKundeEvent()); //Fjerner "indtast mobilnummer" i feltet når man klikker
+
+        btnRetOrdre = new Button("Accepter Ændring");
+        this.add(btnRetOrdre,1,11);
+
+        btnSoegEfterKunde = new Button("Find kunde");
+        this.add(btnSoegEfterKunde,3,3);
+        btnSoegEfterKunde.setOnAction(event -> soegEfterKunde());
+        btnBeregnSamletPris = new Button("Beregn Pris");
+        this.add(btnBeregnSamletPris,2,4);
+
+        lblUdlejninger = new Label("Udlejninger");
+        this.add(lblUdlejninger,0,0);
+
+        this.add(lvwUdlejninger,0,1,1,9);
+        lvwUdlejninger.setPrefHeight(200);
+
+        // TODO Ret til korrekt liste
+        lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
+
+
+        this.add(lvwOrdrelinjer,1,1,1,9);
+        lvwOrdrelinjer.setPrefHeight(200);
+        lblOrdrelinjer = new Label("Ordrelinjer");
+        this.add(lblOrdrelinjer,1,0);
+
+        lblSamletPant = new Label("Samlet Pant:");
+        this.add(lblSamletPant,2,0);
+
+        lblSoegEfterKunde = new Label("Find Udlejning: ");
+        this.add(lblSoegEfterKunde,3,0);
+
+        lblSamletPris = new Label("Samlet Pris:");
+        this.add(lblSamletPris,3,4);
+
         btnBetaling = new Button("Betal");
-        this.add(btnBetaling,11,12);
+        this.add(btnBetaling,3,12);
         GridPane.setHalignment(btnBetaling, HPos.RIGHT);
 
-        lblBetalingsmetoder = new Label("Betalingsmetoder:");
-        this.add(lblBetalingsmetoder,10,9);
-        //TODO Går så man kun kan vælge en RadioButton af gangen
-        r1 = new RadioButton("Kontant");
-        this.add(r1,10,10);
+        Label lblBetalingsmetoder = new Label("Betalingsmetoder:");
+        this.add(lblBetalingsmetoder,3,7);
 
-        r2 = new RadioButton("Mobilepay");
-        this.add(r2,10,11);
+        rbKontant = new RadioButton("Kontant");
+        this.add(rbKontant,3,11);
+        rbKontant.setToggleGroup(groupBetalingsmetode);
 
-        r3 = new RadioButton("Dankort");
-        this.add(r3,10,12);
+        rbMobilepay = new RadioButton("Mobilepay");
+        this.add(rbMobilepay,3,8);
+        rbMobilepay.setToggleGroup(groupBetalingsmetode);
 
-        r4 = new RadioButton("Klippekort");
-        this.add(r4,10,13);
+        rbDankort = new RadioButton("Dankort");
+        this.add(rbDankort,3,9);
+        rbDankort.setToggleGroup(groupBetalingsmetode);
+
+        rbRegning = new RadioButton("Regning");
+        this.add(rbRegning,3,10);
+        rbRegning.setToggleGroup(groupBetalingsmetode);
+
+
+
     }
 
-    private void opretProduktAction() {
-        ProduktWindow dia= new ProduktWindow("Opret Produkt");
-        dia.showAndWait();
+    private void soegEfterKunde() {
+        try{
+            int soegeord = Integer.parseInt(txfSoegKunde.getText().toString());{
+                Kunde kunde = Controller.findKunde(soegeord);
+                if(kunde != null){
+                    lvwUdlejninger.getItems().setAll(Controller.getKundeOrdre(kunde));
+                }
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
 
-        //TODO Lav resten af metoden færdig når knappen skal laves færdig
     }
+
+    private void soegKundeEvent() {
+        txfSoegKunde.clear();
+    }
+
 }
 
