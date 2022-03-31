@@ -1,7 +1,9 @@
 package aarhusBryghus.application.model;
 
 public class Regning implements Betalingsform {
-    public String betal() {
+
+    @Override
+    public String getType() {
         return "Regning";
     }
 }
