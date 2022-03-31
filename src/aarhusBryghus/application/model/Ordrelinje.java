@@ -6,7 +6,7 @@ public class Ordrelinje {
     private int linjenummer = 1;
     private int antal;
     private double pris;
-    private int Klip; // prisen på klippekort??
+    private int klip; // prisen på klippekort??
 
     public Ordrelinje(Produkt produkt, int antal, Prisliste prisliste) {
         linjenummer++;
@@ -47,16 +47,21 @@ public class Ordrelinje {
     }
 
     public void setKlip(int klip) {
-        Klip = klip;
+        this.klip = klip;
     }
 
     public int getKlip() {
-        return Klip;
+        return klip;
     }
 
     public double getSamletPris(){
         double samletPris = pris*antal;
         return samletPris;
+    }
+
+    public int getSamletPrisKlip(){
+        int samletAntalKlip = klip*antal;
+        return samletAntalKlip;
     }
 
     @Override
