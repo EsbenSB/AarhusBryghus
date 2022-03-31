@@ -6,4 +6,9 @@ public class Kontant implements Betalingsform{
     public String getType() {
         return "Kontant";
     }
+
+    @Override
+    public String toString() {
+        return "Kontant";
+    }
 }

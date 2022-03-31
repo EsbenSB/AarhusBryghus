@@ -14,7 +14,7 @@ public class SalgsstatistikPane extends GridPane {
 
     private final DatePicker dpStartDato = new DatePicker(LocalDate.parse("2022-01-01"));
     private final DatePicker dpSlutDato = new DatePicker(LocalDate.now());
-    private final TextField txfSolgteKlip, txfBrugteKlip, txfBetalingsform, txfSamletPris;
+    private final TextField txfSolgteKlip, txfBrugteKlip, txfBetalingsform, txfSamletPris, txfDagensOmsaetning;
     private final Button btnSolgteKlip, btnBrugteKlip, btnDagensSalg, udlejedeProdukter;
     private final ListView<Ordre> lvwOrdrer;
     private final ListView<String> lvwOrdrelinjer;
@@ -24,6 +24,7 @@ public class SalgsstatistikPane extends GridPane {
         this.setHgap(20);
         this.setVgap(10);
         this.setGridLinesVisible(false);
+
 
 
         Label lblPrislister= new Label("Vælg startdato:");
@@ -99,8 +100,13 @@ public class SalgsstatistikPane extends GridPane {
 
         txfSamletPris = new TextField("Samlet pris");
         this.add(txfSamletPris,5,8);
-    }
 
+        Label lblDagensOmsaetning = new Label("Dagens Omsætning: ");
+        this.add(lblDagensOmsaetning,4,10);
+
+        txfDagensOmsaetning = new TextField();
+        this.add(txfDagensOmsaetning,5,10);
+    }
     private void selectedOrdreLinjeChanged() {
         Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
         txfBetalingsform.setText(ordre.getBetalingsform()+"");
@@ -108,6 +114,7 @@ public class SalgsstatistikPane extends GridPane {
             txfSamletPris.setText(ordre.getSamletPrisKlip()+" Klip");
         } else{
             txfSamletPris.setText("Kr. " + ordre.getSamletPris());
+            txfDagensOmsaetning.setText(Controller.getSamletSumDagensSalg(LocalDate.now())+"");
         }
     }
 
@@ -119,11 +126,15 @@ public class SalgsstatistikPane extends GridPane {
             txfSamletPris.setText(ordre.getSamletPrisKlip()+" Klip");
         } else{
             txfSamletPris.setText("Kr. " + ordre.getSamletPris());
+            txfDagensOmsaetning.setText(Controller.getSamletSumDagensSalg(LocalDate.now())+"");
+
         }
     }
 
     private void hentDagensSalg() {
         lvwOrdrer.getItems().setAll(Controller.getDagensSalg());
+        txfDagensOmsaetning.setText(Controller.getSamletSumDagensSalg(LocalDate.now())+"");
+
     }
 
     private void getAntalSolgteKlip(){

@@ -38,6 +38,8 @@ public class UdlejningPane extends GridPane {
         txfSoegKunde = new TextField("Indtast Mobilnummer");
         this.add(txfSoegKunde,3,1);
         txfSoegKunde.setOnMouseClicked(event -> soegKundeEvent()); //Fjerner "indtast mobilnummer" i feltet når man klikker
+        Label lblAccepterAendringer = new Label("Juster den antallet på ordrelinjen: ");
+        this.add(lblAccepterAendringer,0,10);
 
         btnRetOrdre = new Button("Accepter Ændring");
         this.add(btnRetOrdre,1,11);
@@ -60,6 +62,7 @@ public class UdlejningPane extends GridPane {
 
         this.add(lvwOrdrelinjer,1,1,1,9);
         lvwOrdrelinjer.setPrefHeight(200);
+
         lblOrdrelinjer = new Label("Ordrelinjer");
         this.add(lblOrdrelinjer,1,0);
 

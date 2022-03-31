@@ -28,6 +28,14 @@ public class Ordre {
         this.betalingsform = null;
     }
 
+    public boolean isErOrdrenLukket() {
+        return erOrdrenLukket;
+    }
+
+    public Kunde getKunde() {
+        return kunde;
+    }
+
     public void setKunde(Kunde kunde){
         this.kunde = kunde;
     }

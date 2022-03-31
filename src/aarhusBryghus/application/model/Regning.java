@@ -6,4 +6,9 @@ public class Regning implements Betalingsform {
     public String getType() {
         return "Regning";
     }
+
+    @Override
+    public String toString() {
+        return "Regning";
+    }
 }
