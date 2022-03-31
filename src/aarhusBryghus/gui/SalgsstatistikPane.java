@@ -11,6 +11,6 @@ public class SalgsstatistikPane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
-        //TODO Tilføj stuff til GUI:
+
     }
 }

@@ -54,6 +54,11 @@ public class Ordrelinje {
         return Klip;
     }
 
+    public double getSamletPris(){
+        double samletPris = pris*antal;
+        return samletPris;
+    }
+
     @Override
     public String toString() {
         return produkt.getNavn() + " " + produkt.getMaaleEnhed() + ". Antal: " + antal + " stk pris: " + pris + " samlet pris: " + pris * antal;
