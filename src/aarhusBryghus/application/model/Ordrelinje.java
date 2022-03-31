@@ -32,7 +32,7 @@ public class Ordrelinje {
     Pre: procent skal være > 0
      */
     public void setPrisMedProcentRabat(double procent){
-        if(procent > 0){
+        if(procent > 0 && procent <= 100){
             pris = pris*((100.0-procent)/100.0);
         }
     }

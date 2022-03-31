@@ -80,13 +80,15 @@ public class Controller {
     }
     // returnerer den første prisliste, som findes på et produkt
     public static Prisliste getProduktPrisliste(Produkt produkt){
-        for(Prisliste pl: Storage.getPrislister()){
-            for(Pris pris: produkt.getPriser()){
-                if(pris.getPrisliste() == pl){
-                    return pl;
+            for(Prisliste pl: Storage.getPrislister()){
+                for(Pris pris: produkt.getPriser()){
+                    if(pris.getPrisliste() == pl){
+                        return pl;
+                    }
                 }
             }
-        }
+
+
         return null;
     }
 
@@ -234,6 +236,7 @@ public class Controller {
         Produktgruppe beklaedning = Controller.createProduktGruppe("Beklædning");
 
         // Måleenheder
+        MaaleEnhed ingen = Controller.createMaaleEnhed(null, 0);
         MaaleEnhed fireCl = Controller.createMaaleEnhed("cl", 4);
         MaaleEnhed fyrreCl = Controller.createMaaleEnhed("cl", 40);
         MaaleEnhed halvtredsCl = Controller.createMaaleEnhed("cl", 50);
@@ -241,7 +244,10 @@ public class Controller {
         MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
 
         // Klippekort produkt
-        Produkt klippekortProdukt = Controller.createProdukt("Klippekort, 4 klip", klippekort, null);
+        Produkt klippekortProdukt4 = Controller.createKlippekort("Klippekort, 4 klip",klippekort,ingen,4);
+        Produkt klippekortProdukt10 = Controller.createKlippekort("Klippekort, 10 klip",klippekort,ingen,10);
+        Produkt klippekortProdukt20 = Controller.createKlippekort("Klippekort, 20 klip",klippekort,ingen,20);
+
         // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
         Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg", flaske, tresCl);
         Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown", flaske, tresCl);
@@ -271,34 +277,37 @@ public class Controller {
         Produkt special = Controller.createProdukt("Special", fadoel, fyrreCl);
 
         // Mad og drikke produkter
-        Produkt aeblebrus = Controller.createProdukt("Æblebrus", madOgDrikke, null);
-        Produkt chips = Controller.createProdukt("Chips", madOgDrikke, null);
-        Produkt peanuts = Controller.createProdukt("Peanuts", madOgDrikke, null);
-        Produkt cola = Controller.createProdukt("Cola", madOgDrikke, null);
-        Produkt nikoline = Controller.createProdukt("Nikoline", madOgDrikke, null);
-        Produkt sevenUp = Controller.createProdukt("7-Up", madOgDrikke, null);
-        Produkt vand = Controller.createProdukt("Vand", madOgDrikke, null);
-        Produkt oelpoelser = Controller.createProdukt("Ølpølser", madOgDrikke, null);
+        Produkt aeblebrus = Controller.createProdukt("Æblebrus", madOgDrikke, ingen);
+        Produkt chips = Controller.createProdukt("Chips", madOgDrikke, ingen);
+        Produkt peanuts = Controller.createProdukt("Peanuts", madOgDrikke, ingen);
+        Produkt cola = Controller.createProdukt("Cola", madOgDrikke, ingen);
+        Produkt nikoline = Controller.createProdukt("Nikoline", madOgDrikke, ingen);
+        Produkt sevenUp = Controller.createProdukt("7-Up", madOgDrikke, ingen);
+        Produkt vand = Controller.createProdukt("Vand", madOgDrikke, ingen);
+        Produkt oelpoelser = Controller.createProdukt("Ølpølser", madOgDrikke, ingen);
 
         // Spiritusprodukter
         Produkt whiskey45pct = Controller.createProdukt("Whiskey 45% 50 cl rør", spiritus, halvtredsCl);
         Produkt whiskey4Cl = Controller.createProdukt("Whiskey 4 cl", spiritus, fireCl);
         Produkt whiskey43Pct = Controller.createProdukt("Whisky 43% 50 cl rør", spiritus, halvtredsCl);
-        Produkt uEgesplint = Controller.createProdukt("u/ egesplint", spiritus, null);
-        Produkt mEgesplint = Controller.createProdukt("m/ egesplint", spiritus, null);
-        Produkt toWhiskyGlasMedBrikker = Controller.createProdukt("2*whisky glas + brikker", spiritus, null);
-        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus",spiritus,null);
-        Produkt lyngGin50Cl = Controller.createProdukt("Lyng gin 50 cl", spiritus, null);
+        Produkt uEgesplint = Controller.createProdukt("u/ egesplint", spiritus, ingen);
+        Produkt mEgesplint = Controller.createProdukt("m/ egesplint", spiritus, ingen);
+        Produkt toWhiskyGlasMedBrikker = Controller.createProdukt("2*whisky glas + brikker", spiritus, ingen);
+        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus",spiritus,ingen);
+        Produkt lyngGin50Cl = Controller.createProdukt("Lyng gin 50 cl", spiritus, ingen);
         Produkt lyngGin4Cl = Controller.createProdukt("Lyng gin 4 cl", spiritus, fireCl);
 
         // beklædning
-        Produkt tShirt = Controller.createProdukt("t-shirt", beklaedning, null);
-        Produkt polo = Controller.createProdukt("polo", beklaedning, null);
-        Produkt cap = Controller.createProdukt("cap", beklaedning, null);
+        Produkt tShirt = Controller.createProdukt("t-shirt", beklaedning, ingen);
+        Produkt polo = Controller.createProdukt("polo", beklaedning, ingen);
+        Produkt cap = Controller.createProdukt("cap", beklaedning, ingen);
 
         // Fredagsbar prisliste
         // klippekort
-        fredagsbar.createPris(klippekortProdukt, 130, 0);
+        fredagsbar.createPris(klippekortProdukt4, 130, 4);
+        fredagsbar.createPris(klippekortProdukt10, 250, 10);
+        fredagsbar.createPris(klippekortProdukt20, 450, 20);
+
         // flasker
         fredagsbar.createPris(klosterbrygFlaske, 70, 2);
         fredagsbar.createPris(sweetGeorgiaBrown, 70, 2);
@@ -350,7 +359,10 @@ public class Controller {
         fredagsbar.createPris(cap, 30, 0);
         // Butiksprisliste:
         // klippekort
-        butik.createPris(klippekortProdukt, 130, 0);
+        butik.createPris(klippekortProdukt4, 130, 0);
+        butik.createPris(klippekortProdukt10, 250, 0);
+        butik.createPris(klippekortProdukt20, 450, 0);
+
         // flasker
         butik.createPris(klosterbrygFlaske, 36, 0);
         butik.createPris(sweetGeorgiaBrown, 36, 0);
@@ -382,5 +394,15 @@ public class Controller {
 
     public static void init() {
         initStorage();
+    }
+
+    public static void removePrislisteOgProduktFraPris(Prisliste prisliste, Produkt produkt) {
+        for(Pris p: prisliste.getPriser()){
+            if(p.getProdukt() == produkt){
+                p.setPrisliste(null);
+                p.setProdukt(null);
+            }
+        }
+
     }
 }

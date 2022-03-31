@@ -252,23 +252,29 @@ public class ProduktPane extends GridPane {
     Giver dog ingen fejl i gui, når mna trykker slet, på en produktgruppe, som ikke er tom.
      */
     private void sletProduktgruppeAction() {
-        Produktgruppe produktGruppe = lvwProduktgruppe.getSelectionModel().getSelectedItem();
-        if (produktGruppe != null && produktGruppe.getProdukter().isEmpty()) {
-            Alert sletProduktGruppeAlert = new Alert(Alert.AlertType.CONFIRMATION);
-            sletProduktGruppeAlert.setTitle("Slet Produktgruppe");
-            // alert.setContentText("Are you sure?");
-            sletProduktGruppeAlert.setHeaderText("Er du sikker?");
-            Optional<ButtonType> result = sletProduktGruppeAlert.showAndWait();
-            // Wait for the modal dialog to close
-            if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
-                Controller.deleteProduktgruppe(produktGruppe);
-                if(Storage.produktGrupper != null){
-                    lvwProduktgruppe.getItems().setAll(Storage.produktGrupper);
-                    cbProduktGrp.getItems().setAll(Storage.produktGrupper);
-
+        try {
+            if(lvwProduktgruppe.getSelectionModel().getSelectedItem() != null){
+                Produktgruppe produktGruppe = lvwProduktgruppe.getSelectionModel().getSelectedItem();
+                if (produktGruppe != null && produktGruppe.getProdukter().isEmpty()) {
+                    Alert sletProduktGruppeAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    sletProduktGruppeAlert.setTitle("Slet Produktgruppe");
+                    // alert.setContentText("Are you sure?");
+                    sletProduktGruppeAlert.setHeaderText("Er du sikker?");
+                    Optional<ButtonType> result = sletProduktGruppeAlert.showAndWait();
+                    // Wait for the modal dialog to close
+                    if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+                        Controller.deleteProduktgruppe(produktGruppe);
+                        if(Storage.produktGrupper != null){
+                            lvwProduktgruppe.getItems().setAll(Storage.produktGrupper);
+                            cbProduktGrp.getItems().setAll(Storage.produktGrupper);
+                        }
+                    }
                 }
-
             }
+
+        } catch (Exception e){
+            System.out.println("Fejl");
         }
+
     }
 }

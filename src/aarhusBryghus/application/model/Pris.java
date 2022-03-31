@@ -14,6 +14,14 @@ public class Pris {
         this.produkt.addPris(this);
     }
 
+    public void setProdukt(Produkt produkt) {
+        this.produkt = produkt;
+    }
+
+    public void setPrisliste(Prisliste prisliste) {
+        this.prisliste = prisliste;
+    }
+
     public double getPris() {
         return pris;
     }
@@ -28,6 +36,10 @@ public class Pris {
 
     public void setKlippekortPris(int klippekortPris){
         klippekort = klippekortPris;
+    }
+
+    public void removePrisFromPrisliste(Prisliste prisliste){
+
     }
 
     @Override
