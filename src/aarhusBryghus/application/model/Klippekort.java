@@ -9,7 +9,7 @@ public class Klippekort extends Produkt{
     }
     // TODO Metoder til at tælle antal klip tilbage på et klippekort (måske mere)
 
-
+    @Override
     public int getAntalKlip() {
         return antalKlip;
     }

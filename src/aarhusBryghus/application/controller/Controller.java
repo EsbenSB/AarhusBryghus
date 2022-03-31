@@ -233,12 +233,32 @@ public class Controller {
         ArrayList<String> alleSalg = new ArrayList<>();
         for (int j = 0; j < ordre.getOrdrelinjer().size(); j++) {
             Ordrelinje ol = ordre.getOrdrelinjer().get(j);
-            alleSalg.add("Navn: " + ol.getProdukt() + ", antal: " + ol.getAntal() + ", pris pr. styk: " + ol.getPris() + ", samlet pris:"
+            alleSalg.add("Navn: " + ol.getProdukt() + ", antal: " + ol.getAntal() + ", pris pr. styk: " + ol.getPris() + ", samlet pris: "
                     + ol.getSamletPris() + ", betalingsform: " + ordre.getBetalingsform());
         }
         return alleSalg;
     }
 
+    public static int getAntalSolgteKlip(LocalDate startdato, LocalDate slutdato) {
+        int solgteKlip = 0;
+        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
+            Ordre o = Storage.getOrdrer().get(i);
+            if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
+                    o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
+                for (int j = 0; j < o.getOrdrelinjer().size(); j++) {
+                    solgteKlip += o.getOrdrelinjer().get(j).getProdukt().getAntalKlip();
+
+                }
+            }
+        }
+        return solgteKlip;
+    }
+
+    public static void lukSalg(Ordre ordre, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
+        ordre.setAfslutningsDato(afslutDato);
+        ordre.setOrdreStatus(status);
+        ordre.setBetalingsform(betalingsform);
+    }
 
 
 
@@ -413,8 +433,19 @@ public class Controller {
         butik.createPris(cap, 30, 0);
 
         Ordre ordre1 = Controller.createSalg(butik);
+        Controller.createOrdrelinjeSalg(ordre1,tShirt,1,ordre1.getPrisliste());
         Controller.createOrdrelinjeSalg(ordre1,polo,3,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,klosterbrygFadoel,5,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1,cap,10,ordre1.getPrisliste());
         ordre1.setAfslutningsDato(LocalDate.now());
+
+        Ordre ordre2 = Controller.createSalg(butik);
+        Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,2,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,blackMonster,3,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,mEgesplint,5,ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2,lyngGin4Cl,9,ordre1.getPrisliste());
+        ordre2.setAfslutningsDato(LocalDate.now());
+
     }
 
     public static void init() {

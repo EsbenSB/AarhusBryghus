@@ -14,6 +14,9 @@ public class Produkt {
         this.navn = navn;
         this.maaleEnhed = maaleEnhed;
     }
+    public int getAntalKlip() {
+        return 0;
+    }
 
     public void addPris(Pris pris){
         priser.add(pris);
