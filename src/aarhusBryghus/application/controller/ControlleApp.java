@@ -17,5 +17,7 @@ public class ControlleApp {
         System.out.println("Samlet pris: " + ordre.getSamletPris()); // virker
         System.out.println("Samlet klip: " + ordre.getSamletPrisKlip()); // virker
         System.out.println("Antal klip på produkt: " + prisliste.getAntalKlip(produkt)); // virker
+        Produkt klippekort = Controller.createKlippekort("Klippekort, 10 klip",pg,null,10);
+
     }
 }

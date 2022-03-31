@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Ordre {
 
     private String type;
-    private boolean status;
+    private boolean erOrdrenLukket;
     private LocalDate oprettelsesDato;
     private LocalDate afslutningsDato;
     private static int ordreNummer;
@@ -19,7 +19,7 @@ public class Ordre {
     public Ordre(String type, boolean status, LocalDate oprettelsesDato, Prisliste prisliste) {
         ordreNummer++;
         this.type = type;
-        this.status = status;
+        this.erOrdrenLukket = status;
         this.oprettelsesDato = oprettelsesDato;
         this.ordrelinjeNr = 0;
         this.prisliste = prisliste;
@@ -53,12 +53,12 @@ public class Ordre {
         return type;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean erOrdrenLukket() {
+        return erOrdrenLukket;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setOrdreStatus(boolean erOrdrenLukket) {
+        this.erOrdrenLukket = erOrdrenLukket;
     }
 
     public LocalDate getOprettelsesDato() {
@@ -111,7 +111,7 @@ public class Ordre {
     public String toString() {
         return "Ordre{" +
                 "type='" + type + '\'' +
-                ", status=" + status +
+                ", status=" + erOrdrenLukket +
                 ", oprettelsesDato=" + oprettelsesDato +
                 ", afslutningsDato=" + afslutningsDato +
                 ", ordrelinjer=" + ordrelinjer +

@@ -36,7 +36,10 @@ public class Prisliste {
     returnerer alle priser, som er forbundet med denne prisliste
      */
     public ArrayList<Pris> getPriser() {
-        return new ArrayList<>(priser);
+        if(!priser.isEmpty()){
+            return new ArrayList<>(priser);
+        }
+        return null;
     }
 
     /*

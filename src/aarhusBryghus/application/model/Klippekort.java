@@ -7,6 +7,10 @@ public class Klippekort extends Produkt{
         super(navn, maaleEnhed);
         this.antalKlip = antalKlip;
     }
+    // TODO Metoder til at tælle antal klip tilbage på et klippekort (måske mere)
 
 
+    public int getAntalKlip() {
+        return antalKlip;
+    }
 }

@@ -1,8 +1,7 @@
 package aarhusBryghus.gui;
 
 import aarhusBryghus.application.controller.Controller;
-import aarhusBryghus.application.model.MaaleEnhed;
-import aarhusBryghus.application.model.Produkt;
+import aarhusBryghus.application.model.*;
 import aarhusBryghus.storage.Storage;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -37,12 +36,15 @@ public class ProduktWindow extends Stage {
     private TextField txfNavn;
     private ComboBox cbProduktgruppe;
     private ComboBox cbMaaleenhed;
-    private ComboBox cbPrisliste;
+    private ListView lvwPrislister;
+    private Button btnFjernFraPrisliste;
     private TextField txfPris;
     private TextField txfKlippeKortPris;
     private ListView lvwAndrePrislister;
     private TextField nyPris;
+    private Button btnGem;
     private Button btnOpdater;
+    private Button btnAfbryd;
 
     private void initContent(GridPane pane) {
         pane.setPadding(new Insets(10));
@@ -59,7 +61,7 @@ public class ProduktWindow extends Stage {
         lblMaaleenhed = new Label("Måleenhed: ");
         pane.add(lblMaaleenhed,0,2);
 
-        lblPrisliste = new Label("Prisliste: ");
+        lblPrisliste = new Label("Prislister: ");
         pane.add(lblPrisliste,0,3);
 
         lblPrislistePris = new Label("Pris: ");
@@ -68,7 +70,7 @@ public class ProduktWindow extends Stage {
         lblPrislisteAntalKlip = new Label("Antal Klip: ");
         pane.add(lblPrislisteAntalKlip,2, 3);
 
-        lblAddPrisliste = new Label("Tilføj produkt: " + produkt.getNavn() + " til ny prisliste: ");
+        lblAddPrisliste = new Label("Tilføj produkt: \n" + produkt.getNavn() + "\ntil ny prisliste: ");
         pane.add(lblAddPrisliste,0,5);
 
         txfNavn = new TextField();
@@ -88,11 +90,14 @@ public class ProduktWindow extends Stage {
         cbMaaleenhed.getItems().setAll(Storage.getMaaleEnheder());
         cbMaaleenhed.getSelectionModel().select(produkt.getMaaleEnhed());
 
-        cbPrisliste = new ComboBox();
-        pane.add(cbPrisliste,1,3);
-        cbPrisliste.setPrefWidth(200);
-        cbPrisliste.getItems().setAll(Storage.getPrislister());
-        cbPrisliste.getSelectionModel().select(Controller.getProduktPrisliste(produkt));
+        lvwPrislister = new ListView<>();
+        pane.add(lvwPrislister,1,3);
+        lvwPrislister.setPrefWidth(200);
+        lvwPrislister.setPrefHeight(100);
+        lvwPrislister.getItems().setAll(Storage.getPrislister());
+        if(Controller.getProduktPrisliste(produkt) != null){
+            lvwPrislister.getSelectionModel().select(Controller.getProduktPrisliste(produkt));
+        }
 
         txfPris = new TextField();
         pane.add(txfPris,1,4);
@@ -110,38 +115,47 @@ public class ProduktWindow extends Stage {
         lvwAndrePrislister.setPrefHeight(150);
         lvwAndrePrislister.getItems().setAll(Controller.getAndrePrislister(produkt)); // :)
 
+        lblAddNyPris = new Label("Indtast Pris, til den nye prisliste:");
+        pane.add(lblAddNyPris,2,5);
         nyPris = new TextField();
-        pane.add(nyPris,2,5);
+        pane.add(nyPris,2,6);
         nyPris.setPrefWidth(200);
 
-        btnOpdater = new Button("Opdatér");
-        pane.add(btnOpdater,2,6);
+        btnFjernFraPrisliste = new Button("Fjern prisliste");
+        pane.add(btnFjernFraPrisliste,2,3);
+        btnFjernFraPrisliste.setOnAction(event -> this.fjernFraPrislisteAction());
+        btnGem = new Button("Gem");
+        pane.add(btnGem,2,7);
 
+        Button btnOpdater = new Button("Opdatér");
+        pane.add(btnOpdater, 1, 12);
+        GridPane.setHalignment(btnOpdater, HPos.RIGHT);
+        btnOpdater.setOnAction(event -> this.opdaterProduktAction());
 
-
-        //TODO Mangler at okAction er færdig for at virke
-        Button btnGem = new Button("Gem");
-        pane.add(btnGem, 0, 12);
-        GridPane.setHalignment(btnGem, HPos.RIGHT);
-        btnGem.setOnAction(event -> this.okAction());
-
-        Button btnAnuller = new Button("Anuller");
-        pane.add(btnAnuller, 0, 12);
-        GridPane.setHalignment(btnAnuller, HPos.LEFT);
-        btnAnuller.setOnAction(event -> this.afbrydAction());
+        Button btnAfbryd = new Button("Anuller");
+        pane.add(btnAfbryd, 0, 12);
+        GridPane.setHalignment(btnAfbryd, HPos.LEFT);
+        btnAfbryd.setOnAction(event -> this.afbrydAction());
 
         lblError = new Label();
-        pane.add(lblError, 0, 13);
+        pane.add(lblError, 2, 13);
         lblError.setStyle("-fx-text-fill: red");
+    }
+
+    private void fjernFraPrislisteAction() {
+        Prisliste prisliste = (Prisliste) lvwPrislister.getSelectionModel().getSelectedItem();
+        Controller.removePrislisteOgProduktFraPris(prisliste, produkt);
     }
 
     private void afbrydAction() {
         this.hide();
     }
     
-    private void okAction() {
+    private void opdaterProduktAction() {
         String navn = txfNavn.getText().trim();
         MaaleEnhed maaleEnhed = (MaaleEnhed) cbMaaleenhed.getSelectionModel().getSelectedItem();
+        Produktgruppe produktgruppe = (Produktgruppe) cbProduktgruppe.getSelectionModel().getSelectedItem();
+
         if (navn.length() == 0){
             lblError.setText("Navnet er tomt");
         }
@@ -154,5 +168,6 @@ public class ProduktWindow extends Stage {
                 produkt.setMaaleEnhed(maaleEnhed);
             }
         }
+        hide();
     }
 }
