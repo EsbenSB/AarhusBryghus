@@ -411,6 +411,10 @@ public class Controller {
         butik.createPris(tShirt, 70, 0);
         butik.createPris(polo, 100, 0);
         butik.createPris(cap, 30, 0);
+
+        Ordre ordre1 = Controller.createSalg(butik);
+        Controller.createOrdrelinjeSalg(ordre1,polo,3,ordre1.getPrisliste());
+        ordre1.setAfslutningsDato(LocalDate.now());
     }
 
     public static void init() {

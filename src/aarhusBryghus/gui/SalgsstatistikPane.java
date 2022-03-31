@@ -82,10 +82,10 @@ public class SalgsstatistikPane extends GridPane {
 
     private void selectedOrdreChanged() {
         Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
-        Controller.udprintOrdre(ordre);
+        lvwOrdrelinjer.getItems().setAll(Controller.udprintOrdre(ordre));
     }
 
     private void hentDagensSalg() {
-       Controller.getDagensSalg();
+        lvwOrdrer.getItems().setAll(Controller.getDagensSalg());
     }
 }
