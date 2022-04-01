@@ -11,12 +11,27 @@ public class Storage {
     public static ArrayList<MaaleEnhed> maaleEnheder = new ArrayList<>();
     public static ArrayList<Prisliste> prislister = new ArrayList<>();
     public static ArrayList<Ordre> ordrer = new ArrayList<>();
+    public static ArrayList<Kunde> kunder = new ArrayList<>();
 
     public static Storage getInstance() {
         if (uniqueInstance == null) {
             uniqueInstance = new Storage();
         }
         return uniqueInstance;
+    }
+
+    // -------------------------------------------------------------------------
+
+    public static ArrayList<Kunde> getKunder() {
+        return new ArrayList<>(kunder);
+    }
+
+    public static void addKunde(Kunde kunde) {
+        kunder.add(kunde);
+    }
+
+    public static void removeKunde(Kunde kunde) {
+        kunder.remove(kunde);
     }
 
     // -------------------------------------------------------------------------
