@@ -2,14 +2,10 @@ package aarhusBryghus.gui;
 
 import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.*;
-import aarhusBryghus.storage.Storage;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-
-import java.util.List;
-import java.util.Optional;
 
 public class ProduktPane extends GridPane {
 
@@ -27,9 +23,9 @@ public class ProduktPane extends GridPane {
     Label lblPrisKroner = new Label("Pris: ");
     Label lblSelectPrisliste = new Label("Vælg Prisliste");
 
-    TextField txfProduktType = new TextField();
     TextField txfProduktnavn = new TextField();
     ComboBox cbVaelgMaaleenhed = new ComboBox();
+    ComboBox cbProduktType = new ComboBox();
 
 
     TextField txfPantPris = new TextField();
@@ -76,10 +72,14 @@ public class ProduktPane extends GridPane {
 
         } else{
             this.add(lblProduktType,1,3);
-            this.add(txfProduktType,2,3);
+            this.add(cbProduktType,2,3);
+            cbProduktType.setPromptText("Vælg en produkttype");
+            cbProduktType.getItems().setAll(Controller.getProduktTyper());
             this.add(lblProduktnavn,1,4);
             this.add(txfProduktnavn,2,4);
-            this.add(cbVaelgMaaleenhed,1,5);
+            this.add(lblProduktMåleenhed,1,5);
+            this.add(cbVaelgMaaleenhed,2,5);
+            cbVaelgMaaleenhed.getItems().setAll(Controller.getMaaleEnheder());
             this.add(lblSelectPrisliste, 1,6);
             this.add(lvwProduktetsPrislister,2,6,1,4);
         }

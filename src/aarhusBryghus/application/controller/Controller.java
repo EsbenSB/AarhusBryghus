@@ -31,8 +31,15 @@ public class Controller {
         elementTyper.add("Produktgruppe");
         elementTyper.add("Måleenhed");
         elementTyper.add("Prisliste");
-
         return elementTyper;
+    }
+
+    public static ArrayList<String> getProduktTyper(){
+        ArrayList<String> produkttyper = new ArrayList<>();
+        produkttyper.add("Produkt");
+        produkttyper.add("PantProdukt");
+        produkttyper.add("Klippekort");
+        return produkttyper;
     }
 
     // METODER TIL UDLEJNING
