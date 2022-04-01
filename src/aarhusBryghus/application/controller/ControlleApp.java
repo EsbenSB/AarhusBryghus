@@ -22,6 +22,7 @@ public class ControlleApp {
         Produkt klippekort = Controller.createKlippekort("Klippekort, 10 klip",pg,null,10);
         ordre.setAfslutningsDato(LocalDate.now());
         System.out.println(Controller.getDagensSalg());
+        System.out.println(Controller.getKundeUdlejninger(Controller.findKunde(33333333)));
 
     }
 }
