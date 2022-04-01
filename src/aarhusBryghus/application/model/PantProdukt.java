@@ -8,15 +8,12 @@ public class PantProdukt extends Produkt{
         this.pant = pant;
     }
 
-
     public int getPant() {
         return pant;
     }
 
     @Override
     public String toString() {
-        return "PantProdukt{" +
-                "pant=" + pant +
-                '}';
+        return pant+"";
     }
 }

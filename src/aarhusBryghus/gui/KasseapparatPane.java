@@ -364,27 +364,85 @@ public class KasseapparatPane extends GridPane {
                     }
                 }
             }
-
         }
     }
 
     //TODO Lav færdig
     public void addProduktKurv() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
-        if (produkt != null) {
-            Ordrelinje ordrelinje = new Ordrelinje(produkt, Integer.parseInt(txfValgteProdukt.getText()), cbbPrislister.getSelectionModel().getSelectedItem());
-            if (rbStandardPris.isSelected()) {
-                txfSamletPrisProdukt.setText("test");
-            } else if (rbKlippeKortPris.isSelected()) {
-                txfSamletPrisProdukt.setText("test2");
-            } else if (rbCustomPris.isSelected()) {
-                txfSamletPrisProdukt.setText("test3");
-            } else {
-                txfSamletPrisProdukt.setText("test4");
+        Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+
+        String valgteProdukt = txfValgteProdukt.getText().trim();
+        if (valgteProdukt.length() == 0) {
+            lblError.setText("Vælg et produkt");
+        } else {
+            int antalValgte = -1;
+            try {
+                antalValgte = Integer.parseInt(txfAntalValgte.getText().trim());
+            } catch (NumberFormatException ex) {
+                // Do nothing
             }
-            lvwKurv.getItems().add(produkt);
-            cbbPrislister.setDisable(true);
-            txfTotalPris.setDisable(false);
+            if (antalValgte < 1) {
+                lblError.setText("Vælg et antal");
+            } else {
+                if (rbStandardPris.isSelected()) {
+                    Ordrelinje ordrelinje = new Ordrelinje(produkt, antalValgte, prisliste);
+                    txfSamletPrisProdukt.setText(ordrelinje.getSamletPris()+" Kr.");
+                    lvwKurv.getItems().add(produkt);
+                    cbbPrislister.setDisable(true);
+                    txfTotalPris.setDisable(false);
+                    // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                    txfTotalPris.setText(" Kr.");
+                    lblError.setText("");
+                } else {
+                    if (rbKlippeKortPris.isSelected()) {
+                        Ordrelinje ordrelinje2 = new Ordrelinje(produkt, antalValgte, prisliste);
+                        txfSamletPrisProdukt.setText(ordrelinje2.getSamletPrisKlip()+" Klip");
+                        lvwKurv.getItems().add(produkt);
+                        cbbPrislister.setDisable(true);
+                        txfTotalPris.setDisable(false);
+                        lblError.setText("");
+                    } else {
+                        if (rbCustomPris.isSelected()) {
+                            int customPris = -1;
+                            try {
+                                customPris = Integer.parseInt(txfCustomPris.getText().trim());
+                                Ordrelinje ordrelinje3 = new Ordrelinje(produkt, antalValgte, prisliste);
+                                ordrelinje3.setAftaltPris(customPris);
+                                txfSamletPrisProdukt.setText(ordrelinje3.getSamletPris()+" Kr.");
+                                lvwKurv.getItems().add(produkt);
+                                cbbPrislister.setDisable(true);
+                                txfTotalPris.setDisable(false);
+                                lblError.setText("");
+                            } catch (NumberFormatException ex) {
+                                // Do nothing
+                            }
+                            if (customPris <1) {
+                                lblError.setText("CustomPris er tom");
+                            }
+                        } else {
+                            double rabatPris = -1;
+                            try {
+                                rabatPris = Integer.parseInt(txfRabatPris.getText().trim());
+                                Ordrelinje ordrelinje4 = new Ordrelinje(produkt, antalValgte, prisliste);
+                                ordrelinje4.setPrisMedProcentRabat(rabatPris);
+                                txfSamletPrisProdukt.setText(ordrelinje4.getSamletPris()+" Kr.");
+                                lvwKurv.getItems().add(produkt);
+                                cbbPrislister.setDisable(true);
+                                txfTotalPris.setDisable(false);
+                                lblError.setText("");
+                            } catch (NumberFormatException ex) {
+                                // Do nothing
+                            }
+                            if (rabatPris < 0) {
+                                lblError.setText("Ugyldig rabat");
+                            } else if (rabatPris > 100) {
+                                lblError.setText("For høj rabat");
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

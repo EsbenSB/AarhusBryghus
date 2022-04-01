@@ -35,6 +35,12 @@ public class Produktgruppe {
         return rundvisning;
     }
 
+    public PantProdukt createPantProdukt(String navn, MaaleEnhed maaleEnhed, int pant){
+        PantProdukt pantProdukt = new PantProdukt(navn,maaleEnhed,pant);
+        produkter.add(pantProdukt);
+        return pantProdukt;
+    }
+
     public ArrayList<Produkt> getProdukter() {
         return new ArrayList<>(produkter);
     }
