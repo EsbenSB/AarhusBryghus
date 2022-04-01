@@ -84,7 +84,6 @@ public class KundePane extends GridPane {
         int telefonNr = Integer.parseInt(txfTelefonNr.getText());
 
         Kunde kunde = Controller.createKunde(fornavn, efternavn, telefonNr);
-        System.out.println("gfghfh");
         lvwKunder.getItems().setAll(Storage.getKunder());
         lvwKunder.getSelectionModel().select(kunde);
 
