@@ -26,12 +26,18 @@ public class Controller {
 
     // METODER TIL UDLEJNING
     public static Kunde findKunde(int mobilnummer){
-        // TODO FIND KUNDE
-
-        return null;
+        Kunde kunde = null;
+        int i = 0;
+        while (kunde == null && i < Storage.getKunder())
+            if (Storage.getKunder().get(i).getTelefonnr == mobilnummer) {
+                kunde = Storage.getKunder().get(i);
+            } else {
+                i++;
+            }
+        return kunde;
     }
 
-    public static ArrayList<Ordre> getKundeOrdre(Kunde kunde){
+    public static ArrayList<Ordre> getKundeUdlejninger(Kunde kunde){
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
         for(Ordre o: Storage.getOrdrer()){
             if(o.getKunde().equals(kunde)){

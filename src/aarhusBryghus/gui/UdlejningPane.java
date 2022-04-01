@@ -126,10 +126,10 @@ public class UdlejningPane extends GridPane {
 
     private void soegEfterKunde() {
         try{
-            int soegeord = Integer.parseInt(txfSoegKunde.getText().toString());{
-                Kunde kunde = Controller.findKunde(soegeord);
+            int soegeord = Integer.parseInt(txfSoegKunde.getText());{
+                Ordre kundeOrdrer = Controller.getKundeUdlejninger(soegeord);
                 if(kunde != null){
-                    lvwUdlejninger.getItems().setAll(Controller.getKundeOrdre(kunde));
+                    lvwUdlejninger.getItems().setAll(Controller.getKundeUdlejninger(kunde));
                 }
             }
         } catch (Exception e){
