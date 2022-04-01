@@ -66,26 +66,39 @@ public class KundePane extends GridPane {
 
         btnOpdater = new Button("Opdater");
         this.add(btnOpdater, 2, 4);
+        btnOpdater.setOnAction(event -> opdaterKunde());
 
 
         btnOpret = new Button("Opret");
         this.add(btnOpret, 2, 5);
+        btnOpret.setOnAction(event -> opretKunde());
 
     }
-    private void opretKunde() {
+
+    private void opdaterKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
+
+    }
+    private void opretKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
+        String fornavn = txfFornavn.getText();
+        String efternavn = txfEfternavn.getText();
+        int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+
+        Kunde kunde = Controller.createKunde(fornavn, efternavn, telefonNr);
+        lvwKunder.getItems().setAll(Storage.getKunder());
+        lvwKunder.getSelectionModel().select(kunde);
 
     }
 
-    private void opdaterKunde() {
 
-    }
 
     private void selectedKundeChanged() {
         Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
-       // lvwOrdrer.getItems().setAll(Controller.udprintOrdre(ordre));
-        txfFornavn.setText(kunde.getFornavn());
-        txfEfternavn.setText(kunde.getEfternavn());
-        txfTelefonNr.setText(kunde.getTelefon()+"");
+        if(kunde != null) {
+            lvwOrdrer.getItems().setAll(Controller.getKundensSamledeOrdre(kunde));
+            txfFornavn.setText(kunde.getFornavn());
+            txfEfternavn.setText(kunde.getEfternavn());
+            txfTelefonNr.setText(kunde.getTelefon() + "");
+        }
 
     }
 
