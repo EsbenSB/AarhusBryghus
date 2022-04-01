@@ -4,11 +4,14 @@ import aarhusBryghus.application.controller.Controller;
 import aarhusBryghus.application.model.Kunde;
 import aarhusBryghus.application.model.Ordre;
 import aarhusBryghus.application.model.Ordrelinje;
+import aarhusBryghus.storage.Storage;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+
+import javax.xml.transform.dom.DOMSource;
 
 public class UdlejningPane extends GridPane {
 
@@ -67,7 +70,7 @@ public class UdlejningPane extends GridPane {
         lvwUdlejninger.getSelectionModel().selectedItemProperty().addListener(ordreListener);
 
         // TODO Ret til korrekt liste
-        lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
+       // lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
 
 
         this.add(lvwOrdrelinjer,1,1,1,9);
@@ -126,14 +129,11 @@ public class UdlejningPane extends GridPane {
 
     private void soegEfterKunde() {
         try{
-            int soegeord = Integer.parseInt(txfSoegKunde.getText());{
-                Ordre kundeOrdrer = Controller.getKundeUdlejninger(soegeord);
-                if(kunde != null){
+            int soegeord = Integer.parseInt(txfSoegKunde.getText());
+                Kunde kunde = Controller.findKunde(soegeord);
                     lvwUdlejninger.getItems().setAll(Controller.getKundeUdlejninger(kunde));
-                }
-            }
         } catch (Exception e){
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
 
     }

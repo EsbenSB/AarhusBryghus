@@ -36,11 +36,13 @@ public class Ordre {
         return kunde;
     }
 
-    public void setKunde(Kunde kunde){
-        this.kunde = kunde;
+    public void setKunde(Kunde kunde) {
+        if (this.kunde != kunde) {
+            this.kunde = kunde;
+        }
     }
 
-    public void setBetalingsform(Betalingsform betalingsform){
+    public void setBetalingsform(Betalingsform betalingsform) {
         this.betalingsform = betalingsform;
     }
 
@@ -48,7 +50,7 @@ public class Ordre {
         return prisliste;
     }
 
-    public Ordrelinje createOrdrelinje(int antal, Produkt produkt){
+    public Ordrelinje createOrdrelinje(int antal, Produkt produkt) {
         ordrelinjeNr++;
         Ordrelinje ordrelinje = new Ordrelinje(produkt, antal, getPrisliste());
         ordrelinjer.add(ordrelinje);
@@ -101,11 +103,11 @@ public class Ordre {
         return klip;
     }
 
-    public double getSamletPris(){
+    public double getSamletPris() {
         int klip = 0;
         double samletPris = 0;
-        for(Ordrelinje ol: ordrelinjer){
-            samletPris += ol.getPris()*ol.getAntal();
+        for (Ordrelinje ol : ordrelinjer) {
+            samletPris += ol.getPris() * ol.getAntal();
         }
         return samletPris;
     }
@@ -116,11 +118,10 @@ public class Ordre {
 
     @Override
     public String toString() {
-        if(kunde == null){
+        if (kunde == null) {
             return "Ordrenr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Samlet salg: " + this.getSamletPris();
 
-        }
-        else{
+        } else {
             return "OrdreNr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Kunde navn: " + kunde.getFornavn() + " " + kunde.getEfternavn() + "Kunde Mobil: " + kunde.getTelefon();
 
         }

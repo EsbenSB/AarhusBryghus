@@ -25,42 +25,51 @@ public class Controller {
     }
 
     // METODER TIL UDLEJNING
-    public static Kunde findKunde(int mobilnummer){
+    public static Kunde findKunde(int mobilnummer) {
         Kunde kunde = null;
         int i = 0;
-        while (kunde == null && i < Storage.getKunder())
-            if (Storage.getKunder().get(i).getTelefonnr == mobilnummer) {
-                kunde = Storage.getKunder().get(i);
+        while (kunde == null && i < Storage.getKunder().size()) {
+            System.out.println(i +"");
+            if (Storage.getKunder().get(i).getTelefon() == mobilnummer) {
+                kunde = Storage.getKunder().get(i);System.out.println(kunde.getFornavn() +"");
             } else {
                 i++;
+
             }
+        }
         return kunde;
     }
 
-    public static ArrayList<Ordre> getKundeUdlejninger(Kunde kunde){
+    public static ArrayList<Ordre> getKundeUdlejninger(Kunde kunde) {
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
-        for(Ordre o: Storage.getOrdrer()){
-            if(o.getKunde().equals(kunde)){
-                kundensUdlejninger.add(o);
-            }
+        System.out.println("Størrelse: " + Storage.getOrdrer().size());
+        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
+            Ordre o = Storage.getOrdrer().get(i);
+
+                if (kunde.equals(o.getKunde()) ) {
+                    if (!kundensUdlejninger.contains(o))
+                    kundensUdlejninger.add(o);
+                }
+
+
         }
         return kundensUdlejninger;
     }
-    public static ArrayList<Ordre> getNuværendeUdlejninger(){
-        // TODO Listen som indlæses fra start, i udlejning.
-        // Delvist testet! (Delvis ok!)
+
+    public static ArrayList<Ordre> getNuværendeUdlejninger() {
         ArrayList<Ordre> nuværendeUdlejninger = new ArrayList<>();
-        for(Ordre o: Storage.getOrdrer()){
-            if(o.getType().equals("Udlejning") && !o.erOrdrenLukket())
+        for (Ordre o : Storage.getOrdrer()) {
+            if (o.getType().equals("Udlejning") && !o.erOrdrenLukket())
                 nuværendeUdlejninger.add(o);
         }
         return new ArrayList<>(nuværendeUdlejninger);
     }
+
     // Returnerer samlet sum, for alle dagens salg (ikke klip!) - dagens "totalte omsætning"
-    public static double getSamletSumDagensSalg(LocalDate localDate){
+    public static double getSamletSumDagensSalg(LocalDate localDate) {
         double sum = 0;
-        for(Ordre o: Storage.getOrdrer()){
-            if(o.getAfslutningsDato() != null && o.getAfslutningsDato().equals(localDate) && !o.getBetalingsform().getType().equals("Klip")){
+        for (Ordre o : Storage.getOrdrer()) {
+            if (o.getAfslutningsDato() != null && o.getAfslutningsDato().equals(localDate) && !o.getBetalingsform().getType().equals("Klip")) {
                 sum += o.getSamletPris();
             }
         }
@@ -68,7 +77,7 @@ public class Controller {
     }
 
     // create pant produkt
-    public static Produkt createPantProdukt(String navn, MaaleEnhed maaleEnhed, int pant, Produktgruppe produktgruppe){
+    public static Produkt createPantProdukt(String navn, MaaleEnhed maaleEnhed, int pant, Produktgruppe produktgruppe) {
         Produkt produkt = produktgruppe.createPantProdukt(navn, maaleEnhed, pant);
         return produkt;
     }
@@ -79,6 +88,13 @@ public class Controller {
         Storage.addOrdre(ordre);
         return ordre;
     }
+
+    public static Ordre createUdlejning (Prisliste prisliste) {
+        Ordre udlejning = new Ordre("Udlejning", false, LocalDate.now(), prisliste);
+        Storage.addOrdre(udlejning);
+        return udlejning;
+    }
+
 
     // createOrdrelinjeSalg opretter enkelte salgslinjer, til en ordre, men KUN i "Kasseapparat" tabben!
     public static Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste) {
@@ -94,6 +110,12 @@ public class Controller {
     public static Produkt createProdukt(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed) {
         Produkt produkt = produktgruppe.createProdukt(navn, maaleEnhed);
         return produkt;
+    }
+
+    public static Kunde createKunde(String fornavn, String efternavn, int telefon) {
+        Kunde kunde = new Kunde(fornavn, efternavn, telefon);
+        Storage.addKunde(kunde);
+        return kunde;
     }
 
     public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
@@ -316,7 +338,7 @@ public class Controller {
         int forbrugteKlip = 0;
         for (int i = 0; i < Storage.getOrdrer().size(); i++) {
             Ordre o = Storage.getOrdrer().get(i);
-            if(o.getAfslutningsDato() != null){
+            if (o.getAfslutningsDato() != null) {
                 if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                         o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
                     if (o.getBetalingsform().getType().equals("Klip")) {
@@ -329,17 +351,17 @@ public class Controller {
         }
         return forbrugteKlip;
     }
+
     public static void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
         ordre.setAfslutningsDato(afslutDato);
         ordre.setOrdreStatus(status);
         ordre.setBetalingsform(betalingsform);
-        if(betalingsform.getType().equals("Klip")){
-            for(Ordrelinje ol: ordre.getOrdrelinjer()){
+        if (betalingsform.getType().equals("Klip")) {
+            for (Ordrelinje ol : ordre.getOrdrelinjer()) {
                 ol.setKlip(ol.getProdukt().getklippekortPris(prisliste));
             }
         }
     }
-
 
 
     private static void initStorage() {
@@ -425,7 +447,7 @@ public class Controller {
 
         // PantProdukt
 
-        Produkt klosterbrygFustage = Controller.createPantProdukt("Klosterbryg",tyveLiter,200, fustage);
+        Produkt klosterbrygFustage = Controller.createPantProdukt("Klosterbryg", tyveLiter, 200, fustage);
 
         // Fredagsbar prisliste
         // klippekort
@@ -489,7 +511,7 @@ public class Controller {
         butik.createPris(klippekortProdukt20, 450, 0);
 
         // fustage
-        butik.createPris(klosterbrygFustage,775,0);
+        butik.createPris(klosterbrygFustage, 775, 0);
 
         // flasker
         butik.createPris(klosterbrygFlaske, 36, 0);
@@ -527,50 +549,49 @@ public class Controller {
 
 
         Ordre ordre1 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre1,oldStrongAle,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,blackMonster,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,blondieFlaske,1,ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1,oelpoelser,1,ordre1.getPrisliste());
-        lukSalg(ordre1,fredagsbar, LocalDate.now(), true, klip1);
+        Controller.createOrdrelinjeSalg(ordre1, oldStrongAle, 1, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1, blackMonster, 1, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1, blondieFlaske, 1, ordre1.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre1, oelpoelser, 1, ordre1.getPrisliste());
+        lukSalg(ordre1, fredagsbar, LocalDate.now(), true, klip1);
 
         Ordre ordre2 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre2,klippekortProdukt10,1,fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre2,whiskey4Cl,1,ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,blackMonster,2,ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,mEgesplint,3,ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2,klosterbrygFlaske,3,ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, klippekortProdukt10, 1, fredagsbar);
+        Controller.createOrdrelinjeSalg(ordre2, whiskey4Cl, 1, ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, blackMonster, 2, ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, mEgesplint, 3, ordre2.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre2, klosterbrygFlaske, 3, ordre2.getPrisliste());
         lukSalg(ordre2, fredagsbar, LocalDate.now(), true, dankort);
 
         Ordre ordre3 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre3,klosterbrygFlaske,3,fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre3,julebrygFlaske,6,ordre3.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre3,blackMonster,6,ordre3.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre3, klosterbrygFlaske, 3, fredagsbar);
+        Controller.createOrdrelinjeSalg(ordre3, julebrygFlaske, 6, ordre3.getPrisliste());
+        Controller.createOrdrelinjeSalg(ordre3, blackMonster, 6, ordre3.getPrisliste());
         lukSalg(ordre3, fredagsbar, LocalDate.now(), true, kontant);
 
         Ordre ordre4 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre4,indiaPaleAleFadoel,1,ordre4.getPrisliste());
-        lukSalg(ordre4,ordre4.getPrisliste(),LocalDate.now(),true,klip1);
+        Controller.createOrdrelinjeSalg(ordre4, indiaPaleAleFadoel, 1, ordre4.getPrisliste());
+        lukSalg(ordre4, ordre4.getPrisliste(), LocalDate.now(), true, klip1);
 
-        Kunde kunde1 = new Kunde("Earl","Flemmingway", 00000000);
-        Kunde kunde2 = new Kunde("Bo","Bech", 11111111);
-        Kunde kunde3 = new Kunde("Sofie","Lassen Kalke", 22222222);
-        Kunde kunde4 = new Kunde("Big","Chungus", 33333333);
-        Kunde kunde5 = new Kunde("VIP","McDonald", 44444444);
-        Kunde kunde6 = new Kunde("Henning","Stærk", 55555555);
-        Kunde kunde7 = new Kunde("Alfalfa","Solomon", 66666666);
-        Kunde kunde8 = new Kunde("Hannah Montana","Banana Ananas", 77777777);
-        Kunde kunde9 = new Kunde("Mads","Mikkelsel", 88888888);
-        Kunde kunde10 = new Kunde("Yvonne","", 99999999);
-        Ordre ordre5 = new Ordre("Udlejning",true,LocalDate.parse("2022-03-01"),butik);
-        Ordre ordre6 = new Ordre("Udlejning",false,LocalDate.parse("2022-02-01"),butik);
+        Kunde kunde1 = Controller.createKunde("Earl", "Flemmingway", 00000000);
+        Kunde kunde2 = Controller.createKunde("Bo", "Bech", 11111111);
+        Kunde kunde3 = Controller.createKunde("Sofie", "Lassen Kalke", 22222222);
+        Kunde kunde4 = Controller.createKunde("Big", "Chungus", 33333333);
+        Kunde kunde5 = Controller.createKunde("VIP", "McDonald", 44444444);
+        Kunde kunde6 = Controller.createKunde("Henning", "Stærk", 55555555);
+        Kunde kunde7 = Controller.createKunde("Alfalfa", "Solomon", 66666666);
+        Kunde kunde8 = Controller.createKunde("Hannah Montana", "Banana Ananas", 77777777);
+        Kunde kunde9 = Controller.createKunde("Mads", "Mikkelsel", 88888888);
+        Kunde kunde10 = Controller.createKunde("Yvonne", "", 99999999);
+        Ordre ordre5 = Controller.createUdlejning(butik);
+        Ordre ordre6 = Controller.createUdlejning(butik);
         ordre5.setKunde(kunde4);
         ordre6.setKunde(kunde1);
         Storage.addOrdre(ordre5);
         Storage.addOrdre(ordre6);
 
-        ordre5.createOrdrelinje(1,klosterbrygFustage);
-        ordre6.createOrdrelinje(1,klosterbrygFustage);
-
+        ordre5.createOrdrelinje(1, klosterbrygFustage);
+        ordre6.createOrdrelinje(1, klosterbrygFustage);
 
 
     }
