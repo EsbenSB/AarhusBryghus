@@ -7,6 +7,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.sql.SQLOutput;
+
 public class ProduktPane extends GridPane {
 
     private ComboBox<String> cbElementTyper = new ComboBox<>();
@@ -14,25 +16,25 @@ public class ProduktPane extends GridPane {
     private ListView<Produktgruppe> lvwProduktgruppe = new ListView<>();
     private ListView<Produkt> lvwProdukter = new ListView<>();
     private Button btnAccepter = new Button("Acceptér");
-    Label lblProduktType = new Label("Produkttype: ");
-    Label lblProduktnavn = new Label("Produktnavn: ");
-    Label lblProduktMåleenhed = new Label("Måleenhed: ");
-    Label lblPantPris = new Label("Pant: ");
-    Label lblKlipPris = new Label("Klip: ");
-    Label lblPrisliste = new Label("Prisliste: ");
-    Label lblPrisKroner = new Label("Pris: ");
-    Label lblSelectPrisliste = new Label("Vælg Prisliste");
+    private Label lblProduktType = new Label("Produkttype: ");
+    private Label lblProduktnavn = new Label("Produktnavn: ");
+    private Label lblProduktMåleenhed = new Label("Måleenhed: ");
+    private Label lblPantPris = new Label("Pant: ");
+    private Label lblKlipPris = new Label("Klip: ");
+    private Label lblPrisliste = new Label("Prisliste: ");
+    private Label lblPrisKroner = new Label("Pris: ");
+    private Label lblSelectPrisliste = new Label("Vælg Prisliste");
 
-    TextField txfProduktnavn = new TextField();
-    ComboBox cbVaelgMaaleenhed = new ComboBox();
-    ComboBox cbProduktType = new ComboBox();
+    private TextField txfProduktnavn = new TextField();
+    private ComboBox cbVaelgMaaleenhed = new ComboBox();
+    private ComboBox cbProduktType = new ComboBox();
 
 
-    TextField txfPantPris = new TextField();
-    TextField txfKlipPris = new TextField();
-    TextField txfRigtigPris = new TextField();
+    private TextField txfPantPris = new TextField();
+    private TextField txfKlipPris = new TextField();
+    private TextField txfRigtigPris = new TextField();
 
-    ListView<Prisliste> lvwProduktetsPrislister = new ListView<>();
+    private ListView<Prisliste> lvwProduktetsPrislister = new ListView<>();
 
 
     public ProduktPane() {
@@ -43,11 +45,11 @@ public class ProduktPane extends GridPane {
 
         // indsæt knapper og listview osv her
         Label lblInformationsTekst = new Label("Vælg et element du vil opdatere, eller opret et nyt");
-        this.add(lblInformationsTekst,0,0);
+        this.add(lblInformationsTekst, 0, 0);
 
         cbElementTyper.setPromptText("Vælg element her");
         cbElementTyper.getItems().setAll(Controller.getElementTyper());
-        this.add(cbElementTyper,0,1);
+        this.add(cbElementTyper, 0, 1);
         cbElementTyper.setOnAction(event -> elementTypeSelected());
 
         cbProduktgrupper.setPromptText("Vælg produktgruppe");
@@ -60,44 +62,62 @@ public class ProduktPane extends GridPane {
         cbVaelgMaaleenhed.setPromptText("Vælg måleenhed");
 
 
-
     }
 
     private void selectedProduktChanged() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
 
-        if(produkt.getClass().equals(Klippekort.class)){
+        if (produkt.getClass().equals(Klippekort.class)) {
 
-        } else if (produkt.getClass().equals(PantProdukt.class)){
+        } else if (produkt.getClass().equals(PantProdukt.class)) {
+            try{
+                this.add(lblProduktType, 1, 3);
+                this.add(cbProduktType, 2, 3);
+                cbProduktType.setPromptText("Vælg en produkttype");
+                cbProduktType.getItems().setAll(Controller.getProduktTyper());
+                cbProduktType.getSelectionModel().select(PantProdukt.class);
+                this.add(lblProduktnavn, 1, 4);
+                this.add(txfProduktnavn, 2, 4);
+                this.add(lblProduktMåleenhed, 1, 5);
+                this.add(cbVaelgMaaleenhed, 2, 5);
+                cbVaelgMaaleenhed.getItems().setAll(Controller.getMaaleEnheder());
+                this.add(lblSelectPrisliste, 1, 6);
+                this.add(lvwProduktetsPrislister, 2, 6, 1, 4);
+                lvwProduktetsPrislister.getItems().setAll(Controller.getAndrePrislister(produkt));
+            }
+            catch (IllegalArgumentException e) {System.out.print("");
+            }
+        } else {
+            try{
+                this.add(lblProduktType, 1, 3);
+                this.add(cbProduktType, 2, 3);
+                cbProduktType.setPromptText("Vælg en produkttype");
+                cbProduktType.getItems().setAll(Controller.getProduktTyper());
+                this.add(lblProduktnavn, 1, 4);
+                this.add(txfProduktnavn, 2, 4);
+                this.add(lblProduktMåleenhed, 1, 5);
+                this.add(cbVaelgMaaleenhed, 2, 5);
+                cbVaelgMaaleenhed.getItems().setAll(Controller.getMaaleEnheder());
+                this.add(lblSelectPrisliste, 1, 6);
+                this.add(lvwProduktetsPrislister, 2, 6, 1, 4);
+                lvwProduktetsPrislister.getItems().setAll(Controller.getAndrePrislister(produkt));
+            }
+             catch (IllegalArgumentException e) {System.out.print("");
+        }}
 
-        } else{
-            this.add(lblProduktType,1,3);
-            this.add(cbProduktType,2,3);
-            cbProduktType.setPromptText("Vælg en produkttype");
-            cbProduktType.getItems().setAll(Controller.getProduktTyper());
-            this.add(lblProduktnavn,1,4);
-            this.add(txfProduktnavn,2,4);
-            this.add(lblProduktMåleenhed,1,5);
-            this.add(cbVaelgMaaleenhed,2,5);
-            cbVaelgMaaleenhed.getItems().setAll(Controller.getMaaleEnheder());
-            this.add(lblSelectPrisliste, 1,6);
-            this.add(lvwProduktetsPrislister,2,6,1,4);
-        }
     }
 
     private void produktgruppeSelected() {
         Produktgruppe produktgruppe = cbProduktgrupper.getSelectionModel().getSelectedItem();
         lvwProdukter.getItems().setAll(Controller.getAlleProdukter(produktgruppe));
-        this.add(lvwProdukter,0,3,1,7);
-
+        this.add(lvwProdukter, 0, 3, 1, 7);
     }
 
     private void elementTypeSelected() {
-        if(cbElementTyper.getSelectionModel().getSelectedItem().equalsIgnoreCase("Produkt")){
-            this.add(cbProduktgrupper,0,2);
-        }
-        else{
-            this.add(lvwProdukter, 0,2,1,10);
+        if (cbElementTyper.getSelectionModel().getSelectedItem().equalsIgnoreCase("Produkt")) {
+            this.add(cbProduktgrupper, 0, 2);
+        } else {
+            this.add(lvwProdukter, 0, 2, 1, 10);
         }
     }
 
