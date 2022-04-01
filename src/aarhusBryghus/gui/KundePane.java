@@ -46,6 +46,7 @@ public class KundePane extends GridPane {
         this.add(lblIndtjeningFraKunde, 3, 6);
         txfIndtjeningFraKunde = new TextField();
         this.add(txfIndtjeningFraKunde, 3, 7);
+        txfIndtjeningFraKunde.setEditable(false);
 
         lblKunder = new Label("Kunder");
         this.add(lblKunder, 0, 0);
@@ -76,6 +77,16 @@ public class KundePane extends GridPane {
     }
 
     private void opdaterKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
+        String fornavn = txfFornavn.getText();
+        String efternavn = txfEfternavn.getText();
+        int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+
+        Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
+
+        Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
+        lvwKunder.getItems().setAll(Storage.getKunder());
+        lvwKunder.getSelectionModel().select(kunde);
+
 
     }
     private void opretKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
@@ -98,6 +109,7 @@ public class KundePane extends GridPane {
             txfFornavn.setText(kunde.getFornavn());
             txfEfternavn.setText(kunde.getEfternavn());
             txfTelefonNr.setText(kunde.getTelefon() + "");
+            txfIndtjeningFraKunde.setText(Controller.getKundesSamledeKoeb(Controller.getKundensSamledeOrdre(kunde))+" kr.");
         }
 
     }

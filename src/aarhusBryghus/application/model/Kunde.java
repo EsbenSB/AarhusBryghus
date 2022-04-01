@@ -20,6 +20,18 @@ public class Kunde {
         this.telefon = telefon;
     }
 
+    public void setFornavn(String fornavn) {
+        this.fornavn = fornavn;
+    }
+
+    public void setEfternavn(String efternavn) {
+        this.efternavn = efternavn;
+    }
+
+    public void setTelefon(int telefon) {
+        this.telefon = telefon;
+    }
+
     public String getFornavn() {
         return fornavn;
     }

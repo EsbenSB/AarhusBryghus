@@ -75,12 +75,22 @@ public class Controller {
         ArrayList<Ordre> kundensSamledeOrdre = new ArrayList<>();
         for (int i = 0; i < Storage.getOrdrer().size(); i++) {
             Ordre o = Storage.getOrdrer().get(i);
-            if (kunde.equals(o.getKunde()) ) {
-                if (!kundensSamledeOrdre.contains(o))
-                    kundensSamledeOrdre.add(o);
+            if (o.isErOrdrenLukket()) {
+                if (kunde.equals(o.getKunde())) {
+                    if (!kundensSamledeOrdre.contains(o))
+                        kundensSamledeOrdre.add(o);
+                }
             }
         }
         return kundensSamledeOrdre;
+    }
+
+    public static double getKundesSamledeKoeb(ArrayList<Ordre> ordrer) {
+        double sum = 0.0;
+        for (Ordre o : ordrer) {
+            sum += o.getSamletPris();
+        }
+        return sum;
     }
 
     public static ArrayList<Ordre> getNuværendeUdlejninger() {
@@ -143,6 +153,12 @@ public class Controller {
         Kunde kunde = new Kunde(fornavn, efternavn, telefon);
         Storage.addKunde(kunde);
         return kunde;
+    }
+
+    public static void updateKunde(Kunde kunde, String fornavn, String efternavn, int telefon) {
+        kunde.setFornavn(fornavn);
+        kunde.setEfternavn(efternavn);
+        kunde.setTelefon(telefon);
     }
 
     public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
@@ -600,7 +616,7 @@ public class Controller {
         Controller.createOrdrelinjeSalg(ordre4, indiaPaleAleFadoel, 1, ordre4.getPrisliste());
         lukSalg(ordre4, ordre4.getPrisliste(), LocalDate.now(), true, klip1);
 
-        Kunde kunde1 = Controller.createKunde("Earl", "Flemmingway", 00000000);
+        Kunde kunde1 = Controller.createKunde("Earl", "Flemmingway", 10101010);
         Kunde kunde2 = Controller.createKunde("Bo", "Bech", 11111111);
         Kunde kunde3 = Controller.createKunde("Sofie", "Lassen Kalke", 22222222);
         Kunde kunde4 = Controller.createKunde("Big", "Chungus", 33333333);
@@ -616,7 +632,10 @@ public class Controller {
         ordre6.setKunde(kunde1);
         Storage.addOrdre(ordre5);
         Storage.addOrdre(ordre6);
+        ordre3.setKunde(kunde4);
+        ordre2.setKunde(kunde4);
 
+        ordre5.createOrdrelinje(1, klosterbrygFustage);
         ordre5.createOrdrelinje(1, klosterbrygFustage);
         ordre6.createOrdrelinje(1, klosterbrygFustage);
 
