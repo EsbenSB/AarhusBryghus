@@ -624,7 +624,7 @@ public class Controller {
         Kunde kunde6 = Controller.createKunde("Henning", "Stærk", 55555555);
         Kunde kunde7 = Controller.createKunde("Alfalfa", "Solomon", 66666666);
         Kunde kunde8 = Controller.createKunde("Hannah Montana", "Banana Ananas", 77777777);
-        Kunde kunde9 = Controller.createKunde("Mads", "Mikkelsel", 88888888);
+        Kunde kunde9 = Controller.createKunde("L'easy", "Peter", 88888888);
         Kunde kunde10 = Controller.createKunde("Yvonne", "", 99999999);
         Ordre ordre5 = Controller.createUdlejning(butik);
         Ordre ordre6 = Controller.createUdlejning(butik);
