@@ -371,6 +371,8 @@ public class KasseapparatPane extends GridPane {
     public void addProduktKurv() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
+        Ordre ordre = new Ordre("køb", false, LocalDate.now(),prisliste);
+        double totalPris = 0;
 
         String valgteProdukt = txfValgteProdukt.getText().trim();
         if (valgteProdukt.length() == 0) {
@@ -386,13 +388,15 @@ public class KasseapparatPane extends GridPane {
                 lblError.setText("Vælg et antal");
             } else {
                 if (rbStandardPris.isSelected()) {
-                    Ordrelinje ordrelinje = new Ordrelinje(produkt, antalValgte, prisliste);
-                    txfSamletPrisProdukt.setText(ordrelinje.getSamletPris()+" Kr.");
+                    Ordrelinje ordrelinje1 = Controller.createOrdrelinjeSalg(ordre, produkt, antalValgte, prisliste);
+                    txfSamletPrisProdukt.setText(ordrelinje1.getSamletPris()+" Kr.");
                     lvwKurv.getItems().add(produkt);
                     cbbPrislister.setDisable(true);
                     txfTotalPris.setDisable(false);
                     // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
-                    txfTotalPris.setText(" Kr.");
+                    ordre.createOrdrelinje(antalValgte, produkt);
+                    System.out.println(ordre.getOrdrenummer());
+                    txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                     lblError.setText("");
                 } else {
                     if (rbKlippeKortPris.isSelected()) {
@@ -401,6 +405,9 @@ public class KasseapparatPane extends GridPane {
                         lvwKurv.getItems().add(produkt);
                         cbbPrislister.setDisable(true);
                         txfTotalPris.setDisable(false);
+                        // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                        ordre.createOrdrelinje(antalValgte, produkt);
+                        txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                         lblError.setText("");
                     } else {
                         if (rbCustomPris.isSelected()) {
@@ -413,6 +420,9 @@ public class KasseapparatPane extends GridPane {
                                 lvwKurv.getItems().add(produkt);
                                 cbbPrislister.setDisable(true);
                                 txfTotalPris.setDisable(false);
+                                // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                                ordre.createOrdrelinje(antalValgte, produkt);
+                                txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                                 lblError.setText("");
                             } catch (NumberFormatException ex) {
                                 // Do nothing
@@ -430,6 +440,9 @@ public class KasseapparatPane extends GridPane {
                                 lvwKurv.getItems().add(produkt);
                                 cbbPrislister.setDisable(true);
                                 txfTotalPris.setDisable(false);
+                                // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                                ordre.createOrdrelinje(antalValgte, produkt);
+                                txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                                 lblError.setText("");
                             } catch (NumberFormatException ex) {
                                 // Do nothing
