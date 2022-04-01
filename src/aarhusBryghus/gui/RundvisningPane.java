@@ -47,10 +47,8 @@ public class RundvisningPane extends GridPane {
     }
 
     private void opretProduktAction() {
-        ProduktWindow dia= new ProduktWindow("Opret Produkt");
-        dia.showAndWait();
 
-        //TODO Lav resten af metoden færdig når knappen skal laves færdig
+
     }
 }
 

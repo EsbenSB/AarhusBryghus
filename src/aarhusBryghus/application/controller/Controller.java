@@ -25,9 +25,12 @@ public class Controller {
     }
 
     // metode, til combobox i "produkt"- til oprettelse
-    private static ArrayList<String> getElementTyper(){
+    public static ArrayList<String> getElementTyper(){
         ArrayList<String> elementTyper = new ArrayList<>();
         elementTyper.add("Produkt");
+        elementTyper.add("Produktgruppe");
+        elementTyper.add("Måleenhed");
+        elementTyper.add("Prisliste");
 
         return elementTyper;
     }
