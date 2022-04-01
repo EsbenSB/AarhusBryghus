@@ -24,6 +24,14 @@ public class Controller {
         storage = Storage.getInstance();
     }
 
+    // metode, til combobox i "produkt"- til oprettelse
+    private static ArrayList<String> getElementTyper(){
+        ArrayList<String> elementTyper = new ArrayList<>();
+        elementTyper.add("Produkt");
+
+        return elementTyper;
+    }
+
     // METODER TIL UDLEJNING
     public static Kunde findKunde(int mobilnummer) {
         Kunde kunde = null;
@@ -42,18 +50,27 @@ public class Controller {
 
     public static ArrayList<Ordre> getKundeUdlejninger(Kunde kunde) {
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
-        System.out.println("Størrelse: " + Storage.getOrdrer().size());
         for (int i = 0; i < Storage.getOrdrer().size(); i++) {
             Ordre o = Storage.getOrdrer().get(i);
-
-                if (kunde.equals(o.getKunde()) ) {
-                    if (!kundensUdlejninger.contains(o))
-                    kundensUdlejninger.add(o);
+                if (kunde.equals(o.getKunde()) && o.getType().equalsIgnoreCase("udlejning")) {
+                    if (!kundensUdlejninger.contains(o)){
+                        kundensUdlejninger.add(o);
+                    }
                 }
-
-
         }
         return kundensUdlejninger;
+    }
+
+    public static ArrayList<Ordre> getKundensSamledeOrdre(Kunde kunde) {
+        ArrayList<Ordre> kundensSamledeOrdre = new ArrayList<>();
+        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
+            Ordre o = Storage.getOrdrer().get(i);
+            if (kunde.equals(o.getKunde()) ) {
+                if (!kundensSamledeOrdre.contains(o))
+                    kundensSamledeOrdre.add(o);
+            }
+        }
+        return kundensSamledeOrdre;
     }
 
     public static ArrayList<Ordre> getNuværendeUdlejninger() {
