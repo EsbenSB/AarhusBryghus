@@ -27,6 +27,7 @@ public class KasseapparatPane extends GridPane {
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
     private final ToggleGroup groupAnvendtPris = new ToggleGroup();
     private Label lblError;
+    private Ordre ordre;
 
     public KasseapparatPane() {
         this.setPadding(new Insets(20));
@@ -200,9 +201,8 @@ public class KasseapparatPane extends GridPane {
     }
 
     public void opdaterSelectedPrisliste() {
-
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
-
+        this.ordre = Controller.createSalg(prisliste);
         Produktgruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
         if (produktGruppe != null) {
             lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
@@ -306,7 +306,6 @@ public class KasseapparatPane extends GridPane {
     public void beregnProduktPris() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
-
         String valgteProdukt = txfValgteProdukt.getText().trim();
         if (valgteProdukt.length() == 0) {
             lblError.setText("Vælg et produkt");
@@ -371,9 +370,7 @@ public class KasseapparatPane extends GridPane {
     public void addProduktKurv() {
         Produkt produkt = lvwProdukter.getSelectionModel().getSelectedItem();
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
-        Ordre ordre = new Ordre("køb", false, LocalDate.now(),prisliste);
         double totalPris = 0;
-
         String valgteProdukt = txfValgteProdukt.getText().trim();
         if (valgteProdukt.length() == 0) {
             lblError.setText("Vælg et produkt");
@@ -394,8 +391,8 @@ public class KasseapparatPane extends GridPane {
                     cbbPrislister.setDisable(true);
                     txfTotalPris.setDisable(false);
                     // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
-                    ordre.createOrdrelinje(antalValgte, produkt);
                     System.out.println(ordre.getOrdrenummer());
+                    System.out.println(ordre.getOrdrelinjer());
                     txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                     lblError.setText("");
                 } else {
