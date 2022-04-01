@@ -26,7 +26,7 @@ public class KasseapparatPane extends GridPane {
     private final RadioButton rbKontant, rbMobilepay, rbDankort, rbKlippekort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
     private final ToggleGroup groupAnvendtPris = new ToggleGroup();
-    private Label lblError;
+    private Label lblError, lblSucsses;
     private Ordre ordre;
 
     public KasseapparatPane() {
@@ -129,13 +129,11 @@ public class KasseapparatPane extends GridPane {
         txfSamletPrisProdukt.setEditable(false);
         txfSamletPrisProdukt.setDisable(true);
 
-        //TODO Lav knap færdig
         btnBeregnPris = new Button("Beregn pris");
         this.add(btnBeregnPris, 1, 10);
         btnBeregnPris.setOnAction(event -> beregnProduktPris());
         GridPane.setHalignment(btnBeregnPris, HPos.LEFT);
 
-        //TODO Lav knap færdig
         btnTilKurv = new Button("Tilføj til kurv");
         this.add(btnTilKurv,1,10);
         btnTilKurv.setOnAction(event -> addProduktKurv());
@@ -158,12 +156,11 @@ public class KasseapparatPane extends GridPane {
         txfTotalPris.setEditable(false);
         txfTotalPris.setDisable(true);
 
-        //TODO Lav knap færdig
         btnBetaling = new Button("Betal");
         this.add(btnBetaling,4,8);
+        btnBetaling.setOnAction(event -> betal());
         GridPane.setHalignment(btnBetaling, HPos.RIGHT);
 
-        //TODO Lav knap færdig
         btnToemKurv = new Button("Tøm kurv");
         this.add(btnToemKurv, 4, 8);
         btnToemKurv.setOnAction(event -> toemKurv());
@@ -197,6 +194,10 @@ public class KasseapparatPane extends GridPane {
         lblError = new Label();
         this.add(lblError, 4, 0);
         lblError.setStyle("-fx-text-fill: red");
+
+        lblSucsses = new Label();
+        this.add(lblSucsses, 4, 0);
+        lblSucsses.setStyle("-fx-text-fill: green");
         // -------------------------------------------------------------------------------------------------------------
     }
 
@@ -234,7 +235,7 @@ public class KasseapparatPane extends GridPane {
             txfValgteProdukt.setText(produkt.getNavn());
             txfValgteProdukt.setDisable(false);
             txfStandardPris.setText(produkt.enkeltPris(prisliste) + " Kr.");
-            if (produkt.getklippekortPris(prisliste) == 0) {
+            if (produkt.getklippekortPris(prisliste) < 1) {
                 txfKlippekortPris.setText("Klippekort kan ikke anvendes");
                 txfKlippekortPris.setDisable(true);
                 rbKlippeKortPris.setDisable(true);
@@ -308,7 +309,8 @@ public class KasseapparatPane extends GridPane {
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
         String valgteProdukt = txfValgteProdukt.getText().trim();
         if (valgteProdukt.length() == 0) {
-            lblError.setText("Vælg et produkt");
+            lblError.setText("Vælg et produkt der skal udregnes samlet pris på");
+            lblSucsses.setText("");
         } else {
             int antalValgte = -1;
             try {
@@ -317,17 +319,22 @@ public class KasseapparatPane extends GridPane {
                 // Do nothing
             }
             if (antalValgte < 1) {
-                lblError.setText("Vælg et antal");
+                lblError.setText("Vælg det antal produkter du vil beregne samlet pris for");
+                lblSucsses.setText("");
             } else {
                 if (rbStandardPris.isSelected()) {
                     Ordrelinje ordrelinje = new Ordrelinje(produkt, antalValgte, prisliste);
                     txfSamletPrisProdukt.setText(ordrelinje.getSamletPris()+" Kr.");
+                    txfSamletPrisProdukt.setDisable(false);
                     lblError.setText("");
+                    lblSucsses.setText("Pris er blevet udregnet med standard pris");
                 } else {
                     if (rbKlippeKortPris.isSelected()) {
                         Ordrelinje ordrelinje2 = new Ordrelinje(produkt, antalValgte, prisliste);
                         txfSamletPrisProdukt.setText(ordrelinje2.getSamletPrisKlip()+" Klip");
+                        txfSamletPrisProdukt.setDisable(false);
                         lblError.setText("");
+                        lblSucsses.setText("Pris er blevet udregnet i klip");
                     } else {
                         if (rbCustomPris.isSelected()) {
                             int customPris = -1;
@@ -336,12 +343,15 @@ public class KasseapparatPane extends GridPane {
                                 Ordrelinje ordrelinje3 = new Ordrelinje(produkt, antalValgte, prisliste);
                                 ordrelinje3.setAftaltPris(customPris);
                                 txfSamletPrisProdukt.setText(ordrelinje3.getSamletPris()+" Kr.");
+                                txfSamletPrisProdukt.setDisable(false);
                                 lblError.setText("");
+                                lblSucsses.setText("Pris er blevet udregnet med custom pris");
                             } catch (NumberFormatException ex) {
                                 // Do nothing
                             }
                             if (customPris <1) {
                                 lblError.setText("CustomPris er tom");
+                                lblSucsses.setText("");
                             }
                         } else {
                             double rabatPris = -1;
@@ -350,14 +360,18 @@ public class KasseapparatPane extends GridPane {
                                 Ordrelinje ordrelinje4 = new Ordrelinje(produkt, antalValgte, prisliste);
                                 ordrelinje4.setPrisMedProcentRabat(rabatPris);
                                 txfSamletPrisProdukt.setText(ordrelinje4.getSamletPris()+" Kr.");
+                                txfSamletPrisProdukt.setDisable(false);
                                 lblError.setText("");
+                                lblSucsses.setText("Pris er blevet udregnet med rabat");
                             } catch (NumberFormatException ex) {
                                 // Do nothing
                             }
                             if (rabatPris < 0) {
                                 lblError.setText("Ugyldig rabat");
+                                lblSucsses.setText("");
                             } else if (rabatPris > 100) {
                                 lblError.setText("For høj rabat");
+                                lblSucsses.setText("");
                             }
                         }
                     }
@@ -374,6 +388,7 @@ public class KasseapparatPane extends GridPane {
         String valgteProdukt = txfValgteProdukt.getText().trim();
         if (valgteProdukt.length() == 0) {
             lblError.setText("Vælg et produkt");
+            lblSucsses.setText("");
         } else {
             int antalValgte = -1;
             try {
@@ -383,6 +398,7 @@ public class KasseapparatPane extends GridPane {
             }
             if (antalValgte < 1) {
                 lblError.setText("Vælg et antal");
+                lblSucsses.setText("");
             } else {
                 if (rbStandardPris.isSelected()) {
                     Ordrelinje ordrelinje1 = Controller.createOrdrelinjeSalg(ordre, produkt, antalValgte, prisliste);
@@ -390,11 +406,13 @@ public class KasseapparatPane extends GridPane {
                     lvwKurv.getItems().add(produkt);
                     cbbPrislister.setDisable(true);
                     txfTotalPris.setDisable(false);
-                    // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                    rbKlippekort.setDisable(true);
+                    rbKontant.fire();
                     System.out.println(ordre.getOrdrenummer());
                     System.out.println(ordre.getOrdrelinjer());
                     txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                     lblError.setText("");
+                    lblSucsses.setText(produkt + " tilføjet til kurv med standard pris");
                 } else {
                     if (rbKlippeKortPris.isSelected()) {
                         Ordrelinje ordrelinje2 = new Ordrelinje(produkt, antalValgte, prisliste);
@@ -402,10 +420,14 @@ public class KasseapparatPane extends GridPane {
                         lvwKurv.getItems().add(produkt);
                         cbbPrislister.setDisable(true);
                         txfTotalPris.setDisable(false);
-                        // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                        rbKontant.setDisable(true);
+                        rbMobilepay.setDisable(true);
+                        rbDankort.setDisable(true);
+                        rbKlippekort.fire();
                         ordre.createOrdrelinje(antalValgte, produkt);
                         txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                         lblError.setText("");
+                        lblSucsses.setText(produkt + " tilføjet til kurv med klippekort pris");
                     } else {
                         if (rbCustomPris.isSelected()) {
                             int customPris = -1;
@@ -417,15 +439,18 @@ public class KasseapparatPane extends GridPane {
                                 lvwKurv.getItems().add(produkt);
                                 cbbPrislister.setDisable(true);
                                 txfTotalPris.setDisable(false);
-                                // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                                rbKlippekort.setDisable(true);
+                                rbKontant.fire();
                                 ordre.createOrdrelinje(antalValgte, produkt);
                                 txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                                 lblError.setText("");
+                                lblSucsses.setText(produkt + " tilføjet til kurv med custom pris");
                             } catch (NumberFormatException ex) {
                                 // Do nothing
                             }
                             if (customPris <1) {
                                 lblError.setText("CustomPris er tom");
+                                lblSucsses.setText("");
                             }
                         } else {
                             double rabatPris = -1;
@@ -437,17 +462,21 @@ public class KasseapparatPane extends GridPane {
                                 lvwKurv.getItems().add(produkt);
                                 cbbPrislister.setDisable(true);
                                 txfTotalPris.setDisable(false);
-                                // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
+                                rbKlippekort.setDisable(true);
+                                rbKontant.fire();
                                 ordre.createOrdrelinje(antalValgte, produkt);
                                 txfTotalPris.setText(ordre.getSamletPris() + " Kr.");
                                 lblError.setText("");
+                                lblSucsses.setText(produkt + " tilføjet med rabat pris");
                             } catch (NumberFormatException ex) {
                                 // Do nothing
                             }
                             if (rabatPris < 0) {
                                 lblError.setText("Ugyldig rabat");
+                                lblSucsses.setText("");
                             } else if (rabatPris > 100) {
                                 lblError.setText("For høj rabat");
+                                lblSucsses.setText("");
                             }
                         }
                     }
@@ -461,18 +490,103 @@ public class KasseapparatPane extends GridPane {
         Produkt produkt = lvwKurv.getSelectionModel().getSelectedItem();
         if (produkt != null) {
             lvwKurv.getItems().remove(produkt);
+            lblError.setText("");
+            lblSucsses.setText("Vare er blevet fjernet fra kurven");
 
             if (lvwKurv.getSelectionModel().isEmpty()) {
                 cbbPrislister.setDisable(false);
                 txfTotalPris.setDisable(true);
+                rbKontant.setDisable(false);
+                rbMobilepay.setDisable(false);
+                rbDankort.setDisable(false);
+                rbKlippekort.setDisable(false);
             }
+        } else {
+            lblError.setText("Der er ikke valgt et produkt til at slette");
+            lblSucsses.setText("");
         }
     }
 
     public void toemKurv() {
-        lvwKurv.getItems().clear();
-        txfTotalPris.clear();
-        cbbPrislister.setDisable(false);
-        txfTotalPris.setDisable(true);
+        if (lvwKurv.getItems().isEmpty()) {
+            lblError.setText("Der er intet i kurven til at tømme");
+            lblSucsses.setText("");
+        } else {
+            lvwKurv.getItems().clear();
+            txfTotalPris.clear();
+            cbbPrislister.setDisable(false);
+            txfTotalPris.setDisable(true);
+            rbKontant.setDisable(false);
+            rbMobilepay.setDisable(false);
+            rbDankort.setDisable(false);
+            rbKlippekort.setDisable(false);
+            lblError.setText("");
+            lblSucsses.setText("Kurven er blevet tømt");
+        }
+    }
+
+    public void betal() {
+        if (lvwKurv.getItems().isEmpty()) {
+            lblError.setText("Der er intet i kurven som kan købes");
+            lblSucsses.setText("");
+        } else {
+            if (rbKontant.isSelected()) {
+                KasseapparatWindow dia = new KasseapparatWindow("Betalt med kontant");
+                dia.showAndWait();
+
+                lvwKurv.getItems().clear();
+                txfTotalPris.clear();
+                cbbPrislister.setDisable(false);
+                cbbProduktgrupper.setDisable(true);
+                txfTotalPris.setDisable(true);
+                lblError.setText("");
+                lblSucsses.setText("Betaling er fuldført");
+            } else {
+                if (rbMobilepay.isSelected()) {
+                    KasseapparatWindow dia = new KasseapparatWindow("Betalt med mobilepay");
+                    dia.showAndWait();
+
+                    lvwKurv.getItems().clear();
+                    txfTotalPris.clear();
+                    cbbPrislister.setDisable(false);
+                    cbbProduktgrupper.setDisable(true);
+                    txfTotalPris.setDisable(true);
+                    lblError.setText("");
+                    lblSucsses.setText("Betaling er fuldført");
+                } else {
+                    if (rbDankort.isSelected()) {
+                        KasseapparatWindow dia = new KasseapparatWindow("Betalt med dankort");
+                        dia.showAndWait();
+
+                        lvwKurv.getItems().clear();
+                        txfTotalPris.clear();
+                        cbbPrislister.setDisable(false);
+                        cbbProduktgrupper.setDisable(true);
+                        txfTotalPris.setDisable(true);
+                        lblError.setText("");
+                        lblSucsses.setText("Betaling er fuldført");
+                    } else {
+                        if (rbKlippekort.isSelected()) {
+                            KasseapparatWindow dia = new KasseapparatWindow("Betalt med klippekort");
+                            dia.showAndWait();
+
+                            lvwKurv.getItems().clear();
+                            txfTotalPris.clear();
+                            cbbPrislister.setDisable(false);
+                            cbbProduktgrupper.setDisable(true);
+                            txfTotalPris.setDisable(true);
+                            rbKontant.setDisable(false);
+                            rbMobilepay.setDisable(false);
+                            rbDankort.setDisable(false);
+                            lblError.setText("");
+                            lblSucsses.setText("Betaling er fuldført");
+                        } else {
+                            lblError.setText("Vælg betalingsmetode");
+                            lblSucsses.setText("");
+                        }
+                    }
+                }
+            }
+        }
     }
 }
