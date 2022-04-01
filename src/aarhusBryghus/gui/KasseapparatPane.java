@@ -391,6 +391,7 @@ public class KasseapparatPane extends GridPane {
                     lvwKurv.getItems().add(produkt);
                     cbbPrislister.setDisable(true);
                     txfTotalPris.setDisable(false);
+                    // TODO Vi skal have en ordre ind  - så kan vi køre ordre.getsamletpris(), eller hvad den nu hed
                     txfTotalPris.setText(" Kr.");
                     lblError.setText("");
                 } else {
