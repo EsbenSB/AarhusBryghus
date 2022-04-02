@@ -25,7 +25,7 @@ public class Controller {
     }
 
     // metode, til combobox i "produktTab"
-    public static ArrayList<String> getElementTyper(){
+    public static ArrayList<String> getElementTyper() {
         ArrayList<String> elementTyper = new ArrayList<>();
         elementTyper.add("Produkt");
         elementTyper.add("Produktgruppe");
@@ -34,7 +34,7 @@ public class Controller {
         return elementTyper;
     }
 
-    public static ArrayList<String> getProduktTyper(){
+    public static ArrayList<String> getProduktTyper() {
         ArrayList<String> produkttyper = new ArrayList<>();
         produkttyper.add("Produkt");
         produkttyper.add("PantProdukt");
@@ -60,11 +60,11 @@ public class Controller {
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
         for (int i = 0; i < Storage.getOrdrer().size(); i++) {
             Ordre o = Storage.getOrdrer().get(i);
-                if (kunde.equals(o.getKunde()) && o.getType().equalsIgnoreCase("udlejning")) {
-                    if (!kundensUdlejninger.contains(o)){
-                        kundensUdlejninger.add(o);
-                    }
+            if (kunde.equals(o.getKunde()) && o.getType().equalsIgnoreCase("udlejning")) {
+                if (!kundensUdlejninger.contains(o)) {
+                    kundensUdlejninger.add(o);
                 }
+            }
         }
         return kundensUdlejninger;
     }
@@ -125,17 +125,17 @@ public class Controller {
         return ordre;
     }
 
-    public static Ordre createRundvisning (Prisliste prisliste, Kunde kunde, LocalDateTime tidspunkt, Produktgruppe produktgruppe, double prisPerPerson) {
+    public static Ordre createRundvisning(Prisliste prisliste, Kunde kunde, LocalDateTime tidspunkt, Produktgruppe produktgruppe, double prisPerPerson) {
         Ordre rundvisning = new Ordre("Rundvisning", false, LocalDate.now(), prisliste);
         rundvisning.setKunde(kunde);
-        Rundvisning rundvisningProdukt = produktgruppe.createRundvisning("Rundvisning",Controller.getEmptyMaaleenhed(),tidspunkt);
-        prisliste.createPris(rundvisningProdukt,prisPerPerson, 0);
-        rundvisning.createOrdrelinje(1,rundvisningProdukt);
+        Rundvisning rundvisningProdukt = produktgruppe.createRundvisning("Rundvisning", Controller.getEmptyMaaleenhed(), tidspunkt);
+        prisliste.createPris(rundvisningProdukt, prisPerPerson, 0);
+        rundvisning.createOrdrelinje(1, rundvisningProdukt);
         Storage.addOrdre(rundvisning);
         return rundvisning;
     }
 
-    public static Ordre createUdlejning (Prisliste prisliste, Kunde kunde) {
+    public static Ordre createUdlejning(Prisliste prisliste, Kunde kunde) {
         Ordre udlejning = new Ordre("Udlejning", false, LocalDate.now(), prisliste);
         udlejning.setKunde(kunde);
         Storage.addOrdre(udlejning);
@@ -150,30 +150,32 @@ public class Controller {
         }
         return ordrelinje;
     }
+
     //Opretter en ordrelinje, på ordren, som udlejning. Sætter prisen, på
     // ordrelinjen, til at være = panten på det tilføjede produkt
     // NB: Produkter uden pant, bliver tilføjet normalt, men prisen sættes til 0! (fordi den endelig afregning sker ved afslutning)
-    public static Ordrelinje createOrdrelinjeUdlejning(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
+    public static Ordrelinje createOrdrelinjeUdlejning(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste) {
         Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
         return ordrelinje;
     }
+
     //Lukker rundvisningen - ligesom en udlejning
-    public static void lukRundvisningOrdre(Ordre ordre, Betalingsform betalingsform){
-       Controller.lukUdlejningOrdre(ordre,betalingsform);
+    public static void lukRundvisningOrdre(Ordre ordre, Betalingsform betalingsform) {
+        Controller.lukUdlejningOrdre(ordre, betalingsform);
     }
 
     //Lukker ordren, hvis den ikke er lukket
-    public static void lukUdlejningOrdre(Ordre ordre, Betalingsform betalingsform){
-        if(!ordre.erOrdrenLukket()){
+    public static void lukUdlejningOrdre(Ordre ordre, Betalingsform betalingsform) {
+        if (!ordre.erOrdrenLukket()) {
             ordre.setAfslutningsDato(LocalDate.now());
             ordre.setOrdreStatus(true);
             ordre.setBetalingsform(betalingsform);
         }
     }
 
-    public static MaaleEnhed getEmptyMaaleenhed(){
-        for(MaaleEnhed me: Controller.getMaaleEnheder()){
-            if(me.getEnhed() == null){
+    public static MaaleEnhed getEmptyMaaleenhed() {
+        for (MaaleEnhed me : Controller.getMaaleEnheder()) {
+            if (me.getEnhed() == null) {
                 return me;
             }
         }
@@ -189,8 +191,8 @@ public class Controller {
 
     // Opretter kunden, hvis telefonnummeret er unikt
     public static Kunde createKunde(String fornavn, String efternavn, int telefon) {
-        for(Kunde k: Storage.getKunder()){
-            if(k.getTelefon() == telefon){
+        for (Kunde k : Storage.getKunder()) {
+            if (k.getTelefon() == telefon) {
                 Kunde kunde = new Kunde(fornavn, efternavn, telefon);
                 Storage.addKunde(kunde);
                 return kunde;
@@ -200,15 +202,15 @@ public class Controller {
     }
 
     public static void updateKunde(Kunde kunde, String fornavn, String efternavn, int telefon) {
-        for(Kunde k: Storage.getKunder()){
-            if(k.getTelefon() == telefon){
+        for (Kunde k : Storage.getKunder()) {
+            if (k.getTelefon() == telefon) {
                 // Gør ingenting!
-            } else{
+            } else {
                 kunde.setFornavn(fornavn);
                 kunde.setEfternavn(efternavn);
                 kunde.setTelefon(telefon);
-            }}
-
+            }
+        }
     }
 
     public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
@@ -446,7 +448,7 @@ public class Controller {
     }
 
     public static void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
-        if(!ordre.erOrdrenLukket()){
+        if (!ordre.erOrdrenLukket()) {
             ordre.setAfslutningsDato(afslutDato);
             ordre.setOrdreStatus(status);
             ordre.setBetalingsform(betalingsform);
@@ -543,7 +545,7 @@ public class Controller {
         // PantProdukt
 
         Produkt klosterbrygFustage = Controller.createPantProdukt("Klosterbryg", tyveLiter, 200, fustage);
-        Produkt julebrygFustage = Controller.createPantProdukt("Julebryg",tyveLiter,200,fustage);
+        Produkt julebrygFustage = Controller.createPantProdukt("Julebryg", tyveLiter, 200, fustage);
 
         // Fredagsbar prisliste
         // klippekort
@@ -608,7 +610,7 @@ public class Controller {
 
         // fustage
         butik.createPris(klosterbrygFustage, 775, 0);
-        butik.createPris(julebrygFustage,775, 0);
+        butik.createPris(julebrygFustage, 775, 0);
 
         // flasker
         butik.createPris(klosterbrygFlaske, 36, 0);
@@ -680,17 +682,16 @@ public class Controller {
         Kunde kunde8 = Controller.createKunde("Hannah Montana", "Banana Ananas", 77777777);
         Kunde kunde9 = Controller.createKunde("L'easy", "Peter", 88888888);
         Kunde kunde10 = Controller.createKunde("Yvonne", "", 99999999);
-        Ordre ordre5 = Controller.createUdlejning(butik,kunde4);
+        Ordre ordre5 = Controller.createUdlejning(butik, kunde4);
         Ordre ordre6 = Controller.createUdlejning(butik, kunde5);
-        Ordrelinje ordrelinje1PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5,klosterbrygFustage,2,butik);
-        Ordrelinje ordrelinje2PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5,julebrygFustage,2,butik);
+        Ordrelinje ordrelinje1PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5, klosterbrygFustage, 2, butik);
+        Ordrelinje ordrelinje2PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5, julebrygFustage, 2, butik);
 
-        Ordrelinje ordrelinje1PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,klosterbrygFustage,2,butik);
-        Ordrelinje ordrelinje2PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,julebrygFustage,2,butik);
+        Ordrelinje ordrelinje1PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6, klosterbrygFustage, 2, butik);
+        Ordrelinje ordrelinje2PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6, julebrygFustage, 2, butik);
 
         ordre3.setKunde(kunde4);
         ordre2.setKunde(kunde4);
-
 
 
     }
