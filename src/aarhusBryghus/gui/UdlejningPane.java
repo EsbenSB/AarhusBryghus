@@ -137,7 +137,6 @@ public class UdlejningPane extends GridPane {
                 Betalingsform mobilepay = new MobilePay();
                 this.betalingsform = mobilepay;
                 ordre.setBetalingsform(mobilepay);
-                Controller.
 
             } else if (newVal.getToggleGroup().getSelectedToggle().equals(rbRegning)){
                 System.out.println("Regning");
@@ -151,7 +150,6 @@ public class UdlejningPane extends GridPane {
                 ordre.setBetalingsform(kontant);
             }
         }
-
     }
 
     private void betalingAfUdlejningKnap() {
@@ -185,7 +183,6 @@ public class UdlejningPane extends GridPane {
             lblSucces.setText("");
 
         }
-
     }
 
     private void selectedOrdreChanged() {
@@ -197,7 +194,6 @@ public class UdlejningPane extends GridPane {
             rbRegning.setDisable(false);
             lvwOrdrelinjer.getItems().setAll(ordre.getOrdrelinjer());
             txfSamletPant.setText(ordre.getSamletPantPaaOrdre()+"");
-            txfSamletPris.setText(ordre.getSamletPris()+"");
         }
     }
 

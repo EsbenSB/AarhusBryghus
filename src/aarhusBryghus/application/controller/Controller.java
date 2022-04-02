@@ -56,6 +56,18 @@ public class Controller {
         return kunde;
     }
 
+    //Virker kun med udlejninger!
+    // skal køres umiddelbart efter ordren er oprettet og panten er betalt
+    public static void setPrisMinusPant(Ordre ordre) {
+        if (ordre.getType().equalsIgnoreCase("Udlejning")) {
+            for (Ordrelinje ol : ordre.getOrdrelinjer()) {
+                if (ol.getSamletPant() != 0) {
+                    ol.setPris(ol.getPris() - ol.getProdukt().getPant());
+                }
+            }
+        }
+    }
+
     public static ArrayList<Ordre> getKundeUdlejninger(Kunde kunde) {
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
         for (int i = 0; i < Storage.getOrdrer().size(); i++) {
@@ -675,6 +687,9 @@ public class Controller {
 
         Ordrelinje ordrelinje1PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,klosterbrygFustage,2,butik);
         Ordrelinje ordrelinje2PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,julebrygFustage,2,butik);
+        Controller.setPrisMinusPant(ordre5);
+        Controller.setPrisMinusPant(ordre6);
+
 
         ordre3.setKunde(kunde4);
         ordre2.setKunde(kunde4);
