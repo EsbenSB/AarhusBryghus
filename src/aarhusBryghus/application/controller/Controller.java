@@ -187,16 +187,28 @@ public class Controller {
         return produkt;
     }
 
+    // Opretter kunden, hvis telefonnummeret er unikt
     public static Kunde createKunde(String fornavn, String efternavn, int telefon) {
-        Kunde kunde = new Kunde(fornavn, efternavn, telefon);
-        Storage.addKunde(kunde);
-        return kunde;
+        for(Kunde k: Storage.getKunder()){
+            if(k.getTelefon() == telefon){
+                Kunde kunde = new Kunde(fornavn, efternavn, telefon);
+                Storage.addKunde(kunde);
+                return kunde;
+            }
+        }
+        return null;
     }
 
     public static void updateKunde(Kunde kunde, String fornavn, String efternavn, int telefon) {
-        kunde.setFornavn(fornavn);
-        kunde.setEfternavn(efternavn);
-        kunde.setTelefon(telefon);
+        for(Kunde k: Storage.getKunder()){
+            if(k.getTelefon() == telefon){
+                // Gør ingenting!
+            } else{
+                kunde.setFornavn(fornavn);
+                kunde.setEfternavn(efternavn);
+                kunde.setTelefon(telefon);
+            }}
+
     }
 
     public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {

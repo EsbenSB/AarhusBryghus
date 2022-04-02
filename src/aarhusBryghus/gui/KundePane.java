@@ -73,7 +73,7 @@ public class KundePane extends GridPane {
 
     }
 
-    private void opdaterKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
+    private void opdaterKunde() {
         String fornavn = txfFornavn.getText();
         String efternavn = txfEfternavn.getText();
         if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
@@ -84,7 +84,7 @@ public class KundePane extends GridPane {
             lvwKunder.getSelectionModel().select(kunde);
         }
     }
-    private void opretKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
+    private void opretKunde() {
         String fornavn = txfFornavn.getText();
         String efternavn = txfEfternavn.getText();
         if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
