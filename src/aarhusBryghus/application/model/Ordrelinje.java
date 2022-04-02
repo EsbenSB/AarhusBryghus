@@ -77,4 +77,10 @@ public class Ordrelinje {
     public String toString() {
         return produkt.getNavn() + " " + produkt.getMaaleEnhed() + ". Antal: " + antal + " stk pris: " + pris + " samlet pris: " + pris * antal;
     }
+
+    public int getSamletPant() {
+        int pant = this.getProdukt().getPant();
+        int antal = this.getAntal();
+        return pant*antal;
+    }
 }

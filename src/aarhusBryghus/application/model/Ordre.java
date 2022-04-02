@@ -126,4 +126,19 @@ public class Ordre {
 
         }
     }
+
+    public int getSamletPantPaaOrdre(){
+        int samletPant = 0;
+        for(Ordrelinje ol: this.getOrdrelinjer()){
+            samletPant += ol.getSamletPant();
+        }
+        return samletPant;
+    }
+
+    public void removeOrdrelinje(Ordrelinje ordrelinje) {
+        if (ordrelinjer.contains(ordrelinje)) {
+            ordrelinjer.remove(ordrelinje);
+            System.out.println("Removed: " + ordrelinje + ". From ordre");
+        }
+    }
 }

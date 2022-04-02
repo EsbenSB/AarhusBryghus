@@ -155,9 +155,6 @@ public class Controller {
     // NB: Produkter uden pant, bliver tilføjet normalt, men prisen sættes til 0! (fordi den endelig afregning sker ved afslutning)
     public static Ordrelinje createOrdrelinjeUdlejning(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
         Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
-        if(produkt.getClass().equals(PantProdukt.class)){
-            ordrelinje.setPris(((PantProdukt) produkt).getPant());
-        }
         return ordrelinje;
     }
     //Lukker rundvisningen - ligesom en udlejning
@@ -534,6 +531,7 @@ public class Controller {
         // PantProdukt
 
         Produkt klosterbrygFustage = Controller.createPantProdukt("Klosterbryg", tyveLiter, 200, fustage);
+        Produkt julebrygFustage = Controller.createPantProdukt("Julebryg",tyveLiter,200,fustage);
 
         // Fredagsbar prisliste
         // klippekort
@@ -598,6 +596,7 @@ public class Controller {
 
         // fustage
         butik.createPris(klosterbrygFustage, 775, 0);
+        butik.createPris(julebrygFustage,775, 0);
 
         // flasker
         butik.createPris(klosterbrygFlaske, 36, 0);
@@ -669,18 +668,17 @@ public class Controller {
         Kunde kunde8 = Controller.createKunde("Hannah Montana", "Banana Ananas", 77777777);
         Kunde kunde9 = Controller.createKunde("L'easy", "Peter", 88888888);
         Kunde kunde10 = Controller.createKunde("Yvonne", "", 99999999);
-        Ordre ordre5 = Controller.createUdlejning(butik);
-        Ordre ordre6 = Controller.createUdlejning(butik);
-        ordre5.setKunde(kunde4);
-        ordre6.setKunde(kunde1);
-        Storage.addOrdre(ordre5);
-        Storage.addOrdre(ordre6);
+        Ordre ordre5 = Controller.createUdlejning(butik,kunde4);
+        Ordre ordre6 = Controller.createUdlejning(butik, kunde5);
+        Ordrelinje ordrelinje1PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5,klosterbrygFustage,2,butik);
+        Ordrelinje ordrelinje2PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5,julebrygFustage,2,butik);
+
+        Ordrelinje ordrelinje1PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,klosterbrygFustage,2,butik);
+        Ordrelinje ordrelinje2PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,julebrygFustage,2,butik);
+
         ordre3.setKunde(kunde4);
         ordre2.setKunde(kunde4);
 
-        ordre5.createOrdrelinje(1, klosterbrygFustage);
-        ordre5.createOrdrelinje(1, klosterbrygFustage);
-        ordre6.createOrdrelinje(1, klosterbrygFustage);
 
 
     }

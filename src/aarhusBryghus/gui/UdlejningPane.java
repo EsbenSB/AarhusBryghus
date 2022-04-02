@@ -1,28 +1,23 @@
 package aarhusBryghus.gui;
 
 import aarhusBryghus.application.controller.Controller;
-import aarhusBryghus.application.model.Kunde;
-import aarhusBryghus.application.model.Ordre;
-import aarhusBryghus.application.model.Ordrelinje;
-import aarhusBryghus.storage.Storage;
+import aarhusBryghus.application.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import javax.xml.transform.dom.DOMSource;
-
 public class UdlejningPane extends GridPane {
 
-    private Label lblUdlejninger, lblOrdrelinjer, lblSamletPant, lblSoegEfterKunde, lblSamletPris, lblRetOrdreLinje, lblBetalingsmetoder;
+    private Label lblUdlejninger, lblOrdrelinjer, lblSamletPant, lblSoegEfterKunde, lblSamletPris, lblRetOrdreLinje, lblBetalingsmetoder, lblSucces, lblError;
     private Button btnBetaling, btnBeregnSamletPris, btnSoegEfterKunde, btnRetOrdre;
     private RadioButton rbKontant, rbRegning, rbMobilepay, rbDankort;
     private final ToggleGroup groupBetalingsmetode = new ToggleGroup();
     private ListView<Ordre> lvwUdlejninger = new ListView<Ordre>();
     private ListView<Ordrelinje> lvwOrdrelinjer = new ListView<>();
     private TextField txfSamletPant, txfSoegKunde, txfSamletPris, txfRetAntal;
-
+    private Betalingsform betalingsform;
 
 
     public UdlejningPane() {
@@ -54,6 +49,7 @@ public class UdlejningPane extends GridPane {
 
         btnRetOrdre = new Button("Accepter Ændring");
         this.add(btnRetOrdre,1,11);
+        btnRetOrdre.setOnAction(event -> accepterAntalÆndringerKnap());
 
         btnSoegEfterKunde = new Button("Find kunde");
         this.add(btnSoegEfterKunde,3,3);
@@ -66,20 +62,19 @@ public class UdlejningPane extends GridPane {
 
         this.add(lvwUdlejninger,0,1,1,9);
         lvwUdlejninger.setPrefHeight(200);
+        lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
         ChangeListener<Ordre> ordreListener = (ov, gammelOrdre, nyOrdre) -> this.selectedOrdreChanged();
         lvwUdlejninger.getSelectionModel().selectedItemProperty().addListener(ordreListener);
 
-        // TODO Ret til korrekt liste
-       // lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
-
-
         this.add(lvwOrdrelinjer,1,1,1,9);
         lvwOrdrelinjer.setPrefHeight(200);
+        ChangeListener<Ordrelinje> ordreLinjeListener = (ovl, gammelOrdrelinje, nyOrdrelinje) -> this.selectedOrdreLinjeChanged();
+        lvwOrdrelinjer.getSelectionModel().selectedItemProperty().addListener(ordreLinjeListener);
 
         lblOrdrelinjer = new Label("Ordrelinjer");
         this.add(lblOrdrelinjer,1,0);
 
-        lblSamletPant = new Label("Samlet Pant:");
+        lblSamletPant = new Label("Samlet Betalt Pant:");
         this.add(lblSamletPant,2,0);
 
         lblSoegEfterKunde = new Label("Find Udlejning: ");
@@ -91,6 +86,7 @@ public class UdlejningPane extends GridPane {
         btnBetaling = new Button("Betal");
         this.add(btnBetaling,3,12);
         GridPane.setHalignment(btnBetaling, HPos.RIGHT);
+        btnBetaling.setOnAction(event -> betalingAfUdlejningKnap());
 
         Label lblBetalingsmetoder = new Label("Betalingsmetoder:");
         this.add(lblBetalingsmetoder,3,7);
@@ -110,21 +106,108 @@ public class UdlejningPane extends GridPane {
         rbRegning = new RadioButton("Regning");
         this.add(rbRegning,3,10);
         rbRegning.setToggleGroup(groupBetalingsmetode);
+        groupBetalingsmetode.selectedToggleProperty().addListener((observable, oldVal, newVal) -> betalingsformValgt(newVal));
 
+        rbKontant.setDisable(true);
+        rbMobilepay.setDisable(true);
+        rbDankort.setDisable(true);
+        rbRegning.setDisable(true);
 
+        lblError = new Label();
+        this.add(lblError, 0, 13);
+        lblError.setStyle("-fx-text-fill: red");
+
+        lblSucces = new Label();
+        this.add(lblSucces, 0, 13);
+        lblSucces.setStyle("-fx-text-fill: green");
+
+    }
+
+    private void betalingsformValgt(Toggle newVal) {
+        Ordre ordre = lvwUdlejninger.getSelectionModel().getSelectedItem();
+        if(ordre != null){
+            if(newVal.getToggleGroup().getSelectedToggle().equals(rbDankort)){
+                System.out.println("Dankort");
+                Betalingsform dankort = new Dankort();
+                this.betalingsform = dankort;
+                ordre.setBetalingsform(dankort);
+
+            } else if (newVal.getToggleGroup().getSelectedToggle().equals(rbMobilepay)){
+                System.out.println("Mobilepay");
+                Betalingsform mobilepay = new MobilePay();
+                this.betalingsform = mobilepay;
+                ordre.setBetalingsform(mobilepay);
+                Controller.
+
+            } else if (newVal.getToggleGroup().getSelectedToggle().equals(rbRegning)){
+                System.out.println("Regning");
+                Betalingsform regning = new Regning();
+                this.betalingsform = regning;
+                ordre.setBetalingsform(regning);
+            } else if (newVal.getToggleGroup().getSelectedToggle().equals(rbKontant)){
+                System.out.println("kontant");
+                Betalingsform kontant = new Kontant();
+                this.betalingsform = kontant;
+                ordre.setBetalingsform(kontant);
+            }
+        }
+
+    }
+
+    private void betalingAfUdlejningKnap() {
+        Ordre ordre = lvwUdlejninger.getSelectionModel().getSelectedItem();
+        Ordrelinje ordrelinje = lvwOrdrelinjer.getSelectionModel().getSelectedItem();
+        Controller.lukUdlejningOrdre(ordre,ordre.getBetalingsform());
+        lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
+    }
+
+    private void accepterAntalÆndringerKnap() {
+        int antal = Integer.parseInt(txfRetAntal.getText().trim());
+        Ordre ordre = lvwUdlejninger.getSelectionModel().getSelectedItem();
+        Ordrelinje ordrelinje = lvwOrdrelinjer.getSelectionModel().getSelectedItem();
+        if(antal >= 0 && antal <= 10000){
+            if(antal == 0){
+                ordre.removeOrdrelinje(ordrelinje);
+                lvwOrdrelinjer.getItems().setAll(ordre.getOrdrelinjer());
+                txfSamletPris.setText(ordre.getSamletPris()+"");
+                lblSucces.setText("Ordrelinje slettet");
+                lblError.setText("");
+                txfRetAntal.clear();
+
+            } else {
+                ordrelinje.setAntal(antal);
+                lvwOrdrelinjer.getItems().setAll(ordre.getOrdrelinjer());
+                txfSamletPris.setText(ordre.getSamletPris()+"");
+                txfRetAntal.clear();
+            }
+        } else{
+            lblError.setText("Antal skal være mellem 0 og 10000");
+            lblSucces.setText("");
+
+        }
 
     }
 
     private void selectedOrdreChanged() {
         Ordre ordre = lvwUdlejninger.getSelectionModel().getSelectedItem();
-        lvwOrdrelinjer.getItems().setAll(ordre.getOrdrelinjer());
+        if (ordre != null && ordre.getOrdrelinjer() != null){
+            rbKontant.setDisable(false);
+            rbMobilepay.setDisable(false);
+            rbDankort.setDisable(false);
+            rbRegning.setDisable(false);
+            lvwOrdrelinjer.getItems().setAll(ordre.getOrdrelinjer());
+            txfSamletPant.setText(ordre.getSamletPantPaaOrdre()+"");
+            txfSamletPris.setText(ordre.getSamletPris()+"");
+        }
     }
 
     private void selectedOrdreLinjeChanged() {
+        Ordre ordre = lvwUdlejninger.getSelectionModel().getSelectedItem();
         Ordrelinje ordrelinje = lvwOrdrelinjer.getSelectionModel().getSelectedItem();
-        txfRetAntal.setText(ordrelinje.getAntal()+"");
+        if(ordre != null && ordrelinje != null){
+            txfRetAntal.setText(ordrelinje.getAntal()+"");
 
-        // TODO - listerner  vil ikk virker - hvad fanden sker der??
+        }
     }
 
     private void soegEfterKunde() {
@@ -132,6 +215,7 @@ public class UdlejningPane extends GridPane {
             int soegeord = Integer.parseInt(txfSoegKunde.getText());
                 Kunde kunde = Controller.findKunde(soegeord);
                     lvwUdlejninger.getItems().setAll(Controller.getKundeUdlejninger(kunde));
+                    lvwOrdrelinjer.getItems().clear();
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

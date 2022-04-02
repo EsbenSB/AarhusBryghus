@@ -77,6 +77,11 @@ public class Produkt {
         return klip;
     }
 
+    public int getPant() {
+        return 0;
+    }
+
+
     @Override
     public String toString() {
         return navn + "";
