@@ -28,10 +28,18 @@ public class Ordrelinje {
         return pris;
     }
 
+    public void setPris(double pris) {
+        this.pris = pris;
+    }
+
+    public void setAntal(int antal) {
+        this.antal = antal;
+    }
+
     /*
-    Reducerer prisen på alle produkterne på ordrelinjen, med en procentdel.
-    Pre: procent skal være > 0
-     */
+            Reducerer prisen på alle produkterne på ordrelinjen, med en procentdel.
+            Pre: procent skal være > 0
+             */
     public void setPrisMedProcentRabat(double procent){
         if(procent > 0 && procent <= 100){
             pris = pris*((100.0-procent)/100.0);

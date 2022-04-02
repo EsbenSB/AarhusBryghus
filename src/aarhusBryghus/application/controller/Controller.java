@@ -24,7 +24,7 @@ public class Controller {
         storage = Storage.getInstance();
     }
 
-    // metode, til combobox i "produkt"- til oprettelse
+    // metode, til combobox i "produktTab"
     public static ArrayList<String> getElementTyper(){
         ArrayList<String> elementTyper = new ArrayList<>();
         elementTyper.add("Produkt");
@@ -47,12 +47,10 @@ public class Controller {
         Kunde kunde = null;
         int i = 0;
         while (kunde == null && i < Storage.getKunder().size()) {
-            System.out.println(i +"");
             if (Storage.getKunder().get(i).getTelefon() == mobilnummer) {
-                kunde = Storage.getKunder().get(i);System.out.println(kunde.getFornavn() +"");
+                kunde = Storage.getKunder().get(i);
             } else {
                 i++;
-
             }
         }
         return kunde;
@@ -93,6 +91,7 @@ public class Controller {
         return sum;
     }
 
+    // returnerer en liste med alle Ordre, som indeholder typen "udlejning", og ikke er lukket.
     public static ArrayList<Ordre> getNuværendeUdlejninger() {
         ArrayList<Ordre> nuværendeUdlejninger = new ArrayList<>();
         for (Ordre o : Storage.getOrdrer()) {
@@ -126,12 +125,22 @@ public class Controller {
         return ordre;
     }
 
-    public static Ordre createUdlejning (Prisliste prisliste) {
+    public static Ordre createRundvisning (Prisliste prisliste, Kunde kunde, LocalDateTime tidspunkt, Produktgruppe produktgruppe, double prisPerPerson) {
+        Ordre rundvisning = new Ordre("Rundvisning", false, LocalDate.now(), prisliste);
+        rundvisning.setKunde(kunde);
+        Rundvisning rundvisningProdukt = produktgruppe.createRundvisning("Rundvisning",Controller.getEmptyMaaleenhed(),tidspunkt);
+        prisliste.createPris(rundvisningProdukt,prisPerPerson, 0);
+        rundvisning.createOrdrelinje(1,rundvisningProdukt);
+        Storage.addOrdre(rundvisning);
+        return rundvisning;
+    }
+
+    public static Ordre createUdlejning (Prisliste prisliste, Kunde kunde) {
         Ordre udlejning = new Ordre("Udlejning", false, LocalDate.now(), prisliste);
+        udlejning.setKunde(kunde);
         Storage.addOrdre(udlejning);
         return udlejning;
     }
-
 
     // createOrdrelinjeSalg opretter enkelte salgslinjer, til en ordre, men KUN i "Kasseapparat" tabben!
     public static Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste) {
@@ -140,6 +149,38 @@ public class Controller {
             ordrelinje.setKlip(prisliste.getAntalKlip(produkt));
         }
         return ordrelinje;
+    }
+    //Opretter en ordrelinje, på ordren, som udlejning. Sætter prisen, på
+    // ordrelinjen, til at være = panten på det tilføjede produkt
+    // NB: Produkter uden pant, bliver tilføjet normalt, men prisen sættes til 0! (fordi den endelig afregning sker ved afslutning)
+    public static Ordrelinje createOrdrelinjeUdlejning(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
+        Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
+        if(produkt.getClass().equals(PantProdukt.class)){
+            ordrelinje.setPris(((PantProdukt) produkt).getPant());
+        }
+        return ordrelinje;
+    }
+    //Lukker rundvisningen - ligesom en udlejning
+    public static void lukRundvisningOrdre(Ordre ordre, Betalingsform betalingsform){
+       Controller.lukUdlejningOrdre(ordre,betalingsform);
+    }
+
+    //Lukker ordren, hvis den ikke er lukket
+    public static void lukUdlejningOrdre(Ordre ordre, Betalingsform betalingsform){
+        if(!ordre.erOrdrenLukket()){
+            ordre.setAfslutningsDato(LocalDate.now());
+            ordre.setOrdreStatus(true);
+            ordre.setBetalingsform(betalingsform);
+        }
+    }
+
+    public static MaaleEnhed getEmptyMaaleenhed(){
+        for(MaaleEnhed me: Controller.getMaaleEnheder()){
+            if(me.getEnhed() == null){
+                return me;
+            }
+        }
+        return null;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -396,9 +437,11 @@ public class Controller {
     }
 
     public static void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
-        ordre.setAfslutningsDato(afslutDato);
-        ordre.setOrdreStatus(status);
-        ordre.setBetalingsform(betalingsform);
+        if(!ordre.erOrdrenLukket()){
+            ordre.setAfslutningsDato(afslutDato);
+            ordre.setOrdreStatus(status);
+            ordre.setBetalingsform(betalingsform);
+        }
         if (betalingsform.getType().equals("Klip")) {
             for (Ordrelinje ol : ordre.getOrdrelinjer()) {
                 ol.setKlip(ol.getProdukt().getklippekortPris(prisliste));
@@ -647,6 +690,8 @@ public class Controller {
     }
 
     public static void removePrislisteOgProduktFraPris(Prisliste prisliste, Produkt produkt) {
+        //TODO Burde måske kun være prislisten, som slettes?
+        //TODO eller måske kun produktet
         for (Pris p : prisliste.getPriser()) {
             if (p.getProdukt() == produkt) {
                 p.setPrisliste(null);
