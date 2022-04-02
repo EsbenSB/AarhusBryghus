@@ -7,12 +7,9 @@ import aarhusBryghus.application.model.Produkt;
 import aarhusBryghus.storage.Storage;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
-import java.util.Optional;
 public class KundePane extends GridPane {
 
     private final TextField txfFornavn, txfEfternavn, txfTelefonNr, txfIndtjeningFraKunde;
@@ -79,24 +76,23 @@ public class KundePane extends GridPane {
     private void opdaterKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
         String fornavn = txfFornavn.getText();
         String efternavn = txfEfternavn.getText();
-        int telefonNr = Integer.parseInt(txfTelefonNr.getText());
-
-        Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
-
-        Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
-        lvwKunder.getItems().setAll(Storage.getKunder());
-        lvwKunder.getSelectionModel().select(kunde);
-
-
+        if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
+            int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+            Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
+            Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getKunder());
+            lvwKunder.getSelectionModel().select(kunde);
+        }
     }
     private void opretKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
         String fornavn = txfFornavn.getText();
         String efternavn = txfEfternavn.getText();
-        int telefonNr = Integer.parseInt(txfTelefonNr.getText());
-
-        Kunde kunde = Controller.createKunde(fornavn, efternavn, telefonNr);
-        lvwKunder.getItems().setAll(Storage.getKunder());
-        lvwKunder.getSelectionModel().select(kunde);
+        if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
+            int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+            Kunde kunde = Controller.createKunde(fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getKunder());
+            lvwKunder.getSelectionModel().select(kunde);
+        }
 
     }
 

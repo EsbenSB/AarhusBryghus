@@ -137,7 +137,6 @@ public class UdlejningPane extends GridPane {
                 Betalingsform mobilepay = new MobilePay();
                 this.betalingsform = mobilepay;
                 ordre.setBetalingsform(mobilepay);
-                Controller.
 
             } else if (newVal.getToggleGroup().getSelectedToggle().equals(rbRegning)){
                 System.out.println("Regning");
