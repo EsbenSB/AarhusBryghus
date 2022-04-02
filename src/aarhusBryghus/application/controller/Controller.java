@@ -192,7 +192,7 @@ public class Controller {
     // Opretter kunden, hvis telefonnummeret er unikt
     public static Kunde createKunde(String fornavn, String efternavn, int telefon) {
         for (Kunde k : Storage.getKunder()) {
-            if (k.getTelefon() == telefon) {
+            if (k.getTelefon() == telefon && fornavn.length() > 0 && efternavn.length() > 0) {
                 Kunde kunde = new Kunde(fornavn, efternavn, telefon);
                 Storage.addKunde(kunde);
                 return kunde;
@@ -200,10 +200,10 @@ public class Controller {
         }
         return null;
     }
-
+    // opdaterer kunden, hvis telefonnummeret er unikt
     public static void updateKunde(Kunde kunde, String fornavn, String efternavn, int telefon) {
         for (Kunde k : Storage.getKunder()) {
-            if (k.getTelefon() == telefon) {
+            if (k.getTelefon() == telefon && fornavn.length() > 0 && efternavn.length() > 0) {
                 // Gør ingenting!
             } else {
                 kunde.setFornavn(fornavn);
