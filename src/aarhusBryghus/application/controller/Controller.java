@@ -23,9 +23,8 @@ public class Controller {
         return uniqueInstance;
     }
 
-
-    private Controller(){
-        storage = aarhusBryghus.storage.Storage.getInstance();
+    private Controller() {
+        storage = Storage.getStorage();
     }
 
     // metode, til combobox i "produktTab"
@@ -50,9 +49,9 @@ public class Controller {
     public Kunde findKunde(int mobilnummer) {
         Kunde kunde = null;
         int i = 0;
-        while (kunde == null && i < Storage.getInstance().getKunder().size()) {
-            if (Storage.getInstance().getKunder().get(i).getTelefon() == mobilnummer) {
-                kunde = Storage.getInstance().getKunder().get(i);
+        while (kunde == null && i < Storage.getStorage().getKunder().size()) {
+            if (Storage.getStorage().getKunder().get(i).getTelefon() == mobilnummer) {
+                kunde = Storage.getStorage().getKunder().get(i);
             } else {
                 i++;
             }
@@ -74,8 +73,8 @@ public class Controller {
 
     public ArrayList<Ordre> getKundeUdlejninger(Kunde kunde) {
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
-        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
-            Ordre o = Storage.getInstance().getOrdrer().get(i);
+        for (int i = 0; i < Storage.getStorage().getOrdrer().size(); i++) {
+            Ordre o = Storage.getStorage().getOrdrer().get(i);
                 if (kunde.equals(o.getKunde()) && o.getType().equalsIgnoreCase("udlejning")) {
                     if (!kundensUdlejninger.contains(o)){
                         kundensUdlejninger.add(o);
@@ -87,8 +86,8 @@ public class Controller {
 
     public ArrayList<Ordre> getKundensSamledeOrdre(Kunde kunde) {
         ArrayList<Ordre> kundensSamledeOrdre = new ArrayList<>();
-        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
-            Ordre o = Storage.getInstance().getOrdrer().get(i);
+        for (int i = 0; i < Storage.getStorage().getOrdrer().size(); i++) {
+            Ordre o = Storage.getStorage().getOrdrer().get(i);
             if (o.isErOrdrenLukket()) {
                 if (kunde.equals(o.getKunde())) {
                     if (!kundensSamledeOrdre.contains(o))
@@ -110,7 +109,7 @@ public class Controller {
     // returnerer en liste med alle Ordre, som indeholder typen "udlejning", og ikke er lukket.
     public ArrayList<Ordre> getNuværendeUdlejninger() {
         ArrayList<Ordre> nuværendeUdlejninger = new ArrayList<>();
-        for (Ordre o : Storage.getInstance().getOrdrer()) {
+        for (Ordre o : Storage.getStorage().getOrdrer()) {
             if (o.getType().equals("Udlejning") && !o.erOrdrenLukket())
                 nuværendeUdlejninger.add(o);
         }
@@ -120,7 +119,7 @@ public class Controller {
     // Returnerer samlet sum, for alle dagens salg (ikke klip!) - dagens "totalte omsætning"
     public double getSamletSumDagensSalg(LocalDate localDate) {
         double sum = 0;
-        for (Ordre o : Storage.getInstance().getOrdrer()) {
+        for (Ordre o : Storage.getStorage().getOrdrer()) {
             if (o.getAfslutningsDato() != null && o.getAfslutningsDato().equals(localDate) && !o.getBetalingsform().getType().equals("Klip")) {
                 sum += o.getSamletPris();
             }
@@ -137,7 +136,7 @@ public class Controller {
     // createSalg er metoden som bruges, til af kasseapperatet. de oprettes altid med fast dato, og som lukkede.
     public Ordre createSalg(Prisliste prisliste) {
         Ordre ordre = new Ordre("Salg", true, LocalDate.now(), prisliste);
-        Storage.getInstance().addOrdre(ordre);
+        Storage.getStorage().addOrdre(ordre);
         return ordre;
     }
 
@@ -147,13 +146,13 @@ public class Controller {
         Rundvisning rundvisningProdukt = produktgruppe.createRundvisning("Rundvisning",Controller.getInstance().getEmptyMaaleenhed(),tidspunkt);
         prisliste.createPris(rundvisningProdukt,prisPerPerson, 0);
         rundvisning.createOrdrelinje(1,rundvisningProdukt);
-        Storage.getInstance().addOrdre(rundvisning);
+        Storage.getStorage().addOrdre(rundvisning);
         return rundvisning;
     }
 
     public ArrayList<Ordre> getNuværendeRundvisninger() {
         ArrayList<Ordre> nuværendeRundvisninger = new ArrayList<>();
-        for (Ordre o : Storage.getInstance().getOrdrer()) {
+        for (Ordre o : Storage.getStorage().getOrdrer()) {
             if (o.getType().equalsIgnoreCase("Rundvisning") && !o.erOrdrenLukket())
                 nuværendeRundvisninger.add(o);
         }
@@ -162,7 +161,7 @@ public class Controller {
 
     public Produktgruppe getRundvisningsProduktgruppe() {
         Produktgruppe produktgruppe = null;
-        for (Produktgruppe p : Storage.getInstance().getProduktGrupper()) {
+        for (Produktgruppe p : Storage.getStorage().getProduktGrupper()) {
             if (p.getNavn().equalsIgnoreCase("rundvisning")){
                 produktgruppe = p;
             }
@@ -172,7 +171,7 @@ public class Controller {
 
     public Prisliste getButikPrisliste() {
         Prisliste prisliste = null;
-        for (Prisliste p : Storage.getInstance().getPrislister()) {
+        for (Prisliste p : Storage.getStorage().getPrislister()) {
             if (p.getNavn().equalsIgnoreCase("Butik")){
                 prisliste = p;
             }
@@ -197,7 +196,7 @@ public class Controller {
     public Ordre createUdlejning (Prisliste prisliste, Kunde kunde) {
         Ordre udlejning = new Ordre("Udlejning", false, LocalDate.now(), prisliste);
         udlejning.setKunde(kunde);
-        Storage.getInstance().addOrdre(udlejning);
+        Storage.getStorage().addOrdre(udlejning);
         return udlejning;
     }
 
@@ -248,7 +247,8 @@ public class Controller {
 
     public Kunde createKunde(String fornavn, String efternavn, int telefon) {
         Kunde kunde = new Kunde(fornavn, efternavn, telefon);
-        Storage.getInstance().addKunde(kunde);
+        Storage.getStorage().addKunde(kunde);
+        System.out.println(kunde.getFornavn());
         return kunde;
     }
 
@@ -259,7 +259,7 @@ public class Controller {
     }
 
     public ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
-        for (Produktgruppe pg : Storage.getInstance().getProduktGrupper()) {
+        for (Produktgruppe pg : Storage.getStorage().getProduktGrupper()) {
             if (pg == produktgruppe) {
                 System.out.println("Produktgruppe: " + produktgruppe);
                 return pg.getProdukter();
@@ -269,7 +269,7 @@ public class Controller {
     }
 
     public void deleteProdukt(Produkt produkt) {
-        for (Produktgruppe p : Storage.getInstance().getProduktGrupper()) {
+        for (Produktgruppe p : Storage.getStorage().getProduktGrupper()) {
             for (Produkt prod : p.getProdukter()) {
                 if (prod == produkt) {
                     p.removeProdukt(produkt);
@@ -280,7 +280,7 @@ public class Controller {
 
     // henter produktets produktgruppe
     public Produktgruppe getProduktGruppe(Produkt produkt) {
-        for (Produktgruppe pg : Storage.getInstance().getProduktGrupper()) {
+        for (Produktgruppe pg : Storage.getStorage().getProduktGrupper()) {
             for (Produkt prod : pg.getProdukter()) {
                 if (prod.equals(produkt)) {
                     return pg;
@@ -292,7 +292,7 @@ public class Controller {
 
     // returnerer den første prisliste, som findes på et produkt
     public Prisliste getProduktPrisliste(Produkt produkt) {
-        for (Prisliste pl : Storage.getInstance().getPrislister()) {
+        for (Prisliste pl : Storage.getStorage().getPrislister()) {
             for (Pris pris : produkt.getPriser()) {
                 if (pris.getPrisliste() == pl) {
                     return pl;
@@ -305,13 +305,13 @@ public class Controller {
     //Henter de prislister, som produktet i parameteren IKKE har. // todo brug sortering/compareTo i stedet for
     public ArrayList<Prisliste> getAndrePrislister(Produkt produkt) {
         ArrayList<Prisliste> liste = new ArrayList<>();
-        ArrayList<Prisliste> listeNy = Storage.getInstance().getPrislister();
+        ArrayList<Prisliste> listeNy = Storage.getStorage().getPrislister();
         for (Pris pris : produkt.getPriser()) {
             liste.add(pris.getPrisliste());
         }
-        for (int i = 0; i < Storage.getInstance().getPrislister().size(); i++) {
+        for (int i = 0; i < Storage.getStorage().getPrislister().size(); i++) {
             for (int j = 0; j < liste.size(); j++) {
-                if (Storage.getInstance().getPrislister().get(i) == liste.get(j)) {
+                if (Storage.getStorage().getPrislister().get(i) == liste.get(j)) {
                     listeNy.remove(liste.get(j));
                     j = liste.size();
                 }
@@ -342,16 +342,16 @@ public class Controller {
     // Produktgruppe. create, get, delete, update
     public Produktgruppe createProduktGruppe(String navn) {
         Produktgruppe produktGruppe = new Produktgruppe(navn);
-        Storage.getInstance().addProduktGruppe(produktGruppe);
+        Storage.getStorage().addProduktGruppe(produktGruppe);
         return produktGruppe;
     }
 
     public ArrayList<Produktgruppe> getProduktGrupper() {
-        return Storage.getInstance().getProduktGrupper();
+        return Storage.getStorage().getProduktGrupper();
     }
 
     public void deleteProduktgruppe(Produktgruppe produktGruppe) {
-        Storage.getInstance().removeProduktGruppe(produktGruppe);
+        Storage.getStorage().removeProduktGruppe(produktGruppe);
     }
 
     public void updateProduktgruppe(Produktgruppe produktGruppe, String navn) {
@@ -363,16 +363,16 @@ public class Controller {
     // Måleenhed. Create, get, delete, update.
     public Maaleenhed createMaaleEnhed(String navn, int tal) {
         Maaleenhed maaleEnhed = new Maaleenhed(navn, tal);
-        Storage.getInstance().addMaaleEnhed(maaleEnhed);
+        Storage.getStorage().addMaaleEnhed(maaleEnhed);
         return maaleEnhed;
     }
 
     public ArrayList<Maaleenhed> getMaaleEnheder() {
-        return Storage.getInstance().getMaaleEnheder();
+        return Storage.getStorage().getMaaleEnheder();
     }
 
     public void deleteMaaleenhed(Maaleenhed maaleEnhed) {
-        Storage.getInstance().removeMaaleEnhed(maaleEnhed);
+        Storage.getStorage().removeMaaleEnhed(maaleEnhed);
     }
 
     public void updateMaaleenhed(Maaleenhed maaleEnhed, String enhed, int tal) {
@@ -384,16 +384,16 @@ public class Controller {
     // Prisliste. Create, get, delete, update.
     public Prisliste createPrisliste(String navn) {
         Prisliste prisliste = new Prisliste(navn);
-        Storage.getInstance().addPrisliste(prisliste);
+        Storage.getStorage().addPrisliste(prisliste);
         return prisliste;
     }
 
     public ArrayList<Prisliste> getPrislister() {
-        return Storage.getInstance().getPrislister();
+        return Storage.getStorage().getPrislister();
     }
 
     public void deletePrisliste(Prisliste prisliste) {
-        Storage.getInstance().removePrisliste(prisliste);
+        Storage.getStorage().removePrisliste(prisliste);
     }
 
     public void updatePrisliste(Prisliste prisliste, String navn) {
@@ -416,7 +416,7 @@ public class Controller {
 
     public HashSet<Produktgruppe> listeProduktgrupperTilValgtePrisliste(Prisliste prisliste) {
         HashSet<Produktgruppe> produktGrupper = new HashSet<>();
-        for (Produktgruppe g : Storage.getInstance().getProduktGrupper()) {
+        for (Produktgruppe g : Storage.getStorage().getProduktGrupper()) {
             for (Produkt p : g.getProdukter()) {
                 for (Pris pris : p.getPriser()) {
                     if (pris.getPrisliste() == prisliste) {
@@ -432,9 +432,9 @@ public class Controller {
 
     public ArrayList<Ordre> getDagensSalg() {
         ArrayList<Ordre> alleSalg = new ArrayList<>();
-        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
-            if (Storage.getInstance().getOrdrer().get(i).getAfslutningsDato() != null && Storage.getInstance().getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
-                alleSalg.add(Storage.getInstance().getOrdrer().get(i));
+        for (int i = 0; i < Storage.getStorage().getOrdrer().size(); i++) {
+            if (Storage.getStorage().getOrdrer().get(i).getAfslutningsDato() != null && Storage.getStorage().getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
+                alleSalg.add(Storage.getStorage().getOrdrer().get(i));
             }
         }
         return alleSalg;
@@ -458,8 +458,8 @@ public class Controller {
 
     public int getAntalSolgteKlip(LocalDate startdato, LocalDate slutdato) {
         int solgteKlip = 0;
-        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
-            Ordre o = Storage.getInstance().getOrdrer().get(i);
+        for (int i = 0; i < Storage.getStorage().getOrdrer().size(); i++) {
+            Ordre o = Storage.getStorage().getOrdrer().get(i);
             if (o.getAfslutningsDato() != null) {
                 if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                         o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
@@ -476,8 +476,8 @@ public class Controller {
 
     public int getAntalForbrugteKlip(LocalDate startdato, LocalDate slutdato) {
         int forbrugteKlip = 0;
-        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
-            Ordre o = Storage.getInstance().getOrdrer().get(i);
+        for (int i = 0; i < Storage.getStorage().getOrdrer().size(); i++) {
+            Ordre o = Storage.getStorage().getOrdrer().get(i);
             if (o.getAfslutningsDato() != null) {
                 if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                         o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
@@ -508,6 +508,7 @@ public class Controller {
 
     private void initStorage() {
        loadStorage();
+        System.out.println(storage.getPrislister());
     }
 
 
@@ -528,11 +529,13 @@ public class Controller {
 
     }
     public void loadStorage() {
-        try (FileInputStream fileIn = new FileInputStream("storage_gruppe6.ser")) {
+        try (FileInputStream fileIn = new FileInputStream("storage.ser")) {
             try (ObjectInputStream in = new ObjectInputStream(fileIn);) {
-                storage = (aarhusBryghus.storage.Storage) in.readObject();
-                System.out.println("Storage loaded from file storage_gruppe6.ser.");
-
+                storage = (Storage) in.readObject();
+                System.out.println("Storage loaded from file storage.ser.");
+                System.out.println("Controller.getinstance.getkunder" + Controller.getInstance().getKunder());;
+                System.out.println("storage.getkunder()" + storage.getKunder());
+                System.out.println(Controller.getInstance().getPrislister());
             } catch (ClassNotFoundException ex) {
                 System.out.println("Error loading storage object.");
                 throw new RuntimeException(ex);
@@ -545,10 +548,10 @@ public class Controller {
     }
 
     public void saveStorage() {
-        try (FileOutputStream fileOut = new FileOutputStream("storage_gruppe6.ser")) {
+        try (FileOutputStream fileOut = new FileOutputStream("storage.ser")) {
             try (ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
                 out.writeObject(storage);
-                System.out.println("Storage saved in file storage_gruppe6.ser.");
+                System.out.println("Storage saved in file storage.ser.");
             }
         } catch (IOException ex) {
             System.out.println("Error saving storage object.");
@@ -557,6 +560,6 @@ public class Controller {
     }
 
     public ArrayList<Kunde> getKunder() {
-        return Storage.getInstance().getKunder();
+        return storage.getKunder();
     }
 }

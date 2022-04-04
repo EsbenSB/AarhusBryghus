@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 public class ControlleApp {
     public static void main(String[] args) {
-        Controller.getInstance().init();
         Prisliste prisliste = Controller.getInstance().createPrisliste("Frugthandler");
         Produktgruppe pg = Controller.getInstance().createProduktGruppe("Frugt");
         Maaleenhed me = Controller.getInstance().createMaaleEnhed("gram",50);

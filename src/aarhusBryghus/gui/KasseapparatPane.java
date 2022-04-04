@@ -30,6 +30,8 @@ public class KasseapparatPane extends GridPane {
     private Ordre ordre;
 
     public KasseapparatPane() {
+        Controller controller = Controller.getInstance();
+
         this.setPadding(new Insets(20));
         this.setHgap(20);
         this.setVgap(10);
@@ -40,7 +42,7 @@ public class KasseapparatPane extends GridPane {
 
         cbbPrislister = new ComboBox<>();
         this.add(cbbPrislister, 1, 0);
-        cbbPrislister.getItems().addAll(Controller.getInstance().getPrislister());
+        cbbPrislister.getItems().addAll(controller.getPrislister());
         cbbPrislister.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbPrislister.setOnAction(event -> this.opdaterProduktGruppeliste());
         cbbPrislister.setPrefWidth(200);

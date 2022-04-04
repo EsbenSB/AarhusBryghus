@@ -7,18 +7,19 @@ import java.util.ArrayList;
 
 public class Storage implements Serializable {
 
-    private static Storage uniqueInstance;
-    public ArrayList<Produktgruppe> produktGrupper = new ArrayList<>();
-    public ArrayList<Maaleenhed> maaleEnheder = new ArrayList<>();
-    public ArrayList<Prisliste> prislister = new ArrayList<>();
-    public ArrayList<Ordre> ordrer = new ArrayList<>();
-    public ArrayList<Kunde> kunder = new ArrayList<>();
+    private static Storage storage;
 
-    public static Storage getInstance() {
-        if (uniqueInstance == null) {
-            uniqueInstance = new Storage();
+    private ArrayList<Produktgruppe> produktGrupper = new ArrayList<>();
+    private ArrayList<Maaleenhed> maaleEnheder = new ArrayList<>();
+    private ArrayList<Prisliste> prislister = new ArrayList<>();
+    private ArrayList<Ordre> ordrer = new ArrayList<>();
+    private ArrayList<Kunde> kunder = new ArrayList<>();
+
+    public static Storage getStorage() {
+        if (storage == null) {
+            storage = new Storage();
         }
-        return uniqueInstance;
+        return storage;
     }
 
     // -------------------------------------------------------------------------
@@ -65,7 +66,7 @@ public class Storage implements Serializable {
 
     // -------------------------------------------------------------------------
 
-    public  ArrayList<Prisliste> getPrislister() {
+    public ArrayList<Prisliste> getPrislister() {
         return new ArrayList<>(prislister);
     }
 

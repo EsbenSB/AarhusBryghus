@@ -11,7 +11,6 @@ public class SetupInitializer {
 
     public static void main(String[] args) {
         initStorage();
-        Controller controller = Controller.getInstance();
     }
 
     private static void initStorage(){
@@ -310,9 +309,10 @@ public class SetupInitializer {
         ordre2.setKunde(k2);
 
         controller.saveStorage();
+        System.out.println("Storage kunder: " + Storage.getStorage().getKunder());
 
         String regex = "\\d+";
         String data = "23343453";
-        //System.out.println(data.matches(regex));
+        System.out.println(data.matches(regex));
     }
 }

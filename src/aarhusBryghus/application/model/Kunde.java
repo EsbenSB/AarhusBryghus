@@ -1,19 +1,12 @@
 package aarhusBryghus.application.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Kunde implements Serializable {
 
     private String fornavn;
     private String efternavn;
     private int telefon;
-    private String adresse;
-    private int vejnummer;
-    private int postnummer;
-    private String by;
-
-    // TODO Overvej: sletning af adresse, vejnummer, postnummer og by?
 
     public Kunde(String fornavn, String efternavn, int telefon) {
         this.fornavn = fornavn;
@@ -43,22 +36,6 @@ public class Kunde implements Serializable {
 
     public int getTelefon() {
         return telefon;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public int getVejnummer() {
-        return vejnummer;
-    }
-
-    public int getPostnummer() {
-        return postnummer;
-    }
-
-    public String getBy() {
-        return by;
     }
 
     @Override

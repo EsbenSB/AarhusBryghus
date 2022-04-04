@@ -9,7 +9,6 @@ import java.util.HashSet;
 public class Produkt implements Serializable {
 
     private String navn;
-
     private Maaleenhed maaleEnhed;
     private HashSet<Pris> priser = new HashSet<Pris>();
 

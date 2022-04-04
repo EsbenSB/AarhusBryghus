@@ -1,6 +1,7 @@
 package aarhusBryghus.gui;
 
 import aarhusBryghus.application.controller.Controller;
+import aarhusBryghus.storage.Storage;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
@@ -8,16 +9,14 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class StartWindow extends Application {
+import java.sql.SQLOutput;
 
-    @Override
-    public void init() {
-        Controller controller = Controller.getInstance();
-        controller.init();
-    }
+public class StartWindow extends Application {
+    Controller controller = Controller.getInstance();
 
     @Override
     public void start(Stage stage) {
+
         stage.setTitle("Aarhus Bryghus");
         BorderPane pane = new BorderPane();
         this.initContent(pane);
@@ -25,6 +24,8 @@ public class StartWindow extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
+
+
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -80,12 +81,12 @@ public class StartWindow extends Application {
 
         KundePane kundePane = new KundePane();
         tabKunder.setContent(kundePane);
-        }
+    }
 
     @Override
     public void stop() {
         System.out.println("Application stopped.");
-        Controller.getInstance().saveStorage();
+        controller.saveStorage();
     }
 
 }
