@@ -40,6 +40,7 @@ public class KasseapparatPane extends GridPane {
 
         cbbPrislister = new ComboBox<>();
         this.add(cbbPrislister, 1, 0);
+        cbbPrislister.setPromptText("Vælg prisliste");
         cbbPrislister.getItems().addAll(Controller.getPrislister());
         cbbPrislister.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbPrislister.setOnAction(event -> this.opdaterProduktGruppeliste());
@@ -50,6 +51,7 @@ public class KasseapparatPane extends GridPane {
 
         cbbProduktgrupper = new ComboBox<>();
         this.add(cbbProduktgrupper,1,1);
+        cbbProduktgrupper.setPromptText("Vælg produktgruppe");
         cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbProduktgrupper.setPrefWidth(200);
         cbbProduktgrupper.setDisable(true);
