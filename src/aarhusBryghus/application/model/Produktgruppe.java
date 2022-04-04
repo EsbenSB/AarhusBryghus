@@ -23,6 +23,10 @@ public class Produktgruppe {
         return produkt;
     }
 
+    public String getNavn() {
+        return navn;
+    }
+
     public Klippekort createKlippekort(String navn, MaaleEnhed maaleEnhed, int antalKlip){
         Klippekort klippekort = new Klippekort(navn, maaleEnhed, antalKlip);
         produkter.add(klippekort);

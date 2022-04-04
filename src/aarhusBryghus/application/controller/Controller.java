@@ -5,6 +5,7 @@ import aarhusBryghus.storage.Storage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -146,6 +147,49 @@ public class Controller {
         Storage.addOrdre(rundvisning);
         return rundvisning;
     }
+
+    public static ArrayList<Ordre> getNuværendeRundvisninger() {
+        ArrayList<Ordre> nuværendeRundvisninger = new ArrayList<>();
+        for (Ordre o : Storage.getOrdrer()) {
+            if (o.getType().equalsIgnoreCase("Rundvisning") && !o.erOrdrenLukket())
+                nuværendeRundvisninger.add(o);
+        }
+        return new ArrayList<>(nuværendeRundvisninger);
+    }
+
+    public static Produktgruppe getRundvisningsProduktgruppe() {
+        Produktgruppe produktgruppe = null;
+        for (Produktgruppe p : Storage.getProduktGrupper()) {
+            if (p.getNavn().equalsIgnoreCase("rundvisning")){
+                produktgruppe = p;
+            }
+        }
+        return produktgruppe;
+    }
+
+    public static Prisliste getButikPrisliste() {
+        Prisliste prisliste = null;
+        for (Prisliste p : Storage.getPrislister()) {
+            if (p.getNavn().equalsIgnoreCase("Butik")){
+                prisliste = p;
+            }
+        }
+        return prisliste;
+    }
+// todo: tvivler på at nedenstående skal bruges
+    /*public static ArrayList<String> getNuværendeRundvisninger() {
+        ArrayList<String> nuværendeRundvisninger = new ArrayList<>();
+        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
+            Ordre o = Storage.getOrdrer().get(i);
+            if (o.getType().equals("Rundvisning") && !o.erOrdrenLukket()) {
+                for (int j = 0; j < o.getOrdrelinjer().size(); j++) {
+                    nuværendeRundvisninger.add(o.getKunde().getFornavn() + " " + o.getKunde().getEfternavn()
+                            + ", " + o.getKunde().getTelefon() + ", " + o.getOrdrelinjer().get(j).getProdukt());
+                }
+            }
+        }
+        return new ArrayList<>(nuværendeRundvisninger);
+    }*/
 
     public static Ordre createUdlejning (Prisliste prisliste, Kunde kunde) {
         Ordre udlejning = new Ordre("Udlejning", false, LocalDate.now(), prisliste);
@@ -472,6 +516,7 @@ public class Controller {
         Produktgruppe spiritus = Controller.createProduktGruppe("Spiritus");
         Produktgruppe fustage = Controller.createProduktGruppe("Fustage");
         Produktgruppe beklaedning = Controller.createProduktGruppe("Beklædning");
+        Produktgruppe rundvisning = Controller.createProduktGruppe("Rundvisning");
 
         // Måleenheder
         MaaleEnhed ingen = Controller.createMaaleEnhed(null, 0);
@@ -544,6 +589,7 @@ public class Controller {
 
         Produkt klosterbrygFustage = Controller.createPantProdukt("Klosterbryg", tyveLiter, 200, fustage);
         Produkt julebrygFustage = Controller.createPantProdukt("Julebryg",tyveLiter,200,fustage);
+
 
         // Fredagsbar prisliste
         // klippekort
@@ -689,6 +735,16 @@ public class Controller {
         Ordrelinje ordrelinje2PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,julebrygFustage,2,butik);
         Controller.setPrisMinusPant(ordre5);
         Controller.setPrisMinusPant(ordre6);
+
+        // Rundvisning
+
+        Ordre rundvisningTilKunde1 = Controller.createRundvisning(butik, kunde1,
+                LocalDateTime.of(LocalDate.of(2022, 4, 15), LocalTime.of(12, 30)), rundvisning, 100.0);
+        Ordre rundvisningTilKunde2 = Controller.createRundvisning(butik, kunde2,
+                LocalDateTime.of(LocalDate.of(2022, 4, 16), LocalTime.of(13, 30)), rundvisning, 100.0);
+        Ordre rundvisningTilKunde3 = Controller.createRundvisning(butik, kunde3,
+                LocalDateTime.of(LocalDate.of(2022, 4, 17), LocalTime.of(14, 30)), rundvisning, 100.0);
+
 
 
         ordre3.setKunde(kunde4);
