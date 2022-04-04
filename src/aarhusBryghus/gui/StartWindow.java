@@ -12,7 +12,8 @@ public class StartWindow extends Application {
 
     @Override
     public void init() {
-        Controller.init();
+        Controller controller = Controller.getInstance();
+        controller.init();
     }
 
     @Override
@@ -80,5 +81,11 @@ public class StartWindow extends Application {
         KundePane kundePane = new KundePane();
         tabKunder.setContent(kundePane);
         }
+
+    @Override
+    public void stop() {
+        System.out.println("Application stopped.");
+        Controller.getInstance().saveStorage();
+    }
 
 }

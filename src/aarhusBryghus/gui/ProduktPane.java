@@ -48,12 +48,12 @@ public class ProduktPane extends GridPane {
         this.add(lblInformationsTekst, 0, 0);
 
         cbElementTyper.setPromptText("Vælg element her");
-        cbElementTyper.getItems().setAll(Controller.getElementTyper());
+        cbElementTyper.getItems().setAll(Controller.getInstance().getElementTyper());
         this.add(cbElementTyper, 0, 1);
         cbElementTyper.setOnAction(event -> elementTypeSelected());
 
         cbProduktgrupper.setPromptText("Vælg produktgruppe");
-        cbProduktgrupper.getItems().setAll(Controller.getProduktGrupper());
+        cbProduktgrupper.getItems().setAll(Controller.getInstance().getProduktGrupper());
         cbProduktgrupper.setOnAction(event -> produktgruppeSelected());
 
         ChangeListener<Produkt> produktChangeListener = (ov, gammelProdukt, nyProdukt) -> this.selectedProduktChanged();
@@ -74,16 +74,16 @@ public class ProduktPane extends GridPane {
                 this.add(lblProduktType, 1, 3);
                 this.add(cbProduktType, 2, 3);
                 cbProduktType.setPromptText("Vælg en produkttype");
-                cbProduktType.getItems().setAll(Controller.getProduktTyper());
+                cbProduktType.getItems().setAll(Controller.getInstance().getProduktTyper());
                 cbProduktType.getSelectionModel().select(PantProdukt.class);
                 this.add(lblProduktnavn, 1, 4);
                 this.add(txfProduktnavn, 2, 4);
                 this.add(lblProduktMåleenhed, 1, 5);
                 this.add(cbVaelgMaaleenhed, 2, 5);
-                cbVaelgMaaleenhed.getItems().setAll(Controller.getMaaleEnheder());
+                cbVaelgMaaleenhed.getItems().setAll(Controller.getInstance().getMaaleEnheder());
                 this.add(lblSelectPrisliste, 1, 6);
                 this.add(lvwProduktetsPrislister, 2, 6, 1, 4);
-                lvwProduktetsPrislister.getItems().setAll(Controller.getAndrePrislister(produkt));
+                lvwProduktetsPrislister.getItems().setAll(Controller.getInstance().getAndrePrislister(produkt));
             }
             catch (IllegalArgumentException e) {System.out.print("");
             }
@@ -92,15 +92,15 @@ public class ProduktPane extends GridPane {
                 this.add(lblProduktType, 1, 3);
                 this.add(cbProduktType, 2, 3);
                 cbProduktType.setPromptText("Vælg en produkttype");
-                cbProduktType.getItems().setAll(Controller.getProduktTyper());
+                cbProduktType.getItems().setAll(Controller.getInstance().getProduktTyper());
                 this.add(lblProduktnavn, 1, 4);
                 this.add(txfProduktnavn, 2, 4);
                 this.add(lblProduktMåleenhed, 1, 5);
                 this.add(cbVaelgMaaleenhed, 2, 5);
-                cbVaelgMaaleenhed.getItems().setAll(Controller.getMaaleEnheder());
+                cbVaelgMaaleenhed.getItems().setAll(Controller.getInstance().getMaaleEnheder());
                 this.add(lblSelectPrisliste, 1, 6);
                 this.add(lvwProduktetsPrislister, 2, 6, 1, 4);
-                lvwProduktetsPrislister.getItems().setAll(Controller.getAndrePrislister(produkt));
+                lvwProduktetsPrislister.getItems().setAll(Controller.getInstance().getAndrePrislister(produkt));
             }
              catch (IllegalArgumentException e) {System.out.print("");
         }}
@@ -109,7 +109,7 @@ public class ProduktPane extends GridPane {
 
     private void produktgruppeSelected() {
         Produktgruppe produktgruppe = cbProduktgrupper.getSelectionModel().getSelectedItem();
-        lvwProdukter.getItems().setAll(Controller.getAlleProdukter(produktgruppe));
+        lvwProdukter.getItems().setAll(Controller.getInstance().getAlleProdukter(produktgruppe));
         this.add(lvwProdukter, 0, 3, 1, 7);
     }
 

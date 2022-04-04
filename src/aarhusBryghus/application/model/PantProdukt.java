@@ -3,7 +3,7 @@ package aarhusBryghus.application.model;
 public class PantProdukt extends Produkt{
     private int pant;
 
-    public PantProdukt(String navn, MaaleEnhed maaleEnhed, int pant) {
+    public PantProdukt(String navn, Maaleenhed maaleEnhed, int pant) {
         super(navn, maaleEnhed);
         this.pant = pant;
     }

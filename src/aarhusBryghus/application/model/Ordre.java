@@ -1,9 +1,10 @@
 package aarhusBryghus.application.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Ordre {
+public class Ordre  implements Serializable {
 
     private String type;
     private boolean erOrdrenLukket;

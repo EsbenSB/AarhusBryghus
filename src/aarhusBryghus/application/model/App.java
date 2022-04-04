@@ -6,8 +6,8 @@ public class App {
     public static void main(String[] args) {
         Produktgruppe pg = new Produktgruppe("Flaskeøl");
         Produktgruppe pg2 = new Produktgruppe("Fadøl");
-        MaaleEnhed me1 = new MaaleEnhed("Cl", 60);
-        MaaleEnhed me2 = new MaaleEnhed("Cl",40);
+        Maaleenhed me1 = new Maaleenhed("Cl", 60);
+        Maaleenhed me2 = new Maaleenhed("Cl",40);
         Produkt produkt1 =  pg.createProdukt("Klosterbryg", me1);
         Produkt produkt2 =  pg.createProdukt("Julebryg", me1);
         Produkt produkt3 =  pg.createProdukt("Klosterbryg", me2);

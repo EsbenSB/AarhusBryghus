@@ -1,20 +1,20 @@
 package aarhusBryghus.application.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
-public class Produkt {
+public class Produkt implements Serializable {
 
     private String navn;
 
-    private MaaleEnhed maaleEnhed;
+    private Maaleenhed maaleEnhed;
     private HashSet<Pris> priser = new HashSet<Pris>();
 
 
-    public Produkt(String navn, MaaleEnhed maaleEnhed){
+    public Produkt(String navn, Maaleenhed maaleEnhed){
         this.navn = navn;
         this.maaleEnhed = maaleEnhed;
     }
@@ -46,11 +46,11 @@ public class Produkt {
         this.navn = navn;
     }
 
-    public MaaleEnhed getMaaleEnhed() {
+    public Maaleenhed getMaaleEnhed() {
         return maaleEnhed;
     }
 
-    public void setMaaleEnhed(MaaleEnhed maaleEnhed) {
+    public void setMaaleEnhed(Maaleenhed maaleEnhed) {
         this.maaleEnhed = maaleEnhed;
     }
     /*

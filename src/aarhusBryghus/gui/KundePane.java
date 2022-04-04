@@ -51,7 +51,7 @@ public class KundePane extends GridPane {
         this.add(lvwKunder, 0, 1, 1,5);
         lvwKunder.setEditable(false);
         lvwKunder.setPrefHeight(150);
-        lvwKunder.getItems().setAll(Storage.getKunder());
+        lvwKunder.getItems().setAll(Controller.getInstance().getKunder());
         ChangeListener<Kunde> kundeListener = (ov, gammelKunde, nyKunde) -> this.selectedKundeChanged();
         lvwKunder.getSelectionModel().selectedItemProperty().addListener(kundeListener);
 
@@ -79,8 +79,8 @@ public class KundePane extends GridPane {
         if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
             int telefonNr = Integer.parseInt(txfTelefonNr.getText());
             Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
-            Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
-            lvwKunder.getItems().setAll(Storage.getKunder());
+            Controller.getInstance().updateKunde(kunde, fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getInstance().getKunder());
             lvwKunder.getSelectionModel().select(kunde);
         }
     }
@@ -89,8 +89,8 @@ public class KundePane extends GridPane {
         String efternavn = txfEfternavn.getText();
         if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
             int telefonNr = Integer.parseInt(txfTelefonNr.getText());
-            Kunde kunde = Controller.createKunde(fornavn, efternavn, telefonNr);
-            lvwKunder.getItems().setAll(Storage.getKunder());
+            Kunde kunde = Controller.getInstance().createKunde(fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getInstance().getKunder());
             lvwKunder.getSelectionModel().select(kunde);
         }
 
@@ -101,11 +101,11 @@ public class KundePane extends GridPane {
     private void selectedKundeChanged() {
         Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
         if(kunde != null) {
-            lvwOrdrer.getItems().setAll(Controller.getKundensSamledeOrdre(kunde));
+            lvwOrdrer.getItems().setAll(Controller.getInstance().getKundensSamledeOrdre(kunde));
             txfFornavn.setText(kunde.getFornavn());
             txfEfternavn.setText(kunde.getEfternavn());
             txfTelefonNr.setText(kunde.getTelefon() + "");
-            txfIndtjeningFraKunde.setText(Controller.getKundesSamledeKoeb(Controller.getKundensSamledeOrdre(kunde))+" kr.");
+            txfIndtjeningFraKunde.setText(Controller.getInstance().getKundesSamledeKoeb(Controller.getInstance().getKundensSamledeOrdre(kunde))+" kr.");
         }
 
     }

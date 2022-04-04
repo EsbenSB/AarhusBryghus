@@ -1,13 +1,15 @@
 package aarhusBryghus.application.model;
 
-public class MaaleEnhed {
+import java.io.Serializable;
+
+public class Maaleenhed implements Serializable {
     private String enhed;
     private int tal;
 
     // opretter en måleenhed, som skal bruges til produkterne
     // produkterne har forskellige måleenheder
     // fx. centiliter, liter, eller kilo.
-    public MaaleEnhed(String navn, int tal) {
+    public Maaleenhed(String navn, int tal) {
         this.enhed = navn;
         this.tal = tal;
     }

@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class RundvisningPane extends GridPane {
-    //TODO Lav tekstfields og andet stuff her:
+
+    Controller controller = Controller.getInstance();
+
     private Button btnBetaling, btnOpretRundvisning;
     private RadioButton r1, r2, r3, r4;
     private final TextField txfFornavn, txfEfternavn, txfTelefonNr, txfAntalDeltagere, txfBeloeb, txfFindKunde, txfTidspunkt, txfPrisPrPerson, txfPlanlagtTidspunkt;
@@ -95,7 +97,7 @@ public class RundvisningPane extends GridPane {
         lvwRundvisninger.setEditable(false);
         lvwRundvisninger.setPrefHeight(150);
         lvwRundvisninger.setPrefWidth(400);
-        lvwRundvisninger.getItems().setAll(Controller.getNuværendeRundvisninger());
+        lvwRundvisninger.getItems().setAll(controller.getNuværendeRundvisninger());
         ChangeListener<Ordre> rundvisningListener = (ov, gammelRundvisning, nyRundvisning) -> this.selectedRundvisningChanged();
         lvwRundvisninger.getSelectionModel().selectedItemProperty().addListener(rundvisningListener);
 
@@ -128,14 +130,14 @@ public class RundvisningPane extends GridPane {
 
     private void opretRundvisning() {
 
-        Kunde kunde = Controller.findKunde(Integer.parseInt(txfFindKunde.getText()));
+        Kunde kunde = controller.findKunde(Integer.parseInt(txfFindKunde.getText()));
         Double pris = Double.parseDouble(txfPrisPrPerson.getText());
         LocalDate date = dpDato.getValue();
         LocalTime tid = LocalTime.parse(txfTidspunkt.getText());
 
-           Ordre rundvisningTilKunde = Controller.createRundvisning(Controller.getButikPrisliste(), kunde,
-                 LocalDateTime.of(date,tid), Controller.getRundvisningsProduktgruppe(), pris);
-        lvwRundvisninger.getItems().setAll(Controller.getNuværendeRundvisninger());
+           Ordre rundvisningTilKunde = controller.createRundvisning(controller.getButikPrisliste(), kunde,
+                 LocalDateTime.of(date,tid), controller.getRundvisningsProduktgruppe(), pris);
+        lvwRundvisninger.getItems().setAll(controller.getNuværendeRundvisninger());
 
     }
 

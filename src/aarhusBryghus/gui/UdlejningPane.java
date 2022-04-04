@@ -62,7 +62,7 @@ public class UdlejningPane extends GridPane {
 
         this.add(lvwUdlejninger,0,1,1,9);
         lvwUdlejninger.setPrefHeight(200);
-        lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
+        lvwUdlejninger.getItems().setAll(Controller.getInstance().getNuværendeUdlejninger());
         ChangeListener<Ordre> ordreListener = (ov, gammelOrdre, nyOrdre) -> this.selectedOrdreChanged();
         lvwUdlejninger.getSelectionModel().selectedItemProperty().addListener(ordreListener);
 
@@ -155,8 +155,8 @@ public class UdlejningPane extends GridPane {
     private void betalingAfUdlejningKnap() {
         Ordre ordre = lvwUdlejninger.getSelectionModel().getSelectedItem();
         Ordrelinje ordrelinje = lvwOrdrelinjer.getSelectionModel().getSelectedItem();
-        Controller.lukUdlejningOrdre(ordre,ordre.getBetalingsform());
-        lvwUdlejninger.getItems().setAll(Controller.getNuværendeUdlejninger());
+        Controller.getInstance().lukUdlejningOrdre(ordre,ordre.getBetalingsform());
+        lvwUdlejninger.getItems().setAll(Controller.getInstance().getNuværendeUdlejninger());
     }
 
     private void accepterAntalÆndringerKnap() {
@@ -209,8 +209,8 @@ public class UdlejningPane extends GridPane {
     private void soegEfterKunde() {
         try{
             int soegeord = Integer.parseInt(txfSoegKunde.getText());
-                Kunde kunde = Controller.findKunde(soegeord);
-                    lvwUdlejninger.getItems().setAll(Controller.getKundeUdlejninger(kunde));
+                Kunde kunde = Controller.getInstance().findKunde(soegeord);
+                    lvwUdlejninger.getItems().setAll(Controller.getInstance().getKundeUdlejninger(kunde));
                     lvwOrdrelinjer.getItems().clear();
         } catch (Exception e){
             System.out.println(e.getMessage());
