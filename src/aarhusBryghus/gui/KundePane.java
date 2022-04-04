@@ -17,6 +17,7 @@ public class KundePane extends GridPane {
 
     private final TextField txfFornavn, txfEfternavn, txfTelefonNr, txfIndtjeningFraKunde;
     private final Label lblFornavn, lblEfternavn, lblTelefonNr, lblIndtjeningFraKunde, lblKunder, lblOrdrer;
+    private final Label lblError, lblBesked;
     private  ListView<Kunde> lvwKunder;
     private  ListView<Ordre> lvwOrdrer;
     private final Button btnOpdater, btnOpret;
@@ -74,20 +75,32 @@ public class KundePane extends GridPane {
         this.add(btnOpret, 2, 5);
         btnOpret.setOnAction(event -> opretKunde());
 
+        lblError = new Label();
+        this.add(lblError, 0, 6);
+        lblError.setStyle("-fx-text-fill: red");
+
+        lblBesked = new Label();
+        this.add(lblBesked, 0, 6);
+        lblBesked.setStyle("-fx-text-fill: green");
     }
 
     private void opdaterKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
-        String fornavn = txfFornavn.getText();
-        String efternavn = txfEfternavn.getText();
-        int telefonNr = Integer.parseInt(txfTelefonNr.getText());
-
         Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
+        if (kunde != null) {
+            String fornavn = txfFornavn.getText();
+            String efternavn = txfEfternavn.getText();
+            int telefonNr = Integer.parseInt(txfTelefonNr.getText());
 
-        Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
-        lvwKunder.getItems().setAll(Storage.getKunder());
-        lvwKunder.getSelectionModel().select(kunde);
+            Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getKunder());
+            lvwKunder.getSelectionModel().select(kunde);
 
-
+            lblError.setText("");
+            lblBesked.setText("Kunden " + kunde.getFornavn() + " " + kunde.getEfternavn() + " er blevet opdateret.");
+        } else {
+            lblError.setText("Der er ikke valgt en kunde som skal opdateres.");
+            lblBesked.setText("");
+        }
     }
     private void opretKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
         String fornavn = txfFornavn.getText();
@@ -98,6 +111,8 @@ public class KundePane extends GridPane {
         lvwKunder.getItems().setAll(Storage.getKunder());
         lvwKunder.getSelectionModel().select(kunde);
 
+        lblError.setText("");
+        lblBesked.setText("Kunden" + kunde.getFornavn() + " " + kunde.getEfternavn() + " er blevet oprettet.");
     }
 
 
