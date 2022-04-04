@@ -239,7 +239,7 @@ public class KasseapparatPane extends GridPane {
                 txfKlippekortPris.setText("Klippekort kan ikke anvendes");
                 txfKlippekortPris.setDisable(true);
                 rbKlippeKortPris.setDisable(true);
-                rbStandardPris.fire();
+                groupAnvendtPris.selectToggle(null);
                 txfStandardPris.setDisable(false);
             } else {
                 txfKlippekortPris.setText(produkt.getklippekortPris(prisliste) + " Klip");
@@ -405,6 +405,8 @@ public class KasseapparatPane extends GridPane {
                     txfSamletPrisProdukt.setText(ordrelinje1.getSamletPris()+" Kr.");
                     lvwKurv.getItems().add(produkt);
                     cbbPrislister.setDisable(true);
+                    rbKlippeKortPris.setDisable(true);
+//                    txfKlippekortPris.setDisable(true);
                     txfTotalPris.setDisable(false);
                     rbKlippekort.setDisable(true);
                     rbKontant.fire();
@@ -419,6 +421,9 @@ public class KasseapparatPane extends GridPane {
                         txfSamletPrisProdukt.setText(ordrelinje2.getSamletPrisKlip()+" Klip");
                         lvwKurv.getItems().add(produkt);
                         cbbPrislister.setDisable(true);
+                        rbStandardPris.setDisable(true);
+                        rbCustomPris.setDisable(true);
+                        rbRabat.setDisable(true);
                         txfTotalPris.setDisable(false);
                         rbKontant.setDisable(true);
                         rbMobilepay.setDisable(true);
@@ -438,6 +443,8 @@ public class KasseapparatPane extends GridPane {
                                 txfSamletPrisProdukt.setText(ordrelinje3.getSamletPris()+" Kr.");
                                 lvwKurv.getItems().add(produkt);
                                 cbbPrislister.setDisable(true);
+                                rbKlippeKortPris.setDisable(true);
+//                                txfKlippekortPris.setDisable(true);
                                 txfTotalPris.setDisable(false);
                                 rbKlippekort.setDisable(true);
                                 rbKontant.fire();
@@ -461,6 +468,8 @@ public class KasseapparatPane extends GridPane {
                                 txfSamletPrisProdukt.setText(ordrelinje4.getSamletPris()+" Kr.");
                                 lvwKurv.getItems().add(produkt);
                                 cbbPrislister.setDisable(true);
+                                rbKlippeKortPris.setDisable(true);
+//                                txfKlippekortPris.setDisable(true);
                                 txfTotalPris.setDisable(false);
                                 rbKlippekort.setDisable(true);
                                 rbKontant.fire();
@@ -495,6 +504,10 @@ public class KasseapparatPane extends GridPane {
 
             if (lvwKurv.getSelectionModel().isEmpty()) {
                 cbbPrislister.setDisable(false);
+                rbStandardPris.setDisable(false);
+                rbKlippeKortPris.setDisable(false);
+                rbCustomPris.setDisable(false);
+                rbRabat.setDisable(false);
                 txfTotalPris.setDisable(true);
                 rbKontant.setDisable(false);
                 rbMobilepay.setDisable(false);
@@ -515,6 +528,10 @@ public class KasseapparatPane extends GridPane {
             lvwKurv.getItems().clear();
             txfTotalPris.clear();
             cbbPrislister.setDisable(false);
+            rbStandardPris.setDisable(false);
+            rbKlippeKortPris.setDisable(false);
+            rbCustomPris.setDisable(false);
+            rbRabat.setDisable(false);
             txfTotalPris.setDisable(true);
             rbKontant.setDisable(false);
             rbMobilepay.setDisable(false);
