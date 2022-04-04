@@ -1,5 +1,9 @@
 package aarhusBryghus.application.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 public class Produkt {
@@ -16,6 +20,18 @@ public class Produkt {
     }
     public int getAntalKlip() {
         return 0;
+    }
+
+    public LocalDateTime getTidspunkt() {
+        return null;
+    }
+
+
+    public LocalTime getKlokkesletForRundvisning(LocalDateTime tidspunkt){
+       return  null;
+    }
+    public LocalDate getDatoForRundvisning(LocalDateTime tidspunkt){
+      return null;
     }
 
     public void addPris(Pris pris){

@@ -122,7 +122,7 @@ public class Ordre {
             return "Ordrenr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Samlet salg: " + this.getSamletPris();
 
         } else {
-            return "OrdreNr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Kunde navn: " + kunde.getFornavn() + " " + kunde.getEfternavn() + "Kunde Mobil: " + kunde.getTelefon();
+            return "OrdreNr: " + ordrenummer + ". Antal Linjer: " + ordrelinjer.size() + ". Kunde navn: " + kunde.getFornavn() + " " + kunde.getEfternavn() + ", Kunde Mobil: " + kunde.getTelefon();
 
         }
     }
