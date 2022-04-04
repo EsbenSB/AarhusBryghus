@@ -40,8 +40,7 @@ public class KasseapparatPane extends GridPane {
 
         cbbPrislister = new ComboBox<>();
         this.add(cbbPrislister, 1, 0);
-        cbbPrislister.setPromptText("Vælg prisliste");
-        cbbPrislister.getItems().addAll(Controller.getPrislister());
+        cbbPrislister.getItems().addAll(Controller.getInstance().getPrislister());
         cbbPrislister.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbPrislister.setOnAction(event -> this.opdaterProduktGruppeliste());
         cbbPrislister.setPrefWidth(200);
@@ -51,7 +50,6 @@ public class KasseapparatPane extends GridPane {
 
         cbbProduktgrupper = new ComboBox<>();
         this.add(cbbProduktgrupper,1,1);
-        cbbProduktgrupper.setPromptText("Vælg produktgruppe");
         cbbProduktgrupper.setOnAction(event -> this.opdaterSelectedPrisliste());
         cbbProduktgrupper.setPrefWidth(200);
         cbbProduktgrupper.setDisable(true);
@@ -205,10 +203,10 @@ public class KasseapparatPane extends GridPane {
 
     public void opdaterSelectedPrisliste() {
         Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
-        this.ordre = Controller.createSalg(prisliste);
+        this.ordre = Controller.getInstance().createSalg(prisliste);
         Produktgruppe produktGruppe = cbbProduktgrupper.getSelectionModel().getSelectedItem();
         if (produktGruppe != null) {
-            lvwProdukter.getItems().setAll(Controller.listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
+            lvwProdukter.getItems().setAll(Controller.getInstance().listeOverProdukterProduktgruppePaaPrisliste(produktGruppe, prisliste));
         } else {
             lvwProdukter.getItems().clear();
         }
@@ -218,7 +216,7 @@ public class KasseapparatPane extends GridPane {
     public void opdaterProduktGruppeliste() {
         if(cbbPrislister.getSelectionModel().getSelectedItem() != null){
             Prisliste prisliste = cbbPrislister.getSelectionModel().getSelectedItem();
-            cbbProduktgrupper.getItems().setAll(Controller.listeProduktgrupperTilValgtePrisliste(prisliste));
+            cbbProduktgrupper.getItems().setAll(Controller.getInstance().listeProduktgrupperTilValgtePrisliste(prisliste));
             lvwProdukter.getItems().clear();
             cbbProduktgrupper.setDisable(false);
         }
@@ -403,7 +401,7 @@ public class KasseapparatPane extends GridPane {
                 lblSucsses.setText("");
             } else {
                 if (rbStandardPris.isSelected()) {
-                    Ordrelinje ordrelinje1 = Controller.createOrdrelinjeSalg(ordre, produkt, antalValgte, prisliste);
+                    Ordrelinje ordrelinje1 = Controller.getInstance().createOrdrelinjeSalg(ordre, produkt, antalValgte, prisliste);
                     txfSamletPrisProdukt.setText(ordrelinje1.getSamletPris()+" Kr.");
                     lvwKurv.getItems().add(produkt);
                     cbbPrislister.setDisable(true);

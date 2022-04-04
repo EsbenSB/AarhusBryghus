@@ -109,37 +109,37 @@ public class SalgsstatistikPane extends GridPane {
             txfSamletPris.setText(ordre.getSamletPrisKlip()+" Klip");
         } else{
             txfSamletPris.setText("Kr. " + ordre.getSamletPris());
-            txfDagensOmsaetning.setText(Controller.getSamletSumDagensSalg(LocalDate.now())+"");
+            txfDagensOmsaetning.setText(Controller.getInstance().getSamletSumDagensSalg(LocalDate.now())+"");
         }
     }
 
     private void selectedOrdreChanged() {
         Ordre ordre = lvwOrdrer.getSelectionModel().getSelectedItem();
-        lvwOrdrelinjer.getItems().setAll(Controller.udprintOrdre(ordre));
+        lvwOrdrelinjer.getItems().setAll(Controller.getInstance().udprintOrdre(ordre));
         txfBetalingsform.setText(ordre.getBetalingsform()+"");
         if(ordre.getBetalingsform().getType().equals("Klip")){
             txfSamletPris.setText(ordre.getSamletPrisKlip()+" Klip");
         } else{
             txfSamletPris.setText("Kr. " + ordre.getSamletPris());
-            txfDagensOmsaetning.setText(Controller.getSamletSumDagensSalg(LocalDate.now())+"");
+            txfDagensOmsaetning.setText(Controller.getInstance().getSamletSumDagensSalg(LocalDate.now())+"");
 
         }
     }
 
     private void hentDagensSalg() {
-        lvwOrdrer.getItems().setAll(Controller.getDagensSalg());
-        txfDagensOmsaetning.setText(Controller.getSamletSumDagensSalg(LocalDate.now())+"");
+        lvwOrdrer.getItems().setAll(Controller.getInstance().getDagensSalg());
+        txfDagensOmsaetning.setText(Controller.getInstance().getSamletSumDagensSalg(LocalDate.now())+"");
 
     }
 
     private void getAntalSolgteKlip(){
         LocalDate startDato = dpStartDato.getValue();
         LocalDate slutDato = dpSlutDato.getValue();
-        txfSolgteKlip.setText(""+Controller.getAntalSolgteKlip(startDato,slutDato));
+        txfSolgteKlip.setText(""+Controller.getInstance().getAntalSolgteKlip(startDato,slutDato));
     }
     private void getAntalBrugteKlip(){
         LocalDate startDato = dpStartDato.getValue();
         LocalDate slutDato = dpSlutDato.getValue();
-        txfBrugteKlip.setText(""+Controller.getAntalForbrugteKlip(startDato,slutDato));
+        txfBrugteKlip.setText(""+Controller.getInstance().getAntalForbrugteKlip(startDato,slutDato));
     }
 }

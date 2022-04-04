@@ -7,17 +7,13 @@ import aarhusBryghus.application.model.Produkt;
 import aarhusBryghus.storage.Storage;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
-import java.util.Optional;
 public class KundePane extends GridPane {
 
     private final TextField txfFornavn, txfEfternavn, txfTelefonNr, txfIndtjeningFraKunde;
     private final Label lblFornavn, lblEfternavn, lblTelefonNr, lblIndtjeningFraKunde, lblKunder, lblOrdrer;
-    private final Label lblError, lblBesked;
     private  ListView<Kunde> lvwKunder;
     private  ListView<Ordre> lvwOrdrer;
     private final Button btnOpdater, btnOpret;
@@ -55,7 +51,7 @@ public class KundePane extends GridPane {
         this.add(lvwKunder, 0, 1, 1,5);
         lvwKunder.setEditable(false);
         lvwKunder.setPrefHeight(150);
-        lvwKunder.getItems().setAll(Storage.getKunder());
+        lvwKunder.getItems().setAll(Controller.getInstance().getKunder());
         ChangeListener<Kunde> kundeListener = (ov, gammelKunde, nyKunde) -> this.selectedKundeChanged();
         lvwKunder.getSelectionModel().selectedItemProperty().addListener(kundeListener);
 
@@ -75,44 +71,29 @@ public class KundePane extends GridPane {
         this.add(btnOpret, 2, 5);
         btnOpret.setOnAction(event -> opretKunde());
 
-        lblError = new Label();
-        this.add(lblError, 0, 6);
-        lblError.setStyle("-fx-text-fill: red");
-
-        lblBesked = new Label();
-        this.add(lblBesked, 0, 6);
-        lblBesked.setStyle("-fx-text-fill: green");
     }
 
-    private void opdaterKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
-        Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
-        if (kunde != null) {
-            String fornavn = txfFornavn.getText();
-            String efternavn = txfEfternavn.getText();
-            int telefonNr = Integer.parseInt(txfTelefonNr.getText());
-
-            Controller.updateKunde(kunde, fornavn, efternavn, telefonNr);
-            lvwKunder.getItems().setAll(Storage.getKunder());
-            lvwKunder.getSelectionModel().select(kunde);
-
-            lblError.setText("");
-            lblBesked.setText("Kunden " + kunde.getFornavn() + " " + kunde.getEfternavn() + " er blevet opdateret.");
-        } else {
-            lblError.setText("Der er ikke valgt en kunde som skal opdateres.");
-            lblBesked.setText("");
-        }
-    }
-    private void opretKunde() { // todo: tjek for at parametre ikke eksisterer på en anden kunde
+    private void opdaterKunde() {
         String fornavn = txfFornavn.getText();
         String efternavn = txfEfternavn.getText();
-        int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+        if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
+            int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+            Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
+            Controller.getInstance().updateKunde(kunde, fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getInstance().getKunder());
+            lvwKunder.getSelectionModel().select(kunde);
+        }
+    }
+    private void opretKunde() {
+        String fornavn = txfFornavn.getText();
+        String efternavn = txfEfternavn.getText();
+        if(txfTelefonNr.getText().length() == 8 && fornavn != null && efternavn != null) {
+            int telefonNr = Integer.parseInt(txfTelefonNr.getText());
+            Kunde kunde = Controller.getInstance().createKunde(fornavn, efternavn, telefonNr);
+            lvwKunder.getItems().setAll(Storage.getInstance().getKunder());
+            lvwKunder.getSelectionModel().select(kunde);
+        }
 
-        Kunde kunde = Controller.createKunde(fornavn, efternavn, telefonNr);
-        lvwKunder.getItems().setAll(Storage.getKunder());
-        lvwKunder.getSelectionModel().select(kunde);
-
-        lblError.setText("");
-        lblBesked.setText("Kunden" + kunde.getFornavn() + " " + kunde.getEfternavn() + " er blevet oprettet.");
     }
 
 
@@ -120,11 +101,11 @@ public class KundePane extends GridPane {
     private void selectedKundeChanged() {
         Kunde kunde = lvwKunder.getSelectionModel().getSelectedItem();
         if(kunde != null) {
-            lvwOrdrer.getItems().setAll(Controller.getKundensSamledeOrdre(kunde));
+            lvwOrdrer.getItems().setAll(Controller.getInstance().getKundensSamledeOrdre(kunde));
             txfFornavn.setText(kunde.getFornavn());
             txfEfternavn.setText(kunde.getEfternavn());
             txfTelefonNr.setText(kunde.getTelefon() + "");
-            txfIndtjeningFraKunde.setText(Controller.getKundesSamledeKoeb(Controller.getKundensSamledeOrdre(kunde))+" kr.");
+            txfIndtjeningFraKunde.setText(Controller.getInstance().getKundesSamledeKoeb(Controller.getInstance().getKundensSamledeOrdre(kunde))+" kr.");
         }
 
     }

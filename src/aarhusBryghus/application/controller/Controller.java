@@ -3,6 +3,7 @@ package aarhusBryghus.application.controller;
 import aarhusBryghus.application.model.*;
 import aarhusBryghus.storage.Storage;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,22 +12,24 @@ import java.util.HashSet;
 
 public class Controller {
 
+
     private static Controller uniqueInstance;
     private Storage storage;
 
-    public static Controller getInstance() {
-        if (uniqueInstance == null) {
+    public static Controller getInstance(){
+        if(uniqueInstance == null){
             uniqueInstance = new Controller();
         }
         return uniqueInstance;
     }
 
-    private Controller() {
-        storage = Storage.getInstance();
+
+    private Controller(){
+        storage = aarhusBryghus.storage.Storage.getInstance();
     }
 
     // metode, til combobox i "produktTab"
-    public static ArrayList<String> getElementTyper(){
+    public ArrayList<String> getElementTyper(){
         ArrayList<String> elementTyper = new ArrayList<>();
         elementTyper.add("Produkt");
         elementTyper.add("Produktgruppe");
@@ -35,7 +38,7 @@ public class Controller {
         return elementTyper;
     }
 
-    public static ArrayList<String> getProduktTyper(){
+    public ArrayList<String> getProduktTyper(){
         ArrayList<String> produkttyper = new ArrayList<>();
         produkttyper.add("Produkt");
         produkttyper.add("PantProdukt");
@@ -44,12 +47,12 @@ public class Controller {
     }
 
     // METODER TIL UDLEJNING
-    public static Kunde findKunde(int mobilnummer) {
+    public Kunde findKunde(int mobilnummer) {
         Kunde kunde = null;
         int i = 0;
-        while (kunde == null && i < Storage.getKunder().size()) {
-            if (Storage.getKunder().get(i).getTelefon() == mobilnummer) {
-                kunde = Storage.getKunder().get(i);
+        while (kunde == null && i < Storage.getInstance().getKunder().size()) {
+            if (Storage.getInstance().getKunder().get(i).getTelefon() == mobilnummer) {
+                kunde = Storage.getInstance().getKunder().get(i);
             } else {
                 i++;
             }
@@ -59,7 +62,7 @@ public class Controller {
 
     //Virker kun med udlejninger!
     // skal køres umiddelbart efter ordren er oprettet og panten er betalt
-    public static void setPrisMinusPant(Ordre ordre) {
+    public void setPrisMinusPant(Ordre ordre) {
         if (ordre.getType().equalsIgnoreCase("Udlejning")) {
             for (Ordrelinje ol : ordre.getOrdrelinjer()) {
                 if (ol.getSamletPant() != 0) {
@@ -69,10 +72,10 @@ public class Controller {
         }
     }
 
-    public static ArrayList<Ordre> getKundeUdlejninger(Kunde kunde) {
+    public ArrayList<Ordre> getKundeUdlejninger(Kunde kunde) {
         ArrayList<Ordre> kundensUdlejninger = new ArrayList<>();
-        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
-            Ordre o = Storage.getOrdrer().get(i);
+        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
+            Ordre o = Storage.getInstance().getOrdrer().get(i);
                 if (kunde.equals(o.getKunde()) && o.getType().equalsIgnoreCase("udlejning")) {
                     if (!kundensUdlejninger.contains(o)){
                         kundensUdlejninger.add(o);
@@ -82,10 +85,10 @@ public class Controller {
         return kundensUdlejninger;
     }
 
-    public static ArrayList<Ordre> getKundensSamledeOrdre(Kunde kunde) {
+    public ArrayList<Ordre> getKundensSamledeOrdre(Kunde kunde) {
         ArrayList<Ordre> kundensSamledeOrdre = new ArrayList<>();
-        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
-            Ordre o = Storage.getOrdrer().get(i);
+        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
+            Ordre o = Storage.getInstance().getOrdrer().get(i);
             if (o.isErOrdrenLukket()) {
                 if (kunde.equals(o.getKunde())) {
                     if (!kundensSamledeOrdre.contains(o))
@@ -96,7 +99,7 @@ public class Controller {
         return kundensSamledeOrdre;
     }
 
-    public static double getKundesSamledeKoeb(ArrayList<Ordre> ordrer) {
+    public double getKundesSamledeKoeb(ArrayList<Ordre> ordrer) {
         double sum = 0.0;
         for (Ordre o : ordrer) {
             sum += o.getSamletPris();
@@ -105,9 +108,9 @@ public class Controller {
     }
 
     // returnerer en liste med alle Ordre, som indeholder typen "udlejning", og ikke er lukket.
-    public static ArrayList<Ordre> getNuværendeUdlejninger() {
+    public ArrayList<Ordre> getNuværendeUdlejninger() {
         ArrayList<Ordre> nuværendeUdlejninger = new ArrayList<>();
-        for (Ordre o : Storage.getOrdrer()) {
+        for (Ordre o : Storage.getInstance().getOrdrer()) {
             if (o.getType().equals("Udlejning") && !o.erOrdrenLukket())
                 nuværendeUdlejninger.add(o);
         }
@@ -115,9 +118,9 @@ public class Controller {
     }
 
     // Returnerer samlet sum, for alle dagens salg (ikke klip!) - dagens "totalte omsætning"
-    public static double getSamletSumDagensSalg(LocalDate localDate) {
+    public double getSamletSumDagensSalg(LocalDate localDate) {
         double sum = 0;
-        for (Ordre o : Storage.getOrdrer()) {
+        for (Ordre o : Storage.getInstance().getOrdrer()) {
             if (o.getAfslutningsDato() != null && o.getAfslutningsDato().equals(localDate) && !o.getBetalingsform().getType().equals("Klip")) {
                 sum += o.getSamletPris();
             }
@@ -126,40 +129,40 @@ public class Controller {
     }
 
     // create pant produkt
-    public static Produkt createPantProdukt(String navn, MaaleEnhed maaleEnhed, int pant, Produktgruppe produktgruppe) {
+    public Produkt createPantProdukt(String navn, Maaleenhed maaleEnhed, int pant, Produktgruppe produktgruppe) {
         Produkt produkt = produktgruppe.createPantProdukt(navn, maaleEnhed, pant);
         return produkt;
     }
 
     // createSalg er metoden som bruges, til af kasseapperatet. de oprettes altid med fast dato, og som lukkede.
-    public static Ordre createSalg(Prisliste prisliste) {
+    public Ordre createSalg(Prisliste prisliste) {
         Ordre ordre = new Ordre("Salg", true, LocalDate.now(), prisliste);
-        Storage.addOrdre(ordre);
+        Storage.getInstance().addOrdre(ordre);
         return ordre;
     }
 
-    public static Ordre createRundvisning (Prisliste prisliste, Kunde kunde, LocalDateTime tidspunkt, Produktgruppe produktgruppe, double prisPerPerson) {
+    public Ordre createRundvisning (Prisliste prisliste, Kunde kunde, LocalDateTime tidspunkt, Produktgruppe produktgruppe, double prisPerPerson) {
         Ordre rundvisning = new Ordre("Rundvisning", false, LocalDate.now(), prisliste);
         rundvisning.setKunde(kunde);
-        Rundvisning rundvisningProdukt = produktgruppe.createRundvisning("Rundvisning",Controller.getEmptyMaaleenhed(),tidspunkt);
+        Rundvisning rundvisningProdukt = produktgruppe.createRundvisning("Rundvisning",Controller.getInstance().getEmptyMaaleenhed(),tidspunkt);
         prisliste.createPris(rundvisningProdukt,prisPerPerson, 0);
         rundvisning.createOrdrelinje(1,rundvisningProdukt);
-        Storage.addOrdre(rundvisning);
+        Storage.getInstance().addOrdre(rundvisning);
         return rundvisning;
     }
 
-    public static ArrayList<Ordre> getNuværendeRundvisninger() {
+    public ArrayList<Ordre> getNuværendeRundvisninger() {
         ArrayList<Ordre> nuværendeRundvisninger = new ArrayList<>();
-        for (Ordre o : Storage.getOrdrer()) {
+        for (Ordre o : Storage.getInstance().getOrdrer()) {
             if (o.getType().equalsIgnoreCase("Rundvisning") && !o.erOrdrenLukket())
                 nuværendeRundvisninger.add(o);
         }
         return new ArrayList<>(nuværendeRundvisninger);
     }
 
-    public static Produktgruppe getRundvisningsProduktgruppe() {
+    public Produktgruppe getRundvisningsProduktgruppe() {
         Produktgruppe produktgruppe = null;
-        for (Produktgruppe p : Storage.getProduktGrupper()) {
+        for (Produktgruppe p : Storage.getInstance().getProduktGrupper()) {
             if (p.getNavn().equalsIgnoreCase("rundvisning")){
                 produktgruppe = p;
             }
@@ -167,9 +170,9 @@ public class Controller {
         return produktgruppe;
     }
 
-    public static Prisliste getButikPrisliste() {
+    public Prisliste getButikPrisliste() {
         Prisliste prisliste = null;
-        for (Prisliste p : Storage.getPrislister()) {
+        for (Prisliste p : Storage.getInstance().getPrislister()) {
             if (p.getNavn().equalsIgnoreCase("Butik")){
                 prisliste = p;
             }
@@ -191,15 +194,15 @@ public class Controller {
         return new ArrayList<>(nuværendeRundvisninger);
     }*/
 
-    public static Ordre createUdlejning (Prisliste prisliste, Kunde kunde) {
+    public Ordre createUdlejning (Prisliste prisliste, Kunde kunde) {
         Ordre udlejning = new Ordre("Udlejning", false, LocalDate.now(), prisliste);
         udlejning.setKunde(kunde);
-        Storage.addOrdre(udlejning);
+        Storage.getInstance().addOrdre(udlejning);
         return udlejning;
     }
 
     // createOrdrelinjeSalg opretter enkelte salgslinjer, til en ordre, men KUN i "Kasseapparat" tabben!
-    public static Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste) {
+    public Ordrelinje createOrdrelinjeSalg(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste) {
         Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
         if (prisliste.getAntalKlip(produkt) > 0) {
             ordrelinje.setKlip(prisliste.getAntalKlip(produkt));
@@ -209,17 +212,17 @@ public class Controller {
     //Opretter en ordrelinje, på ordren, som udlejning. Sætter prisen, på
     // ordrelinjen, til at være = panten på det tilføjede produkt
     // NB: Produkter uden pant, bliver tilføjet normalt, men prisen sættes til 0! (fordi den endelig afregning sker ved afslutning)
-    public static Ordrelinje createOrdrelinjeUdlejning(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
+    public Ordrelinje createOrdrelinjeUdlejning(Ordre ordre, Produkt produkt, int antal, Prisliste prisliste){
         Ordrelinje ordrelinje = ordre.createOrdrelinje(antal, produkt);
         return ordrelinje;
     }
     //Lukker rundvisningen - ligesom en udlejning
-    public static void lukRundvisningOrdre(Ordre ordre, Betalingsform betalingsform){
-       Controller.lukUdlejningOrdre(ordre,betalingsform);
+    public void lukRundvisningOrdre(Ordre ordre, Betalingsform betalingsform){
+        Controller.getInstance().lukUdlejningOrdre(ordre,betalingsform);
     }
 
     //Lukker ordren, hvis den ikke er lukket
-    public static void lukUdlejningOrdre(Ordre ordre, Betalingsform betalingsform){
+    public void lukUdlejningOrdre(Ordre ordre, Betalingsform betalingsform){
         if(!ordre.erOrdrenLukket()){
             ordre.setAfslutningsDato(LocalDate.now());
             ordre.setOrdreStatus(true);
@@ -227,8 +230,8 @@ public class Controller {
         }
     }
 
-    public static MaaleEnhed getEmptyMaaleenhed(){
-        for(MaaleEnhed me: Controller.getMaaleEnheder()){
+    public Maaleenhed getEmptyMaaleenhed(){
+        for(Maaleenhed me: Controller.getInstance().getMaaleEnheder()){
             if(me.getEnhed() == null){
                 return me;
             }
@@ -238,25 +241,25 @@ public class Controller {
 
     //------------------------------------------------------------------------------------------------------------------
     // Produkt. Create, get, delete, update.
-    public static Produkt createProdukt(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed) {
+    public Produkt createProdukt(String navn, Produktgruppe produktgruppe, Maaleenhed maaleEnhed) {
         Produkt produkt = produktgruppe.createProdukt(navn, maaleEnhed);
         return produkt;
     }
 
-    public static Kunde createKunde(String fornavn, String efternavn, int telefon) {
+    public Kunde createKunde(String fornavn, String efternavn, int telefon) {
         Kunde kunde = new Kunde(fornavn, efternavn, telefon);
-        Storage.addKunde(kunde);
+        Storage.getInstance().addKunde(kunde);
         return kunde;
     }
 
-    public static void updateKunde(Kunde kunde, String fornavn, String efternavn, int telefon) {
+    public void updateKunde(Kunde kunde, String fornavn, String efternavn, int telefon) {
         kunde.setFornavn(fornavn);
         kunde.setEfternavn(efternavn);
         kunde.setTelefon(telefon);
     }
 
-    public static ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
-        for (Produktgruppe pg : Storage.getProduktGrupper()) {
+    public ArrayList<Produkt> getAlleProdukter(Produktgruppe produktgruppe) {
+        for (Produktgruppe pg : Storage.getInstance().getProduktGrupper()) {
             if (pg == produktgruppe) {
                 System.out.println("Produktgruppe: " + produktgruppe);
                 return pg.getProdukter();
@@ -265,8 +268,8 @@ public class Controller {
         return null;
     }
 
-    public static void deleteProdukt(Produkt produkt) {
-        for (Produktgruppe p : Storage.getProduktGrupper()) {
+    public void deleteProdukt(Produkt produkt) {
+        for (Produktgruppe p : Storage.getInstance().getProduktGrupper()) {
             for (Produkt prod : p.getProdukter()) {
                 if (prod == produkt) {
                     p.removeProdukt(produkt);
@@ -276,8 +279,8 @@ public class Controller {
     }
 
     // henter produktets produktgruppe
-    public static Produktgruppe getProduktGruppe(Produkt produkt) {
-        for (Produktgruppe pg : Storage.getProduktGrupper()) {
+    public Produktgruppe getProduktGruppe(Produkt produkt) {
+        for (Produktgruppe pg : Storage.getInstance().getProduktGrupper()) {
             for (Produkt prod : pg.getProdukter()) {
                 if (prod.equals(produkt)) {
                     return pg;
@@ -288,8 +291,8 @@ public class Controller {
     }
 
     // returnerer den første prisliste, som findes på et produkt
-    public static Prisliste getProduktPrisliste(Produkt produkt) {
-        for (Prisliste pl : Storage.getPrislister()) {
+    public Prisliste getProduktPrisliste(Produkt produkt) {
+        for (Prisliste pl : Storage.getInstance().getPrislister()) {
             for (Pris pris : produkt.getPriser()) {
                 if (pris.getPrisliste() == pl) {
                     return pl;
@@ -300,15 +303,15 @@ public class Controller {
     }
 
     //Henter de prislister, som produktet i parameteren IKKE har. // todo brug sortering/compareTo i stedet for
-    public static ArrayList<Prisliste> getAndrePrislister(Produkt produkt) {
+    public ArrayList<Prisliste> getAndrePrislister(Produkt produkt) {
         ArrayList<Prisliste> liste = new ArrayList<>();
-        ArrayList<Prisliste> listeNy = Storage.getPrislister();
+        ArrayList<Prisliste> listeNy = Storage.getInstance().getPrislister();
         for (Pris pris : produkt.getPriser()) {
             liste.add(pris.getPrisliste());
         }
-        for (int i = 0; i < Storage.getPrislister().size(); i++) {
+        for (int i = 0; i < Storage.getInstance().getPrislister().size(); i++) {
             for (int j = 0; j < liste.size(); j++) {
-                if (Storage.getPrislister().get(i) == liste.get(j)) {
+                if (Storage.getInstance().getPrislister().get(i) == liste.get(j)) {
                     listeNy.remove(liste.get(j));
                     j = liste.size();
                 }
@@ -321,7 +324,7 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
 
     // Klippekort. Create, get, delete, update.
-    public static Klippekort createKlippekort(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed, int antalKlip) {
+    public Klippekort createKlippekort(String navn, Produktgruppe produktgruppe, Maaleenhed maaleEnhed, int antalKlip) {
         Klippekort klippekort = produktgruppe.createKlippekort(navn, maaleEnhed, antalKlip);
         return klippekort;
     }
@@ -329,7 +332,7 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
 
     // Rundvisning. Create, get, delete, update.
-    public static Rundvisning createRundvisning(String navn, Produktgruppe produktgruppe, MaaleEnhed maaleEnhed, LocalDateTime tidspunkt) {
+    public Rundvisning createRundvisning(String navn, Produktgruppe produktgruppe, Maaleenhed maaleEnhed, LocalDateTime tidspunkt) {
         Rundvisning rundvisning = produktgruppe.createRundvisning(navn, maaleEnhed, tidspunkt);
         return rundvisning;
     }
@@ -337,69 +340,69 @@ public class Controller {
     //------------------------------------------------------------------------------------------------------------------
 
     // Produktgruppe. create, get, delete, update
-    public static Produktgruppe createProduktGruppe(String navn) {
+    public Produktgruppe createProduktGruppe(String navn) {
         Produktgruppe produktGruppe = new Produktgruppe(navn);
-        Storage.addProduktGruppe(produktGruppe);
+        Storage.getInstance().addProduktGruppe(produktGruppe);
         return produktGruppe;
     }
 
-    public static ArrayList<Produktgruppe> getProduktGrupper() {
-        return Storage.getProduktGrupper();
+    public ArrayList<Produktgruppe> getProduktGrupper() {
+        return Storage.getInstance().getProduktGrupper();
     }
 
-    public static void deleteProduktgruppe(Produktgruppe produktGruppe) {
-        Storage.removeProduktGruppe(produktGruppe);
+    public void deleteProduktgruppe(Produktgruppe produktGruppe) {
+        Storage.getInstance().removeProduktGruppe(produktGruppe);
     }
 
-    public static void updateProduktgruppe(Produktgruppe produktGruppe, String navn) {
+    public void updateProduktgruppe(Produktgruppe produktGruppe, String navn) {
         produktGruppe.setNavn(navn);
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
     // Måleenhed. Create, get, delete, update.
-    public static MaaleEnhed createMaaleEnhed(String navn, int tal) {
-        MaaleEnhed maaleEnhed = new MaaleEnhed(navn, tal);
-        Storage.addMaaleEnhed(maaleEnhed);
+    public Maaleenhed createMaaleEnhed(String navn, int tal) {
+        Maaleenhed maaleEnhed = new Maaleenhed(navn, tal);
+        Storage.getInstance().addMaaleEnhed(maaleEnhed);
         return maaleEnhed;
     }
 
-    public static ArrayList<MaaleEnhed> getMaaleEnheder() {
-        return Storage.getMaaleEnheder();
+    public ArrayList<Maaleenhed> getMaaleEnheder() {
+        return Storage.getInstance().getMaaleEnheder();
     }
 
-    public static void deleteMaaleenhed(MaaleEnhed maaleEnhed) {
-        Storage.removeMaaleEnhed(maaleEnhed);
+    public void deleteMaaleenhed(Maaleenhed maaleEnhed) {
+        Storage.getInstance().removeMaaleEnhed(maaleEnhed);
     }
 
-    public static void updateMaaleenhed(MaaleEnhed maaleEnhed, String enhed, int tal) {
+    public void updateMaaleenhed(Maaleenhed maaleEnhed, String enhed, int tal) {
         maaleEnhed.setEnhed(enhed);
         maaleEnhed.setTal(tal);
     }
 
     //------------------------------------------------------------------------------------------------------------------
     // Prisliste. Create, get, delete, update.
-    public static Prisliste createPrisliste(String navn) {
+    public Prisliste createPrisliste(String navn) {
         Prisliste prisliste = new Prisliste(navn);
-        Storage.addPrisliste(prisliste);
+        Storage.getInstance().addPrisliste(prisliste);
         return prisliste;
     }
 
-    public static ArrayList<Prisliste> getPrislister() {
-        return Storage.getPrislister();
+    public ArrayList<Prisliste> getPrislister() {
+        return Storage.getInstance().getPrislister();
     }
 
-    public static void deletePrisliste(Prisliste prisliste) {
-        Storage.removePrisliste(prisliste);
+    public void deletePrisliste(Prisliste prisliste) {
+        Storage.getInstance().removePrisliste(prisliste);
     }
 
-    public static void updatePrisliste(Prisliste prisliste, String navn) {
+    public void updatePrisliste(Prisliste prisliste, String navn) {
         prisliste.setNavn(navn);
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public static HashSet<Produkt> listeOverProdukterProduktgruppePaaPrisliste(Produktgruppe produktgruppe, Prisliste prisliste) {
+    public HashSet<Produkt> listeOverProdukterProduktgruppePaaPrisliste(Produktgruppe produktgruppe, Prisliste prisliste) {
         HashSet<Produkt> produkter = new HashSet<>();
         for (Produkt p : produktgruppe.getProdukter()) {
             for (Pris pris : p.getPriser()) {
@@ -411,9 +414,9 @@ public class Controller {
         return produkter;
     }
 
-    public static HashSet<Produktgruppe> listeProduktgrupperTilValgtePrisliste(Prisliste prisliste) {
+    public HashSet<Produktgruppe> listeProduktgrupperTilValgtePrisliste(Prisliste prisliste) {
         HashSet<Produktgruppe> produktGrupper = new HashSet<>();
-        for (Produktgruppe g : Storage.getProduktGrupper()) {
+        for (Produktgruppe g : Storage.getInstance().getProduktGrupper()) {
             for (Produkt p : g.getProdukter()) {
                 for (Pris pris : p.getPriser()) {
                     if (pris.getPrisliste() == prisliste) {
@@ -427,17 +430,17 @@ public class Controller {
         return produktGrupper;
     }
 
-    public static ArrayList<Ordre> getDagensSalg() {
+    public ArrayList<Ordre> getDagensSalg() {
         ArrayList<Ordre> alleSalg = new ArrayList<>();
-        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
-            if (Storage.getOrdrer().get(i).getAfslutningsDato() != null && Storage.getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
-                alleSalg.add(Storage.getOrdrer().get(i));
+        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
+            if (Storage.getInstance().getOrdrer().get(i).getAfslutningsDato() != null && Storage.getInstance().getOrdrer().get(i).getAfslutningsDato().equals(LocalDate.now())) {
+                alleSalg.add(Storage.getInstance().getOrdrer().get(i));
             }
         }
         return alleSalg;
     }
 
-    public static ArrayList<String> udprintOrdre(Ordre ordre) {
+    public ArrayList<String> udprintOrdre(Ordre ordre) {
         ArrayList<String> alleSalg = new ArrayList<>();
         for (int j = 0; j < ordre.getOrdrelinjer().size(); j++) {
             Ordrelinje ol = ordre.getOrdrelinjer().get(j);
@@ -453,10 +456,10 @@ public class Controller {
         return alleSalg;
     }
 
-    public static int getAntalSolgteKlip(LocalDate startdato, LocalDate slutdato) {
+    public int getAntalSolgteKlip(LocalDate startdato, LocalDate slutdato) {
         int solgteKlip = 0;
-        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
-            Ordre o = Storage.getOrdrer().get(i);
+        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
+            Ordre o = Storage.getInstance().getOrdrer().get(i);
             if (o.getAfslutningsDato() != null) {
                 if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                         o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
@@ -471,10 +474,10 @@ public class Controller {
         return solgteKlip;
     }
 
-    public static int getAntalForbrugteKlip(LocalDate startdato, LocalDate slutdato) {
+    public int getAntalForbrugteKlip(LocalDate startdato, LocalDate slutdato) {
         int forbrugteKlip = 0;
-        for (int i = 0; i < Storage.getOrdrer().size(); i++) {
-            Ordre o = Storage.getOrdrer().get(i);
+        for (int i = 0; i < Storage.getInstance().getOrdrer().size(); i++) {
+            Ordre o = Storage.getInstance().getOrdrer().get(i);
             if (o.getAfslutningsDato() != null) {
                 if (o.getAfslutningsDato().isBefore(slutdato) && o.getAfslutningsDato().isAfter(startdato) ||
                         o.getAfslutningsDato().equals(startdato) || o.getAfslutningsDato().equals(slutdato)) {
@@ -489,7 +492,7 @@ public class Controller {
         return forbrugteKlip;
     }
 
-    public static void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
+    public void lukSalg(Ordre ordre, Prisliste prisliste, LocalDate afslutDato, boolean status, Betalingsform betalingsform) {
         if(!ordre.erOrdrenLukket()){
             ordre.setAfslutningsDato(afslutDato);
             ordre.setOrdreStatus(status);
@@ -503,262 +506,17 @@ public class Controller {
     }
 
 
-    private static void initStorage() {
-        // Prislister
-        Prisliste fredagsbar = Controller.createPrisliste("Fredagsbar");
-        Prisliste butik = Controller.createPrisliste("Butik");
-
-        // Produktgrupper
-        Produktgruppe klippekort = Controller.createProduktGruppe("Klippekort");
-        Produktgruppe flaske = Controller.createProduktGruppe("Flaske");
-        Produktgruppe fadoel = Controller.createProduktGruppe("Fadøl 40 cl");
-        Produktgruppe madOgDrikke = Controller.createProduktGruppe("Mad og drikke");
-        Produktgruppe spiritus = Controller.createProduktGruppe("Spiritus");
-        Produktgruppe fustage = Controller.createProduktGruppe("Fustage");
-        Produktgruppe beklaedning = Controller.createProduktGruppe("Beklædning");
-        Produktgruppe rundvisning = Controller.createProduktGruppe("Rundvisning");
-
-        // Måleenheder
-        MaaleEnhed ingen = Controller.createMaaleEnhed(null, 0);
-        MaaleEnhed fireCl = Controller.createMaaleEnhed("cl", 4);
-        MaaleEnhed fyrreCl = Controller.createMaaleEnhed("cl", 40);
-        MaaleEnhed halvtredsCl = Controller.createMaaleEnhed("cl", 50);
-        MaaleEnhed tresCl = Controller.createMaaleEnhed("cl", 60);
-        MaaleEnhed tyveLiter = Controller.createMaaleEnhed("liter", 20);
-
-        // Klippekort produkt
-        Produkt klippekortProdukt4 = Controller.createKlippekort("Klippekort, 4 klip", klippekort, ingen, 4);
-        Produkt klippekortProdukt10 = Controller.createKlippekort("Klippekort, 10 klip", klippekort, ingen, 10);
-        Produkt klippekortProdukt20 = Controller.createKlippekort("Klippekort, 20 klip", klippekort, ingen, 20);
-
-        // Flaske produkter todo: er det nok bare at have produktgruppe med som parameter, eller bør den create produktet?
-        Produkt klosterbrygFlaske = Controller.createProdukt("Klosterbryg", flaske, tresCl);
-        Produkt sweetGeorgiaBrown = Controller.createProdukt("Sweet Georgia Brown", flaske, tresCl);
-        Produkt extraPilsnerFlaske = Controller.createProdukt("Extra Pilsner", flaske, tresCl);
-        Produkt celebrationFlaske = Controller.createProdukt("Celebration", flaske, tresCl);
-        Produkt blondieFlaske = Controller.createProdukt("Blondie", flaske, tresCl);
-        Produkt foraarsbrygFlaske = Controller.createProdukt("Forårsbryg", flaske, tresCl);
-        Produkt indiaPaleAleFlaske = Controller.createProdukt("India Pale Ale", flaske, tresCl);
-        Produkt julebrygFlaske = Controller.createProdukt("Julebryg", flaske, tresCl);
-        Produkt juletoenden = Controller.createProdukt("Juletønden", flaske, tresCl);
-        Produkt oldStrongAle = Controller.createProdukt("Old Strong Ale", flaske, tresCl);
-        Produkt fregattenJylland = Controller.createProdukt("Fregatten Jylland", flaske, tresCl);
-        Produkt imperialStoutFlaske = Controller.createProdukt("Imperial Stout", flaske, tresCl);
-        Produkt tribute = Controller.createProdukt("Tribute", flaske, tresCl);
-        Produkt blackMonster = Controller.createProdukt("Black Monster", flaske, tresCl);
-
-        // Fadøl, 40 cl produkter
-        Produkt klosterbrygFadoel = Controller.createProdukt("Klosterbryg", fadoel, fyrreCl);
-        Produkt jazzClassic = Controller.createProdukt("Jazz Classic", fadoel, fyrreCl);
-        Produkt extraPilsnerFadoel = Controller.createProdukt("Extra Pilsner", fadoel, fyrreCl);
-        Produkt celebrationFadoel = Controller.createProdukt("Celebration", fadoel, fyrreCl);
-        Produkt blondieFadoel = Controller.createProdukt("Blondie", fadoel, fyrreCl);
-        Produkt foraarsbrygFadoel = Controller.createProdukt("Forårsbryg", fadoel, fyrreCl);
-        Produkt indiaPaleAleFadoel = Controller.createProdukt("India Pale Ale", fadoel, fyrreCl);
-        Produkt julebrygFadoel = Controller.createProdukt("Julebryg", fadoel, fyrreCl);
-        Produkt imperialStoutFadoel = Controller.createProdukt("Imperial Stout", fadoel, fyrreCl);
-        Produkt special = Controller.createProdukt("Special", fadoel, fyrreCl);
-
-        // Mad og drikke produkter
-        Produkt aeblebrus = Controller.createProdukt("Æblebrus", madOgDrikke, ingen);
-        Produkt chips = Controller.createProdukt("Chips", madOgDrikke, ingen);
-        Produkt peanuts = Controller.createProdukt("Peanuts", madOgDrikke, ingen);
-        Produkt cola = Controller.createProdukt("Cola", madOgDrikke, ingen);
-        Produkt nikoline = Controller.createProdukt("Nikoline", madOgDrikke, ingen);
-        Produkt sevenUp = Controller.createProdukt("7-Up", madOgDrikke, ingen);
-        Produkt vand = Controller.createProdukt("Vand", madOgDrikke, ingen);
-        Produkt oelpoelser = Controller.createProdukt("Ølpølser", madOgDrikke, ingen);
-
-        // Spiritusprodukter
-        Produkt whiskey45pct = Controller.createProdukt("Whiskey 45% 50 cl rør", spiritus, halvtredsCl);
-        Produkt whiskey4Cl = Controller.createProdukt("Whiskey 4 cl", spiritus, fireCl);
-        Produkt whiskey43Pct = Controller.createProdukt("Whisky 43% 50 cl rør", spiritus, halvtredsCl);
-        Produkt uEgesplint = Controller.createProdukt("u/ egesplint", spiritus, ingen);
-        Produkt mEgesplint = Controller.createProdukt("m/ egesplint", spiritus, ingen);
-        Produkt toWhiskyGlasMedBrikker = Controller.createProdukt("2*whisky glas + brikker", spiritus, ingen);
-        Produkt liquorOfAarhus = Controller.createProdukt("Liquor of Aarhus", spiritus, ingen);
-        Produkt lyngGin50Cl = Controller.createProdukt("Lyng gin 50 cl", spiritus, ingen);
-        Produkt lyngGin4Cl = Controller.createProdukt("Lyng gin 4 cl", spiritus, fireCl);
-
-        // beklædning
-        Produkt tShirt = Controller.createProdukt("t-shirt", beklaedning, ingen);
-        Produkt polo = Controller.createProdukt("polo", beklaedning, ingen);
-        Produkt cap = Controller.createProdukt("cap", beklaedning, ingen);
-
-        // PantProdukt
-
-        Produkt klosterbrygFustage = Controller.createPantProdukt("Klosterbryg", tyveLiter, 200, fustage);
-        Produkt julebrygFustage = Controller.createPantProdukt("Julebryg",tyveLiter,200,fustage);
-
-
-        // Fredagsbar prisliste
-        // klippekort
-        fredagsbar.createPris(klippekortProdukt4, 130, 4);
-        fredagsbar.createPris(klippekortProdukt10, 250, 10);
-        fredagsbar.createPris(klippekortProdukt20, 450, 20);
-
-        // flasker
-        fredagsbar.createPris(klosterbrygFlaske, 70, 2);
-        fredagsbar.createPris(sweetGeorgiaBrown, 70, 2);
-        fredagsbar.createPris(extraPilsnerFlaske, 70, 2);
-        fredagsbar.createPris(celebrationFlaske, 70, 2);
-        fredagsbar.createPris(blondieFlaske, 70, 2);
-        fredagsbar.createPris(foraarsbrygFlaske, 70, 2);
-        fredagsbar.createPris(indiaPaleAleFlaske, 70, 2);
-        fredagsbar.createPris(julebrygFlaske, 70, 2);
-        fredagsbar.createPris(juletoenden, 70, 2);
-        fredagsbar.createPris(oldStrongAle, 70, 2);
-        fredagsbar.createPris(fregattenJylland, 70, 2);
-        fredagsbar.createPris(imperialStoutFlaske, 70, 2);
-        fredagsbar.createPris(tribute, 70, 2);
-        fredagsbar.createPris(blackMonster, 100, 3);
-        // fadøl
-        fredagsbar.createPris(klosterbrygFadoel, 38, 1);
-        fredagsbar.createPris(jazzClassic, 38, 1);
-        fredagsbar.createPris(extraPilsnerFadoel, 38, 1);
-        fredagsbar.createPris(celebrationFadoel, 38, 1);
-        fredagsbar.createPris(blondieFadoel, 38, 1);
-        fredagsbar.createPris(foraarsbrygFadoel, 38, 1);
-        fredagsbar.createPris(indiaPaleAleFadoel, 38, 1);
-        fredagsbar.createPris(julebrygFadoel, 38, 1);
-        fredagsbar.createPris(imperialStoutFadoel, 38, 1);
-        fredagsbar.createPris(special, 38, 1);
-        // mad og drikke
-        fredagsbar.createPris(aeblebrus, 15, 0);
-        fredagsbar.createPris(chips, 10, 0);
-        fredagsbar.createPris(peanuts, 15, 0);
-        fredagsbar.createPris(cola, 15, 0);
-        fredagsbar.createPris(nikoline, 15, 0);
-        fredagsbar.createPris(sevenUp, 15, 0);
-        fredagsbar.createPris(vand, 10, 0);
-        fredagsbar.createPris(oelpoelser, 30, 1);
-        // spiritus
-        fredagsbar.createPris(whiskey45pct, 599, 0);
-        fredagsbar.createPris(whiskey4Cl, 50, 0);
-        fredagsbar.createPris(whiskey43Pct, 599, 0);
-        fredagsbar.createPris(uEgesplint, 300, 0);
-        fredagsbar.createPris(mEgesplint, 350, 0);
-        fredagsbar.createPris(toWhiskyGlasMedBrikker, 80, 0);
-        fredagsbar.createPris(liquorOfAarhus, 175, 0);
-        fredagsbar.createPris(lyngGin50Cl, 350, 0);
-        fredagsbar.createPris(lyngGin4Cl, 40, 0);
-        // beklædning
-        fredagsbar.createPris(tShirt, 70, 0);
-        fredagsbar.createPris(polo, 100, 0);
-        fredagsbar.createPris(cap, 30, 0);
-        // Butiksprisliste:
-        // klippekort
-        butik.createPris(klippekortProdukt4, 130, 0);
-        butik.createPris(klippekortProdukt10, 250, 0);
-        butik.createPris(klippekortProdukt20, 450, 0);
-
-        // fustage
-        butik.createPris(klosterbrygFustage, 775, 0);
-        butik.createPris(julebrygFustage,775, 0);
-
-        // flasker
-        butik.createPris(klosterbrygFlaske, 36, 0);
-        butik.createPris(sweetGeorgiaBrown, 36, 0);
-        butik.createPris(extraPilsnerFlaske, 36, 0);
-        butik.createPris(celebrationFlaske, 36, 0);
-        butik.createPris(blondieFlaske, 36, 0);
-        butik.createPris(foraarsbrygFlaske, 36, 0);
-        butik.createPris(indiaPaleAleFlaske, 36, 0);
-        butik.createPris(julebrygFlaske, 36, 0);
-        butik.createPris(juletoenden, 36, 0);
-        butik.createPris(oldStrongAle, 36, 0);
-        butik.createPris(fregattenJylland, 36, 0);
-        butik.createPris(imperialStoutFlaske, 36, 0);
-        butik.createPris(tribute, 36, 0);
-        butik.createPris(blackMonster, 60, 0);
-        // spiritus
-        butik.createPris(whiskey45pct, 599, 0);
-        butik.createPris(whiskey43Pct, 499, 0);
-        butik.createPris(uEgesplint, 300, 0);
-        butik.createPris(mEgesplint, 350, 0);
-        butik.createPris(toWhiskyGlasMedBrikker, 80, 0);
-        butik.createPris(liquorOfAarhus, 175, 0);
-        butik.createPris(lyngGin50Cl, 350, 0);
-        // beklædning
-        butik.createPris(tShirt, 70, 0);
-        butik.createPris(polo, 100, 0);
-        butik.createPris(cap, 30, 0);
-
-        Betalingsform klip1 = new Klip();
-        Betalingsform kontant = new Kontant();
-        Betalingsform dankort = new Dankort();
-        Betalingsform mobilePay = new MobilePay();
-        Betalingsform regning = new Regning();
-
-
-        Ordre ordre1 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre1, oldStrongAle, 1, ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1, blackMonster, 1, ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1, blondieFlaske, 1, ordre1.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre1, oelpoelser, 1, ordre1.getPrisliste());
-        lukSalg(ordre1, fredagsbar, LocalDate.now(), true, klip1);
-
-        Ordre ordre2 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre2, klippekortProdukt10, 1, fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre2, whiskey4Cl, 1, ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2, blackMonster, 2, ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2, mEgesplint, 3, ordre2.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre2, klosterbrygFlaske, 3, ordre2.getPrisliste());
-        lukSalg(ordre2, fredagsbar, LocalDate.now(), true, dankort);
-
-        Ordre ordre3 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre3, klosterbrygFlaske, 3, fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre3, julebrygFlaske, 6, ordre3.getPrisliste());
-        Controller.createOrdrelinjeSalg(ordre3, blackMonster, 6, ordre3.getPrisliste());
-        lukSalg(ordre3, fredagsbar, LocalDate.now(), true, kontant);
-
-        Ordre ordre4 = Controller.createSalg(fredagsbar);
-        Controller.createOrdrelinjeSalg(ordre4, indiaPaleAleFadoel, 1, ordre4.getPrisliste());
-        lukSalg(ordre4, ordre4.getPrisliste(), LocalDate.now(), true, klip1);
-
-        Kunde kunde1 = Controller.createKunde("Earl", "Flemmingway", 10101010);
-        Kunde kunde2 = Controller.createKunde("Bo", "Bech", 11111111);
-        Kunde kunde3 = Controller.createKunde("Sofie", "Lassen Kalke", 22222222);
-        Kunde kunde4 = Controller.createKunde("Big", "Chungus", 33333333);
-        Kunde kunde5 = Controller.createKunde("VIP", "McDonald", 44444444);
-        Kunde kunde6 = Controller.createKunde("Henning", "Stærk", 55555555);
-        Kunde kunde7 = Controller.createKunde("Alfalfa", "Solomon", 66666666);
-        Kunde kunde8 = Controller.createKunde("Hannah Montana", "Banana Ananas", 77777777);
-        Kunde kunde9 = Controller.createKunde("L'easy", "Peter", 88888888);
-        Kunde kunde10 = Controller.createKunde("Yvonne", "", 99999999);
-        Ordre ordre5 = Controller.createUdlejning(butik,kunde4);
-        Ordre ordre6 = Controller.createUdlejning(butik, kunde5);
-        Ordrelinje ordrelinje1PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5,klosterbrygFustage,2,butik);
-        Ordrelinje ordrelinje2PaaOrdre5 = Controller.createOrdrelinjeUdlejning(ordre5,julebrygFustage,2,butik);
-
-        Ordrelinje ordrelinje1PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,klosterbrygFustage,2,butik);
-        Ordrelinje ordrelinje2PaaOrdre6 = Controller.createOrdrelinjeUdlejning(ordre6,julebrygFustage,2,butik);
-        Controller.setPrisMinusPant(ordre5);
-        Controller.setPrisMinusPant(ordre6);
-
-        // Rundvisning
-
-        Ordre rundvisningTilKunde1 = Controller.createRundvisning(butik, kunde1,
-                LocalDateTime.of(LocalDate.of(2022, 4, 15), LocalTime.of(12, 30)), rundvisning, 100.0);
-        Ordre rundvisningTilKunde2 = Controller.createRundvisning(butik, kunde2,
-                LocalDateTime.of(LocalDate.of(2022, 4, 16), LocalTime.of(13, 30)), rundvisning, 100.0);
-        Ordre rundvisningTilKunde3 = Controller.createRundvisning(butik, kunde3,
-                LocalDateTime.of(LocalDate.of(2022, 4, 17), LocalTime.of(14, 30)), rundvisning, 100.0);
-
-
-
-        ordre3.setKunde(kunde4);
-        ordre2.setKunde(kunde4);
-
-
-
+    private void initStorage() {
+       loadStorage();
     }
 
-    public static void init() {
+
+
+    public void init() {
         initStorage();
     }
 
-    public static void removePrislisteOgProduktFraPris(Prisliste prisliste, Produkt produkt) {
+    public void removePrislisteOgProduktFraPris(Prisliste prisliste, Produkt produkt) {
         //TODO Burde måske kun være prislisten, som slettes?
         //TODO eller måske kun produktet
         for (Pris p : prisliste.getPriser()) {
@@ -768,5 +526,37 @@ public class Controller {
             }
         }
 
+    }
+    public void loadStorage() {
+        try (FileInputStream fileIn = new FileInputStream("storage_gruppe6.ser")) {
+            try (ObjectInputStream in = new ObjectInputStream(fileIn);) {
+                storage = (aarhusBryghus.storage.Storage) in.readObject();
+                System.out.println("Storage loaded from file storage_gruppe6.ser.");
+
+            } catch (ClassNotFoundException ex) {
+                System.out.println("Error loading storage object.");
+                throw new RuntimeException(ex);
+            }
+        } catch (IOException ex) {
+            System.out.println("Error loading storage object.");
+            throw new RuntimeException(ex);
+        }
+
+    }
+
+    public void saveStorage() {
+        try (FileOutputStream fileOut = new FileOutputStream("storage_gruppe6.ser")) {
+            try (ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+                out.writeObject(storage);
+                System.out.println("Storage saved in file storage_gruppe6.ser.");
+            }
+        } catch (IOException ex) {
+            System.out.println("Error saving storage object.");
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public ArrayList<Kunde> getKunder() {
+        return Storage.getInstance().getKunder();
     }
 }

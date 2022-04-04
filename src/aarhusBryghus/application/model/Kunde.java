@@ -1,8 +1,9 @@
 package aarhusBryghus.application.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Kunde {
+public class Kunde implements Serializable {
 
     private String fornavn;
     private String efternavn;

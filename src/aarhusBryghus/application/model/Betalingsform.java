@@ -1,6 +1,8 @@
 package aarhusBryghus.application.model;
 
-public interface Betalingsform {
+import java.io.Serializable;
+
+public interface Betalingsform extends Serializable {
     public String getType();
 
     public String toString();

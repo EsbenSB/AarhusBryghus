@@ -1,6 +1,8 @@
 package aarhusBryghus.application.model;
 
-public class Pris {
+import java.io.Serializable;
+
+public class Pris implements Serializable {
 
     private double pris;
     private int klippekort;
